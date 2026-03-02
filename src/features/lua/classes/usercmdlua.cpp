@@ -32,9 +32,6 @@ void LuaClasses::UserCmd::open(lua_State *L)
 	// lock
 	lua_pushboolean(L, 0);
 	lua_setfield(L, -2, "__metatable");
-
-	// pop the metatable
-	lua_pop(L, 1);
 }
 
 void LuaUserCmd::CopyFromUserCmd(const CUserCmd& pCmd)

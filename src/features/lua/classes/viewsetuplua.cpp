@@ -13,8 +13,6 @@ namespace LuaClasses
 
 			lua_pushcfunction(L, NewIndex);
 			lua_setfield(L, -2, "__newindex");
-
-			lua_pop(L, 1);
 		}
 
 		LuaViewSetup* push_viewsetup(lua_State* L, CViewSetup* view)

@@ -71,8 +71,6 @@ namespace LuaClasses
 
 			lua_pushcfunction(L, EQ);
     			lua_setfield(L, -2, "__eq");
-
-			lua_pop(L, 1);
 		}
 
 		LuaEntity* push_entity(lua_State* L, CBaseEntity* entity)

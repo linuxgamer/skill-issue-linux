@@ -137,13 +137,8 @@ void LuaClasses::Color::open(lua_State *L)
 	lua_pushboolean(L, 0);
 	lua_setfield(L, -2, "__metatable");
 
-	// pop the metatable
-	lua_pop(L, 1);
-
 	lua_pushcfunction(L, Color3);
 	lua_setglobal(L, "color");
-
-	lua_pop(L, 1);
 }
 
 LuaColor* LuaClasses::Color::push(lua_State *L, struct Color &color)

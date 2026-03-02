@@ -43,10 +43,6 @@ namespace LuaClasses
 
 			lua_pushcfunction(L, LuaStringCmd::__gc);
 			lua_setfield(L, -2, "__gc");
-
-			lua_pop(L, 1);
-
-			lua_pop(L, 1);
 		}
 
 		LuaStringCmd* push(lua_State* L, const std::string& cmd)

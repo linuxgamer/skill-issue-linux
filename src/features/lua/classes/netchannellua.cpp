@@ -56,8 +56,6 @@ namespace LuaClasses
 
 			lua_pushcfunction(L, GC);
 			lua_setfield(L, -2, "__gc");
-
-			lua_pop(L, 1);
 		}
 
 		LuaNetChannel* push_netchannel(lua_State* L, CNetChannel* netchan)

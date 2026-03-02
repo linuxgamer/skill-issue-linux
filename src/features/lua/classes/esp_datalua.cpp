@@ -184,9 +184,6 @@ void LuaClasses::ESP_Data::open(lua_State *L)
 	// lock
 	lua_pushboolean(L, 0);
 	lua_setfield(L, -2, "__metatable");
-
-	// pop the metatable
-	lua_pop(L, 1);
 }
 
 Lua_ESP_Data* LuaClasses::ESP_Data::push(lua_State *L, struct ESP_Data &data)

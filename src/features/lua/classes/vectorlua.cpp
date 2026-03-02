@@ -72,12 +72,8 @@ void LuaClasses::Vector3::open(lua_State* L)
 	lua_pushboolean(L, 0);
 	lua_setfield(L, -2, "__metatable");
 
-	lua_pop(L, 1); // pop table
-
 	lua_pushcfunction(L, vector3);
 	lua_setglobal(L, "vector3");
-
-	lua_pop(L, 1); // pop Vector3 global
 }
 
 void LuaVector::CopyFromVector(const Vector& in)
