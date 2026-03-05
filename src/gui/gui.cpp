@@ -8,6 +8,11 @@ TextEditor GUI::editor;
 int GUI::tab = 0;
 bool GUI::openDeletePopup = false;
 
+int GUI::selectedIndex = -1;
+std::vector<std::string> GUI::configs;
+char GUI::newConfigName[64] = "\0";
+bool GUI::firstOpenConfigTab = true;
+
 void DrawTabButtons(int &tab)
 {
 	ImGui::BeginGroup();
@@ -506,11 +511,6 @@ void DrawRadarTab()
 	ImGui::Checkbox("Buildings", &Settings::Radar.buildings);
 }
 
-int GUI::selectedIndex = -1;
-std::vector<std::string> GUI::configs;
-std::string GUI::newConfigName = "";
-bool GUI::firstOpenConfigTab = true;
-
 void RefreshConfigList(const std::string& folder)
 {
 	GUI::configs.clear();
@@ -548,13 +548,13 @@ void DrawConfigTab()
 	float buttonWidth = 120.0f;
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - ImGui::GetStyle().ItemSpacing.x);
 
-	ImGui::InputText("##NewConfigName", &GUI::newConfigName, sizeof(GUI::newConfigName));
+	ImGui::InputText("##NewConfigName", GUI::newConfigName, sizeof(GUI::newConfigName));
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Create & Save", ImVec2(buttonWidth, 0)))
 	{
-		if (GUI::newConfigName.length() > 0)
+		if (strlen(GUI::newConfigName) > 0)
 		{
 			std::string filename = std::string(GUI::newConfigName) + ".txt";
 			std::string fullPath = configFolder + "/" + filename;
@@ -809,8 +809,7 @@ void GUI::RunMainWindow()
 void GUI::Init()
 {
 	configs.reserve(5);
-	GUI::selectedIndex = -1;
-	GUI::newConfigName = "";
-	GUI::firstOpenConfigTab = true;
-	GUI::openDeletePopup = false;
+	selectedIndex = -1;
+	firstOpenConfigTab = true;
+	openDeletePopup = false;
 }

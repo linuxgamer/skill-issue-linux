@@ -56,7 +56,7 @@ namespace Lua
 
 		luaregister_constants(m_luaState);
 
-		consoleText += "Pluto initialized\n";
+		//consoleText += "Pluto initialized\n";
 	}
 
 	void ClosePluto()

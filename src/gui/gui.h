@@ -35,7 +35,7 @@ namespace GUI
 
 	extern int selectedIndex;
 	extern std::vector<std::string> configs;
-	extern std::string newConfigName;
+	extern char newConfigName[64];
 	extern bool firstOpenConfigTab;
 	extern bool openDeletePopup;
 
