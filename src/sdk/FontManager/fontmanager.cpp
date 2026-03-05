@@ -55,7 +55,6 @@ const std::unordered_map<std::string, unsigned long>& FontManager::GetAllFonts()
 void FontManager::Init()
 {
 	m_Fonts.reserve(10);
-	m_currentFontID = "";
 }
 
 void FontManager::Unitialize()
