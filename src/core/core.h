@@ -5,7 +5,6 @@ class CApp
 public:
 	CApp();
 
-	CApp& App();
 	bool IsInitialized();
 	bool StartInterfaces();
 	bool StartHooks();

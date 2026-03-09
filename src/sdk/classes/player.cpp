@@ -133,3 +133,36 @@ uint8_t CTFPlayer::GetMoveType()
 	*/
 	return *reinterpret_cast<int*>(uintptr_t(this) + 0x214);
 }
+
+void CTFPlayer::ThirdPersonSwitch(bool state)
+{
+	using ThirdPersonSwitchFn = void(*)(CTFPlayer* self, bool state);
+
+	// The offset I got from
+	// CInput::CAM_ToFirstPerson
+	/*
+	void CInput::CAM_ToFirstPerson(long param_1)
+	{
+		long *plVar1;
+		*(undefined1 *)(param_1 + 0xa1) = 0;
+		DAT_02ee4374 = DAT_030078a8;
+		DAT_02ee436c = DAT_030078a0;
+		FUN_01fd3c30(&DAT_02f51b40,0);
+		plVar1 = (long *)CMultiPlayerAnimState::GetBasePlayer();
+		if (plVar1 != (long *)0x0) {
+		// the 0xa00 is what we want
+		(**(code **)(*plVar1 + 0xa00))(plVar1,0);
+			return;
+		}
+		return;
+	}
+	*/
+
+	auto vt = vtable::get(this);
+
+	if (vt == nullptr)
+		return;
+
+	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(void*)]);
+	func(this, state);
+}

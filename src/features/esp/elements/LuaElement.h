@@ -11,13 +11,9 @@
 #include "../../lua/classes/entitylua.h"
 
 /*
-esp.Register("hello world", function(entity, data)
-	if entity is valid then
-		return true
-	end
-
-	return false
-end)
+esp.Register("id", "text", (int)alignment, {r, g, b, a}, function(entity, data)
+	return true
+end): bool
 */
 
 class LuaElement : public IBaseElement
@@ -31,12 +27,13 @@ public:
 		m_shoulddraw_ref = LUA_NOREF;
 	}
 
-	LuaElement(const std::string& id, const std::string& text, int ref, ESP_ALIGNMENT alignment)
+	LuaElement(const std::string& id, const std::string& text, int ref, ESP_ALIGNMENT alignment, const Color& color)
 	{
 		m_id = id;
 		m_text = text;
 		m_alignment = alignment;
 		m_shoulddraw_ref = ref;
+		m_color = color;
 	}
 
 	bool ShouldDraw(CBaseEntity* entity, const ESP_Data& data) const override
@@ -79,7 +76,7 @@ public:
 
 	void Draw(Vec2& pos, CBaseEntity* ent, const ESP_Data& data, ESPContext& ctx) const override
 	{
-		helper::draw::TextShadow(pos.x, pos.y, Color(255, 255, 255, 255), m_text);
+		helper::draw::TextShadow(pos.x, pos.y, GetColor(ent, data), m_text);
 	}
 
 	Vec2 GetSize(const ESP_Data& data) const override
@@ -109,9 +106,15 @@ public:
 		return m_shoulddraw_ref;
 	}
 
+	Color GetColor(CBaseEntity* pEnt, const ESP_Data &data) const override
+	{
+		return m_color;
+	}
+
 private:
 	std::string m_text;
 	int m_shoulddraw_ref;
 	ESP_ALIGNMENT m_alignment;
 	std::string m_id;
+	Color m_color;
 };

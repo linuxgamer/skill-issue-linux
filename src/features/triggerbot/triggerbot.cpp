@@ -46,11 +46,7 @@ namespace Triggerbot
 		if (pLocal == nullptr || pWeapon == nullptr || pCmd == nullptr)
 			return;
 
-		if (!Settings::Trigger.enabled)
-			return;
-
-		ButtonCode_t key = interfaces::InputSystem->StringToButtonCode(Settings::Trigger.key);
-		if (key != BUTTON_CODE_INVALID && !interfaces::InputSystem->IsButtonDown(key))
+		if (!Settings::Trigger.key->IsActive())
 			return;
 
 		if (Settings::Trigger.hitscan && pWeapon->IsHitscan())

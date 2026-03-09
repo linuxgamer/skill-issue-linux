@@ -1,6 +1,6 @@
 # ESP Library
 
-### > Register( id: **string**, text: **string**, alignment: **int**, func(entity: **Entity**, data: **ESP_Data**): **bool** )
+### > Register( id: **string**, text: **string**, alignment: **int**, color: {r: **int**, g: **int**, b: **int**, a: **int**}, func(entity: **Entity**, data: **ESP_Data**): **bool** )
 returns **bool**
 
 The function needs to return a true or false. When its true, it will draw the text.

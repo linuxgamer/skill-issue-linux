@@ -24,6 +24,9 @@ namespace ESP
 
 	bool GetData(const EntityListEntry& entry, ESP_Data& out);
 
+	const char* GetHealthMode();
+	const char* GetTeamMode();
+
 	void Init();
 	void Run(CTFPlayer* pLocal);
 };

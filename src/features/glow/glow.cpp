@@ -85,14 +85,18 @@ namespace Glow
 
 	void GetEntities()
 	{
+		CTFPlayer* pLocal = EntityList::GetLocal();
+		if (pLocal == nullptr)
+			return;
+
 		for (auto entry : EntityList::GetEntities())
 		{
+			if (!ESP_Utils::IsValidEntity(pLocal, entry))
+				continue;
+
 			CBaseEntity* entity = entry.ptr;
 
 			if (!entity->ShouldDraw())
-				continue;
-
-			if (!(entry.flags & (EntityFlags::IsPlayer | EntityFlags::IsBuilding)))
 				continue;
 
 			if (entry.flags & EntityFlags::IsBuilding)
@@ -123,14 +127,14 @@ namespace Glow
 
 		if (interfaces::Engine->IsTakingScreenshot())
 			return;
-		
-		auto pRenderContext = interfaces::MaterialSystem->GetRenderContext();
-		if (!pRenderContext)
-			return;
 
 		GetEntities();
 		
 		if (glowEnts.empty())
+			return;
+
+		auto pRenderContext = interfaces::MaterialSystem->GetRenderContext();
+		if (!pRenderContext)
 			return;
 
 		int w, h;

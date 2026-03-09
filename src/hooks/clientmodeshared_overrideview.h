@@ -14,6 +14,7 @@
 
 #include "../features/visuals/customfov/customfov.h"
 #include "../features/visuals/norecoil/norecoil.h"
+#include "../features/visuals/thirdperson/thirdperson.h"
 
 DECLARE_VTABLE_HOOK(OverrideView, void, (IClientMode *thisptr, CViewSetup *pView))
 {
@@ -35,6 +36,7 @@ DECLARE_VTABLE_HOOK(OverrideView, void, (IClientMode *thisptr, CViewSetup *pView
 
 		NoRecoil::RunOverrideView(pLocal, pView);
 		CustomFov::Run(pLocal, pView);
+		Thirdperson::OverrideView(pLocal, pView);
 	}
 }
 

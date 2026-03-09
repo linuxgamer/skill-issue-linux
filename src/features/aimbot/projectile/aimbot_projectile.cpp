@@ -128,6 +128,9 @@ namespace AimbotProjectile
 			case TF_WEAPON_FLAMETHROWER:
 			{	
 				static ConVar* tf_flamethrower_size = interfaces::Cvar->FindVar("tf_flamethrower_size");
+				if (!tf_flamethrower_size)
+					return false;
+
 				float flhull = tf_flamethrower_size->GetFloat();
 				info.offset.Set(40, 5, 0);
 				info.hull.Set(flhull, flhull, flhull);

@@ -1,8 +1,9 @@
 #include "gui.h"
 
 #include <filesystem>
-#include "../features/backtrack/backtrack.h"
+
 #include "../features/logs/logs.h"
+#include "../features/binds/binds.h"
 
 TextEditor GUI::editor;
 int GUI::tab = 0;
@@ -52,11 +53,11 @@ void DrawTabButtons(int &tab)
 
 void DrawAimbotTab()
 {
-	ImGui::Checkbox("Enabled", &Settings::Aimbot.enabled);
-
-	ImGui::BeginDisabled(!Settings::Aimbot.enabled);
+	gBinds.RenderHotkey("Aimbot", Settings::Aimbot.key);
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Aimbot.key->IsEnabled() ? 1.0f : 0.5f); 
 	{
-		ImGui::InputText("Key", Settings::Aimbot.key, sizeof(Settings::Aimbot.key));
+		//ImGui::InputText("Key", Settings::Aimbot.key, sizeof(Settings::Aimbot.key));
+
 		ImGui::Checkbox("Autoshoot", &Settings::Aimbot.autoshoot);
 		ImGui::Checkbox("Viewmodel Aim", &Settings::Aimbot.viewmodelaim);
 		ImGui::Checkbox("Draw FOV Indicator", &Settings::Aimbot.draw_fov_indicator);
@@ -65,49 +66,31 @@ void DrawAimbotTab()
 		ImGui::SliderFloat("Max Sim Time", &Settings::Aimbot.max_sim_time, 0.0f, 5.0f);
 		ImGui::SliderFloat("Smoothness", &Settings::Aimbot.smoothness, 0.0f, 100.0f);
 
-		if (ImGui::BeginCombo("Melee Aimbot", AimbotMelee::GetMeleeModeName().c_str()))
 		{
-			if (ImGui::Selectable("None"))
-				Settings::Aimbot.melee = static_cast<int>(MeleeMode::NONE);
-
-			if (ImGui::Selectable("Legit"))
-				Settings::Aimbot.melee = static_cast<int>(MeleeMode::LEGIT);
-
-			if (ImGui::Selectable("Rage"))
-				Settings::Aimbot.melee = static_cast<int>(MeleeMode::RAGE);
-
-			ImGui::EndCombo();
+			constexpr const char* items[]{"None", "Legit", "Rage"};
+			ImGui::Combo("Melee Aimbot", &Settings::Aimbot.melee, items, 3);
 		}
 
-		if (ImGui::BeginCombo("Aimbot Method", AimbotUtils::GetAimbotModeName().c_str()))
 		{
-			if (ImGui::Selectable("Plain"))
-				Settings::Aimbot.mode = static_cast<int>(AimbotMode::PLAIN);
-
-			if (ImGui::Selectable("Smooth"))
-				Settings::Aimbot.mode = static_cast<int>(AimbotMode::SMOOTH);
-
-			if (ImGui::Selectable("Assistance"))
-				Settings::Aimbot.mode = static_cast<int>(AimbotMode::ASSISTANCE);
-
-			if (ImGui::Selectable("Silent"))
-				Settings::Aimbot.mode = static_cast<int>(AimbotMode::SILENT);
-
-			ImGui::EndCombo();
+			constexpr const char* items[]
+			{
+				"Plain",
+				"Smooth",
+				"Assistance",
+				"Silent",
+			};
+			ImGui::Combo("Method", &Settings::Aimbot.mode, items, 4);
 		}
-
-		if (ImGui::BeginCombo("Team Selection", AimbotUtils::GetTeamModeName().c_str()))
+		
 		{
-			if (ImGui::Selectable("Only Enemy"))
-				Settings::Aimbot.teamMode = static_cast<int>(TeamMode::ONLYENEMY);
+			constexpr const char* items[]
+			{
+				"Only Enemies",
+				"Only Teammates",
+				"Both",
+			};
 
-			if (ImGui::Selectable("Only Teammate"))
-				Settings::Aimbot.teamMode = static_cast<int>(TeamMode::ONLYTEAMMATE);
-
-			if (ImGui::Selectable("Both"))
-				Settings::Aimbot.teamMode = static_cast<int>(TeamMode::BOTH);
-
-			ImGui::EndCombo();
+			ImGui::Combo("Team Selection", &Settings::Aimbot.teamMode, items, 3);
 		}
 
 		ImGui::Separator();
@@ -125,23 +108,51 @@ void DrawAimbotTab()
 
 		ImGui::Checkbox("Hold Minigun Spin", &Settings::Aimbot.hold_minigun_spin);
 	}
-	ImGui::EndDisabled();
+	ImGui::PopStyleVar();
 }
 
 void DrawESPTab()
 {
-	ImGui::Checkbox("ESP Enabled", &Settings::ESP.enabled);
-
-	ImGui::BeginDisabled(!Settings::ESP.enabled);
+	if (ImGui::BeginTable("##ESPContents", 2))
 	{
-		ImGui::Checkbox("Name", &Settings::ESP.name);
-		ImGui::Checkbox("Box", &Settings::ESP.box);
-		ImGui::Checkbox("Ignore Cloaked", &Settings::ESP.ignorecloaked);
-		ImGui::Checkbox("Buildings", &Settings::ESP.buildings);
-		ImGui::Checkbox("Weapon", &Settings::ESP.weapon);
-		ImGui::Checkbox("Health", &Settings::ESP.healthbar);
-	}
-	ImGui::EndDisabled();
+		ImGui::TableSetupColumn("LeftSide");
+		ImGui::TableSetupColumn("RightSide");
+		
+		ImGui::TableNextRow();
+		
+		ImGui::TableNextColumn();
+		ImGui::Checkbox("ESP Enabled", &Settings::ESP.enabled);
+		ImGui::BeginDisabled(!Settings::ESP.enabled);
+		{
+			ImGui::Checkbox("Name", &Settings::ESP.name);
+			ImGui::Checkbox("Box", &Settings::ESP.box);
+			ImGui::Checkbox("Ignore Cloaked", &Settings::ESP.ignorecloaked);
+			ImGui::Checkbox("Buildings", &Settings::ESP.buildings);
+			ImGui::Checkbox("Weapon", &Settings::ESP.weapon);
+
+			{
+				constexpr const char* items[]{"None", "Text", "Bar", "Both"};
+				ImGui::Combo("Health", &Settings::ESP.health, items, 4);
+			}
+
+			{
+				constexpr const char* items[]{"Only Enemies", "Only Teammates", "Both"};
+				ImGui::Combo("Team Selection", &Settings::ESP.team_selection, items, 3);
+			}
+		}
+		ImGui::EndDisabled();
+
+		ImGui::TableNextColumn();
+
+		ImGui::TextUnformatted("Conditions");
+
+		ImGui::CheckboxFlags("Zoom", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Zoomed));
+		ImGui::CheckboxFlags("Ubercharge", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Ubered));
+		ImGui::CheckboxFlags("Jarate", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Jarated));
+		ImGui::CheckboxFlags("Bonk", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Bonked));
+
+		ImGui::EndTable();
+	} // table end
 
 	ImGui::Separator();
 
@@ -155,10 +166,10 @@ void DrawESPTab()
 
 	ImGui::Separator();
 
-	static float red[3] = {Settings::Colors.red_team.r()/255.0f, Settings::Colors.red_team.g()/255.0f, Settings::Colors.red_team.b()/255.0f};
-	static float blu[3] = {Settings::Colors.blu_team.r()/255.0f, Settings::Colors.blu_team.g()/255.0f, Settings::Colors.blu_team.b()/255.0f};
-	static float target[3] = {Settings::Colors.aimbot_target.r()/255.0f, Settings::Colors.aimbot_target.g()/255.0f, Settings::Colors.aimbot_target.b()/255.0f};
-	static float weapon[3] = {Settings::Colors.weapon.r()/255.0f, Settings::Colors.weapon.g()/255.0f, Settings::Colors.weapon.b()/255.0f};
+	float red[3] = {Settings::Colors.red_team.r()/255.0f, Settings::Colors.red_team.g()/255.0f, Settings::Colors.red_team.b()/255.0f};
+	float blu[3] = {Settings::Colors.blu_team.r()/255.0f, Settings::Colors.blu_team.g()/255.0f, Settings::Colors.blu_team.b()/255.0f};
+	float target[3] = {Settings::Colors.aimbot_target.r()/255.0f, Settings::Colors.aimbot_target.g()/255.0f, Settings::Colors.aimbot_target.b()/255.0f};
+	float weapon[3] = {Settings::Colors.weapon.r()/255.0f, Settings::Colors.weapon.g()/255.0f, Settings::Colors.weapon.b()/255.0f};
 
 	ImGui::TextUnformatted("Colors");
 
@@ -179,8 +190,8 @@ void DrawMiscTab()
 {
 	ImGui::BeginGroup();
 
-	ImGui::Checkbox("Third person", &Settings::Misc.thirdperson);
-	ImGui::InputText("Third Person Key", Settings::Misc.thirdperson_key, sizeof(Settings::Misc.thirdperson_key));
+	gBinds.RenderHotkey("Third Person", Settings::Misc.thirdperson_key);
+	ImGui::SliderFloat4("Third Person Offset", Settings::Misc.thirdperson_offset, -100.0f, 100.0f);
 
 	ImGui::Separator();
 
@@ -209,18 +220,9 @@ void DrawMiscTab()
 	ImGui::SliderFloat3("Viewmodel Offset", Settings::Misc.viewmodel_offset, -20, 20.0f );
 	ImGui::SliderFloat("Viewmodel Interp", &Settings::Misc.viewmodel_interp, 0.0f, 50.0f);
 
-	if (ImGui::BeginCombo("Backtrack", Backtrack::GetModeName().c_str()))
 	{
-		if (ImGui::Selectable("None"))
-			Settings::Misc.backtrack = static_cast<int>(BacktrackMode::NONE);
-
-		if (ImGui::Selectable("Last Record Only"))
-			Settings::Misc.backtrack = static_cast<int>(BacktrackMode::LAST_ONLY);
-
-		if (ImGui::Selectable("All Records"))
-			Settings::Misc.backtrack = static_cast<int>(BacktrackMode::ALL_RECORDS);
-
-		ImGui::EndCombo();
+		constexpr const char* items[]{"None", "Last Record Only", "All Records"};
+		ImGui::Combo("Backtrack", &Settings::Misc.backtrack, items, 3);
 	}
 
 	ImGui::EndGroup();
@@ -228,41 +230,20 @@ void DrawMiscTab()
 
 void DrawTriggerTab()
 {
-	ImGui::Checkbox("Trigger Enabled", &Settings::Trigger.enabled);
-	ImGui::BeginDisabled(!Settings::Trigger.enabled);
+	//ImGui::Checkbox("Trigger Enabled", &Settings::Trigger.enabled);
+	gBinds.RenderHotkey("TriggerBot", Settings::Trigger.key);
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Trigger.key->IsEnabled() ? 1.0f : 0.5f); 
 	{
 		ImGui::Checkbox("Hitscan", &Settings::Trigger.hitscan);
-		ImGui::InputText("Trigger Key", Settings::Trigger.key, sizeof(Settings::Trigger.key));
+		//ImGui::InputText("Trigger Key", Settings::Trigger.key, sizeof(Settings::Trigger.key));
 	
-		if (ImGui::BeginCombo("Auto Backstab", AutoBackstab::GetModeName().c_str()))
 		{
-			if (ImGui::Selectable("None"))
-				Settings::Trigger.autobackstab = static_cast<int>(AutoBackstabMode::NONE);
-	
-			if (ImGui::Selectable("Legit"))
-				Settings::Trigger.autobackstab = static_cast<int>(AutoBackstabMode::LEGIT);
-	
-			if (ImGui::Selectable("Rage"))
-				Settings::Trigger.autobackstab = static_cast<int>(AutoBackstabMode::RAGE);
-	
-			ImGui::EndCombo();
-		}
-	
-		if (ImGui::BeginCombo("Auto Airblast", AutoAirblast::GetModeName().c_str()))
-		{
-			if (ImGui::Selectable("None"))
-				Settings::Trigger.autoairblast = static_cast<int>(AutoBackstabMode::NONE);
-	
-			if (ImGui::Selectable("Legit"))
-				Settings::Trigger.autoairblast = static_cast<int>(AutoBackstabMode::LEGIT);
-	
-			if (ImGui::Selectable("Rage"))
-				Settings::Trigger.autoairblast = static_cast<int>(AutoBackstabMode::RAGE);
-	
-			ImGui::EndCombo();
+			constexpr const char* items[]{"None", "Legit", "Rage"};
+			ImGui::Combo("Auto Backstab", &Settings::Trigger.autobackstab, items, 3);
+			ImGui::Combo("Auto Airblast", &Settings::Trigger.autoairblast, items, 3);
 		}
 	}
-	ImGui::EndDisabled();
+	ImGui::PopStyleVar();
 }
 
 void DrawAntiaimTab()
@@ -271,85 +252,22 @@ void DrawAntiaimTab()
 
 	ImGui::BeginDisabled(!Settings::AntiAim.enabled);
 	{
-		if (ImGui::BeginCombo("Pitch Mode", Antiaim::GetPitchModeName(static_cast<PitchMode>(Settings::AntiAim.pitch_mode)).c_str()))
 		{
-			if (ImGui::Selectable("None"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::NONE);
-	
-			if (ImGui::Selectable("Up"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::UP);
-	
-			if (ImGui::Selectable("Down"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::DOWN);
-	
-			if (ImGui::Selectable("Fake Up"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::FAKEUP);
-	
-			if (ImGui::Selectable("Fake Down"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::FAKEDOWN);
-	
-			if (ImGui::Selectable("Random"))
-				Settings::AntiAim.pitch_mode = static_cast<int>(PitchMode::RANDOM);
-	
-			ImGui::EndCombo();
+			constexpr const char* items[]{"None", "Up", "Down", "Fake Up", "Fake Down", "Random"};
+			ImGui::Combo("Pitch Mode", &Settings::AntiAim.pitch_mode, items, 6);
 		}
-	
-		if (ImGui::BeginCombo("Real Yaw Mode", Antiaim::GetYawModeName(static_cast<YawMode>(Settings::AntiAim.real_yaw_mode)).c_str()))
+
 		{
-			if (ImGui::Selectable("None"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::NONE);
-	
-			if (ImGui::Selectable("Left"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::LEFT);
-	
-			if (ImGui::Selectable("Right"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::RIGHT);
-	
-			if (ImGui::Selectable("Spin Left"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::SPIN_LEFT);
-	
-			if (ImGui::Selectable("Spin Right"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::SPIN_RIGHT);
-	
-			if (ImGui::Selectable("Jitter"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::JITTER);
-	
-			if (ImGui::Selectable("Back"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::BACK);
-	
-			if (ImGui::Selectable("Forward"))
-				Settings::AntiAim.real_yaw_mode = static_cast<int>(YawMode::FORWARD);
-	
-			ImGui::EndCombo();
-		}
-	
-		if (ImGui::BeginCombo("Fake Yaw Mode", Antiaim::GetYawModeName(static_cast<YawMode>(Settings::AntiAim.fake_yaw_mode)).c_str()))
-		{
-			if (ImGui::Selectable("None"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::NONE);
-	
-			if (ImGui::Selectable("Left"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::LEFT);
-	
-			if (ImGui::Selectable("Right"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::RIGHT);
-	
-			if (ImGui::Selectable("Spin Left"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::SPIN_LEFT);
-	
-			if (ImGui::Selectable("Spin Right"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::SPIN_RIGHT);
-	
-			if (ImGui::Selectable("Jitter"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::JITTER);
-	
-			if (ImGui::Selectable("Back"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::BACK);
-	
-			if (ImGui::Selectable("Forward"))
-				Settings::AntiAim.fake_yaw_mode = static_cast<int>(YawMode::FORWARD);
-	
-			ImGui::EndCombo();
+			constexpr const char* items[]{
+				"None",
+				"Left", "Right",
+				"Back", "Forward",
+				"Spin Left", "Spin Right",
+				"Jitter"
+			};
+
+			ImGui::Combo("Real Yaw", &Settings::AntiAim.real_yaw_mode, items, 8);
+			ImGui::Combo("Fake Yaw", &Settings::AntiAim.fake_yaw_mode, items, 8);
 		}
 	
 		ImGui::SliderInt("Spin Speed", &Settings::AntiAim.spin_speed, 0, 10);
@@ -358,15 +276,14 @@ void DrawAntiaimTab()
 
 	ImGui::Separator();
 
-	ImGui::Checkbox("Warp", &Settings::AntiAim.warp_enabled);
-	ImGui::BeginDisabled(!Settings::AntiAim.warp_enabled);
+	gBinds.RenderHotkey("Warp Key", Settings::AntiAim.warp_key);
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::AntiAim.warp_key->IsEnabled() ? 1.0f : 0.5f); 
 	{
+		gBinds.RenderHotkey("Warp Recharge Key", Settings::AntiAim.warp_recharge_key);
+		gBinds.RenderHotkey("Warp DoubleTap Key", Settings::AntiAim.warp_dt_key);
 		ImGui::SliderInt("Speed", &Settings::AntiAim.warp_speed, 1, 24);
-		ImGui::InputText("Warp Key", Settings::AntiAim.warp_key, sizeof(Settings::AntiAim.warp_key));
-		ImGui::InputText("Warp Recharge Key", Settings::AntiAim.warp_recharge_key, sizeof(Settings::AntiAim.warp_recharge_key));
-		ImGui::InputText("DoubleTap Key", Settings::AntiAim.warp_dt_key, sizeof(Settings::AntiAim.warp_dt_key));
 	}
-	ImGui::EndDisabled();
+	ImGui::PopStyleVar();
 
 	ImGui::Separator();
 
@@ -384,7 +301,7 @@ void DrawLuaTab()
 	static bool init = false;
 	if (!init)
 	{
-		const char* keywords[]
+		constexpr const char* keywords[]
 		{
 			"begin", "switch", "continue", "number",
 			"int", "float", "boolean", "bool",
@@ -394,7 +311,7 @@ void DrawLuaTab()
 			"catch",
 		};
 
-		const char* myIdentifiers[]
+		constexpr const char* myIdentifiers[]
 		{
 			"globals", "engine",
 			"hooks", "vector3",

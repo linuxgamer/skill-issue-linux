@@ -135,7 +135,7 @@ namespace LuaFuncs
 
 		int GetKey(lua_State* L)
 		{
-			const std::string& key = Settings::Aimbot.key;
+			/*const std::string& key = Settings::Aimbot.key;
 			ButtonCode_t btn = interfaces::InputSystem->StringToButtonCode(key.c_str());
 
 			if (!helper::input::IsButtonValid(btn))
@@ -146,13 +146,14 @@ namespace LuaFuncs
 			}
 
 			lua_pushinteger(L, static_cast<lua_Integer>(btn));
-			lua_pushstring(L, key.c_str());
-			return 2;
+			lua_pushstring(L, key.c_str());*/
+
+			return 0;
 		}
 
 		int SetKey(lua_State* L)
 		{
-			if (lua_isnoneornil(L, 1))
+			/*if (lua_isnoneornil(L, 1))
 				return 0;
 
 			if (lua_isstring(L, 1))
@@ -175,7 +176,7 @@ namespace LuaFuncs
 					strncpy(Settings::Aimbot.key, interfaces::InputSystem->ButtonCodeToString(btn), sizeof(Settings::Aimbot.key));
 
 				return 0;
-			}
+			}*/
 
 			return 0;
 		}

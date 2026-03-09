@@ -26,9 +26,9 @@ DECLARE_VTABLE_HOOK(VGuiPaint, void, (IEngineVGui* thisptr, PaintMode_t paint))
 
 	// I don't trust
 	// C++'s static initialization
-	if (!gApp.App().IsInitialized())
+	if (!gApp.IsInitialized())
 	{
-		gApp.App().StartHooks();
+		gApp.StartHooks();
 		return;
 	}
 

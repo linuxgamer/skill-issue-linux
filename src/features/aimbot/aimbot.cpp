@@ -1,7 +1,8 @@
 #include "aimbot.h"
+
 #include "utils/utils.h"
-//#include "../visuals/customfov/customfov.h"
 #include "../ticks/ticks.h"
+#include "../binds/binds.h"
 
 namespace Aimbot
 {
@@ -26,15 +27,10 @@ namespace Aimbot
 	{
 		ClearAimbotState(m_state);
 
-		if (!Settings::Aimbot.enabled)
-			return;
-
 		if (helper::engine::IsConsoleVisible() || helper::engine::IsGameUIVisible() || helper::engine::IsTakingScreenshot())
 			return;
 
-		ButtonCode_t key = interfaces::InputSystem->StringToButtonCode(Settings::Aimbot.key);
-
-		if (key != BUTTON_CODE_INVALID && !interfaces::InputSystem->IsButtonDown(key))
+		if (!Settings::Aimbot.key->IsActive())
 			return;
 
 		switch (pWeapon->GetWeaponType())
@@ -124,7 +120,7 @@ namespace Aimbot
 
 	void RunPaint()
 	{
-		if (!Settings::Aimbot.enabled)
+		if (!Settings::Aimbot.key->IsEnabled())
 			return;
 
 		//DrawTargetPath();

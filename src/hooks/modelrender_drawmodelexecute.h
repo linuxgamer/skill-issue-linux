@@ -35,7 +35,7 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void, (IVModelRender* thisptr, const DrawM
 		return originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
 
 	if (Backtrack::m_drawing)
-		return originalDrawModelExecute(thisptr, state, pInfo, Backtrack::m_current_drawing_record->bones);
+		return originalDrawModelExecute(thisptr, state, pInfo, Backtrack::m_current_drawing_record->m_Bones);
 
 	if (!Chams::m_bRunning && !Glow::m_bRunning)
 	{

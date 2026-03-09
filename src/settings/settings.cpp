@@ -2,18 +2,19 @@
 #include <cstring>
 #include <fstream>
 #include "../features/logs/logs.h"
+#include "type.h"
 
 bool Settings::menu_open = false;
 
 namespace Settings
 {
-	SettingsAimbot Aimbot = {};
-	SettingsAntiAim AntiAim = {};
-	SettingsColors Colors = {};
-	SettingsESP ESP = {};
-	SettingsMisc Misc = {};
-	SettingsRadar Radar = {};
-	SettingsTriggerbot Trigger = {};
+	SettingsAimbot Aimbot{};
+	SettingsAntiAim AntiAim{};
+	SettingsColors Colors{};
+	SettingsESP ESP{};
+	SettingsMisc Misc{};
+	SettingsRadar Radar{};
+	SettingsTriggerbot Trigger{};
 }
 
 void Settings::Load(const std::string& fullPath)
@@ -40,7 +41,7 @@ void Settings::Load(const std::string& fullPath)
 		{
 			if (setting.name != key || setting.ptr == nullptr)
 				continue;
-	
+
 			switch (setting.type)
 			{
 				case SettingType::BOOL:
@@ -48,24 +49,32 @@ void Settings::Load(const std::string& fullPath)
 					*static_cast<bool*>(setting.ptr) = (value == "1" || value == "true");
 					break;
 				}
-		
+
 				case SettingType::INT:
 				{
 					*static_cast<int*>(setting.ptr) = std::stoi(value);
 					break;
 				}
-		
+
 				case SettingType::FLOAT:
 				{
 					*static_cast<float*>(setting.ptr) = std::stof(value);
 					break;
 				}
-		
+
 				case SettingType::STRING:
 				{
 					char* buffer = static_cast<char*>(setting.ptr);
 					strncpy(buffer, value.c_str(), 15);
 					buffer[15] = '\0';
+					break;
+				}
+
+				case SettingType::BIND:
+				{
+					Hotkey* hk = static_cast<Hotkey*>(setting.ptr);
+					hk->m_iKey = std::stoi(value);
+					hk->m_bCapturing = false;
 					break;
 				}
 			}
@@ -104,6 +113,9 @@ void Settings::Save(const std::string &fullPath)
                 case SettingType::STRING:
 			file << static_cast<char*>(setting.ptr);
                 	break;
+		case SettingType::BIND:
+			file << static_cast<int>(static_cast<Hotkey*>(setting.ptr)->m_iKey);
+			break;
                 }
 
 		file << "\n";

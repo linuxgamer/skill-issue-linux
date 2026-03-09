@@ -160,10 +160,12 @@ inline void Hooked_SwapWindow(SDL_Window* window)
 
 	cursor = ImGui::GetMouseCursor();
 
+	gBinds.Update();
+
 	if (LuaHookManager::HasHooks("ImGui"))
 		LuaHookManager::Call(Lua::m_luaState, "ImGui");
 
-	if (Settings::AntiAim.warp_enabled)
+	if (Settings::AntiAim.warp_key->IsEnabled())
 		Warp::RunWindow();
 
 	if (Settings::Radar.enabled)
@@ -177,6 +179,8 @@ inline void Hooked_SwapWindow(SDL_Window* window)
 
 	if (Settings::menu_open)
 		GUI::RunMainWindow();
+
+	gBinds.DrawWindow(Settings::menu_open);
 
 	ImGui::Render();
   	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

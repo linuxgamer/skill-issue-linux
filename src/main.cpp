@@ -4,7 +4,6 @@
 __attribute__((constructor))
 void init(void)
 {
-	gApp.App();
 	gApp.StartInterfaces();
 
 	HookEngineVGuiPaint();

@@ -17,6 +17,8 @@
 #include "../features/radar/radar.h"
 #include "../features/warp/warp.h"
 
+#include "../features/binds/binds.h"
+
 typedef struct IDirect3DDevice9 *LPDIRECT3DDEVICE9;
 
 inline LPDIRECT3DDEVICE9 g_pd3dDevice = nullptr;
@@ -130,10 +132,12 @@ inline void RenderImGui()
 
 	cursor = ImGui::GetMouseCursor();
 
+	gBinds.Update();
+
 	if (LuaHookManager::HasHooks("ImGui"))
 		LuaHookManager::Call(Lua::m_luaState, "ImGui", 0);
 
-	if (Settings::AntiAim.warp_enabled)
+	if (Settings::AntiAim.warp_key->IsEnabled())
 		Warp::RunWindow();
 
 	if (Settings::Radar.enabled)
@@ -147,6 +151,8 @@ inline void RenderImGui()
 
 	if (Settings::menu_open)
 		GUI::RunMainWindow();
+
+	gBinds.DrawWindow(Settings::menu_open);
 
 	ImGui::EndFrame();
 	ImGui::Render();

@@ -6,7 +6,10 @@
 
 namespace Thirdperson
 {
-	void RunHotkey();
 	// Call in FrameStageNotify -> FRAME_NET_UPDATE_END
-	void Run(CTFPlayer* pLocal);
+	void FrameStageNotify(CTFPlayer* pLocal);
+	void OverrideView(CTFPlayer* pLocal, CViewSetup* pView);
+
+	bool IsThirdPerson(CTFPlayer* pLocal);
+	bool ShouldIgnoreBind(CTFPlayer* pLocal);
 };

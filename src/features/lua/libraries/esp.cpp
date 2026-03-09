@@ -27,7 +27,7 @@ namespace LuaFuncs
 		}
 
 		/*
-		esp.Register("id", "text", (int)alignment, function(entity, data)
+		esp.Register("id", "text", (int)alignment, {r, g, b, a}, function(entity, data)
 			return true
 		end): bool
 		*/
@@ -48,11 +48,34 @@ namespace LuaFuncs
 			const char* text = luaL_checkstring(L, 2);
 			int alignment = luaL_checkinteger(L, 3);
 
-			luaL_checktype(L, 4, LUA_TFUNCTION);
-    			lua_pushvalue(L, 4);
+			luaL_checktype(L, 4, LUA_TTABLE);
+			Color color{};
+			// get the color from lua
+			{
+				lua_getfield(L, 4, "r");
+				int r = luaL_checkinteger(L, -1);
+				lua_pop(L, 1);
+
+				lua_getfield(L, 4, "g");
+				int g = luaL_checkinteger(L, -1);
+				lua_pop(L, 1);
+
+				lua_getfield(L, 4, "b");
+				int b = luaL_checkinteger(L, -1);
+				lua_pop(L, 1);
+
+				lua_getfield(L, 4, "a");
+				int a = luaL_optinteger(L, -1, 255);
+				lua_pop(L, 1);
+
+				color.SetColor(r, g, b, a);
+			}
+
+			luaL_checktype(L, 5, LUA_TFUNCTION);
+    			lua_pushvalue(L, 5);
     			int callbackRef = luaL_ref(L, LUA_REGISTRYINDEX);
 
-			ESP::m_luaElements.push_back(std::make_unique<LuaElement>(id, text, callbackRef, static_cast<ESP_ALIGNMENT>(alignment)));
+			ESP::m_luaElements.push_back(std::make_unique<LuaElement>(id, text, callbackRef, static_cast<ESP_ALIGNMENT>(alignment), color));
 
 			lua_pushboolean(L, 1);
 			return 1;

@@ -37,18 +37,13 @@
 #include "../hooks/chlclient_levelinitpreentity.h"
 #include "../hooks/chlclient_levelpostentity.h"
 #include "../hooks/dxvk.h"
+#include "../hooks/cthirdperson_manager.h"
 
 CApp::CApp() : m_bInitialized(false) {}
 
 bool CApp::IsInitialized()
 {
 	return m_bInitialized;
-}
-
-CApp& CApp::App()
-{
-	static CApp instance;
-	return instance;
 }
 
 bool CApp::StartInterfaces()
@@ -58,6 +53,15 @@ bool CApp::StartInterfaces()
 
 bool CApp::StartHooks()
 {
+	// !!	not a good solution	!!
+	// !!	think of something else	!!
+	Settings::Aimbot.key = gBinds.RegisterHotkey("aimbot key");
+	Settings::AntiAim.warp_key = gBinds.RegisterHotkey("warp key");
+	Settings::AntiAim.warp_recharge_key = gBinds.RegisterHotkey("warp recharge key");
+	Settings::AntiAim.warp_dt_key = gBinds.RegisterHotkey("doubletap key");
+	Settings::Misc.thirdperson_key = gBinds.RegisterHotkey("thirdperson key");
+	Settings::Trigger.key = gBinds.RegisterHotkey("trigger key");
+
 	GUI::Init();
 	TickManager::Init();
 	MaterialManager::Init();
@@ -107,9 +111,10 @@ bool CApp::StartHooks()
 	Hook_BaseInterpolatePart1();
 	Hook_Interpolate();
 	Hook_DataTable_Warning();
+	Hook_CThirdPersonManager_Update();
 
 	m_bInitialized = true;
 	return true;
 }
 
-CApp gApp;
+CApp gApp{};

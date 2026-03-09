@@ -1,9 +1,17 @@
 #include "esp.h"
+
 #include "elements/BaseElement.h"
+#include "elements/BonkCondElement.h"
 #include "elements/HealthTextElement.h"
+#include "elements/JaratedCondElement.h"
 #include "elements/LuaElement.h"
 #include "elements/NameElement.h"
+#include "elements/UberedCondElement.h"
+#include "elements/ZoomedCondElement.h"
+
 #include "structs.h"
+
+#include "../visuals/thirdperson/thirdperson.h"
 
 namespace ESP
 {
@@ -14,9 +22,14 @@ namespace ESP
 	{
 		FontManager::CreateFont("esp font", "Arial", 16, 400, EFONTFLAG_CUSTOM | EFONTFLAG_ANTIALIAS);
 
-		m_builtinElements.reserve(2);
+		m_builtinElements.reserve(6);
+
 		m_builtinElements.push_back(std::make_unique<NameElement>());
 		m_builtinElements.push_back(std::make_unique<HealthTextElement>());
+		m_builtinElements.push_back(std::make_unique<ZoomedCondElement>());
+		m_builtinElements.push_back(std::make_unique<UberedCondElement>());
+		m_builtinElements.push_back(std::make_unique<JaratedCondElement>());
+		m_builtinElements.push_back(std::make_unique<BonkedCondElement>());
 
 		m_luaElements.reserve(5);
 	}
@@ -30,7 +43,7 @@ namespace ESP
 
 		if (entry.flags & EntityFlags::IsPlayer)
 		{
-			if (ent == EntityList::GetLocal() && !Settings::Misc.thirdperson)
+			if (ent == EntityList::GetLocal() && !Thirdperson::IsThirdPerson(static_cast<CTFPlayer*>(ent)))
 				return false;
 
 			if (!ESP_Utils::GetEntityBounds(ent, out))
@@ -83,15 +96,14 @@ namespace ESP
 	void PaintHealthbar(const ESP_Data& data)
 	{
 		const Color background = {20, 20, 20, 255};
-		const Color bar = {100, 255, 100, 255};
-		
+
 		constexpr int width = 5;
 		constexpr int gap = 3;
 		constexpr int barMargin = 1;
-		
+
 		const int barRight = data.top.x - data.width - gap;
 		const int barLeft = barRight - width;
-		
+
 		const int x0 = barLeft;
 		const int y0 = data.top.y;
 		const int x1 = barRight;
@@ -103,8 +115,11 @@ namespace ESP
 		interfaces::Surface->DrawSetColor(background);
 		interfaces::Surface->DrawFilledRect(x0 - barMargin, y0 - barMargin, x1 + barMargin, y1 + barMargin);
 
+		int r = (1 - healthRatio) * 255;
+		int g = healthRatio * 255;
+
 		// draw health bar
-		interfaces::Surface->DrawSetColor(bar);
+		interfaces::Surface->DrawSetColor(Color{r, g, 100, 255});
 		interfaces::Surface->DrawFilledRect(x0, y1 - static_cast<int>(data.height * healthRatio), x1, y1);
 	}
 
@@ -113,33 +128,37 @@ namespace ESP
 		if (!helper::engine::IsInMatch() || !Settings::ESP.enabled)
 			return;
 
+		if (interfaces::Engine->IsTakingScreenshot())
+			return;
+
 		FontManager::SetFont("esp font");
 
-		constexpr int gap = 2;
+		constexpr int iGAP = 2;
 
 		for (const auto& entry : EntityList::GetEntities())
 		{
 			if (!ESP_Utils::IsValidEntity(pLocal, entry))
 				continue;
 
-			CBaseEntity* ent = entry.ptr;
-
-			ESP_Data data = {};
-
+			ESP_Data data{};
 			if (!GetData(entry, data))
 				continue;
 
+			CBaseEntity* ent = entry.ptr;
+
 			Color color = ESP_Utils::GetEntityColor(ent);
+
 			if (Settings::ESP.box)
 				PaintBox(color, data);
 
-			//if (Settings::ESP.name)
-				//PaintName(color, top, w, h, data.name);
+			{	// Health bar
+				auto mode = static_cast<HealthMode>(Settings::ESP.health);
+				if (data.maxhealth > 0 && (mode == HealthMode::BAR || mode == HealthMode::BOTH))
+					PaintHealthbar(data);
+			}
 
-			if (Settings::ESP.healthbar && data.maxhealth > 0)
-				PaintHealthbar(data);
-
-			ESPContext context = {};
+			ESPContext context{};
+			context.topOffset += 16.0f;
 
 			auto run = [&](const auto& elements)
 			{
@@ -155,28 +174,28 @@ namespace ESP
 					{
 						case ESP_ALIGNMENT::TOP:
 						{
-							Vec2 pos = Vec2(data.top.x - size.x/2.0f, data.top.y - context.topOffset - gap);
+							Vec2 pos = Vec2(data.top.x - size.x/2.0f, data.top.y - context.topOffset - iGAP);
 							element->Draw(pos, ent, data, context);
 							context.topOffset += element->GetSize(data).y;
 							break;
 						}
 						case ESP_ALIGNMENT::LEFT:
 						{
-							Vec2 pos = Vec2(data.top.x - data.width - size.x - gap, data.top.y + context.verticalLeftOffset + gap);
+							Vec2 pos = Vec2(data.top.x - data.width - size.x - iGAP, data.top.y + context.verticalLeftOffset + iGAP);
 							element->Draw(pos, ent, data, context);
 							context.verticalLeftOffset += element->GetSize(data).y;
 							break;
 						}
 						case ESP_ALIGNMENT::RIGHT:
 						{
-							Vec2 pos = Vec2(data.top.x + data.width + gap, data.top.y + context.verticalRightOffset + gap);
+							Vec2 pos = Vec2(data.top.x + data.width + iGAP, data.top.y + context.verticalRightOffset + iGAP);
 							element->Draw(pos, ent, data, context);
 							context.verticalRightOffset += element->GetSize(data).y;
 							break;
 						}
 						case ESP_ALIGNMENT::BOTTOM:
 						{
-							Vec2 pos = Vec2(data.top.x - size.x/2.0f, data.top.y + data.height + context.bottomOffset + gap);
+							Vec2 pos = Vec2(data.top.x - size.x/2.0f, data.top.y + data.height + context.bottomOffset + iGAP);
 							element->Draw(pos, ent, data, context);
 							context.bottomOffset += element->GetSize(data).y;
 							break;
@@ -192,4 +211,26 @@ namespace ESP
 			run(m_luaElements);
 		}
 	}
+
+	const char* GetHealthMode()
+	{
+		switch (static_cast<HealthMode>(Settings::ESP.health))
+		{
+                case HealthMode::TEXT: return "Text";
+                case HealthMode::BAR: return "Bar";
+                case HealthMode::BOTH: return "Both";
+		default: return "Invalid";
+                }
+        }
+
+	const char* GetTeamMode()
+	{
+		switch(static_cast<ESPTeamSelectionMode>(Settings::ESP.team_selection))
+		{
+                case ESPTeamSelectionMode::ENEMIES: return "Only Enemies";
+                case ESPTeamSelectionMode::TEAMMATES: return "Only Teammates";
+                case ESPTeamSelectionMode::BOTH: return "Both";
+		default: return "Invalid";
+                }
+        }
 };

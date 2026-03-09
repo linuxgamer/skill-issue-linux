@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "settingentry.h"
 #include "type.h"
+#include "../features/binds/binds.h"
 
 enum class PitchMode
 {
@@ -65,23 +66,47 @@ enum class BacktrackMode
 	MAX
 };
 
+enum class HealthMode
+{
+	INVALID = -1,
+	NONE, TEXT, BAR, BOTH,
+	MAX
+};
+
+enum class ESPTeamSelectionMode
+{
+	INVALID = -1,
+	ENEMIES, TEAMMATES, BOTH,
+	MAX,
+};
+
+enum class ESPConditionFlags
+{
+	Zoomed = 1 << 0,
+	Bonked = 1 << 1,
+	Ubered = 1 << 2,
+	Jarated = 1 << 3,
+};
+
 namespace Settings
 {
 	struct SettingsAntiAim
 	{
-		char warp_key[16];
-		char warp_recharge_key[16];
-		char warp_dt_key[16];
+		Hotkey* warp_key = nullptr;
+		Hotkey* warp_recharge_key = nullptr;
+		Hotkey* warp_dt_key = nullptr;
 
-		int spin_speed;
-		bool enabled;
-		int pitch_mode;
-		int real_yaw_mode;
-		int fake_yaw_mode;
-		bool warp_enabled;
-		int warp_speed;
-		bool fakelag_enabled;
-		int fakelag_ticks;
+		int spin_speed = 0;
+		bool enabled = false;
+		int pitch_mode = 0;
+		int real_yaw_mode = 0;
+		int fake_yaw_mode = 0;
+
+		bool warp_enabled = false;
+		int warp_speed = 1;
+
+		bool fakelag_enabled = false;
+		int fakelag_ticks = 1;
 	};
 
 	extern SettingsAntiAim AntiAim;
@@ -91,16 +116,18 @@ namespace Settings
 {
 	struct SettingsESP
 	{
-		int stencil;
-		int blur;
-		bool enabled;
-		bool ignorecloaked;
-		bool buildings;
-		bool name;
-		bool box;
-		bool healthbar;
-		bool chams;
-		bool weapon;
+		int stencil = 0;
+		int blur = 0;
+		bool enabled = false;
+		bool ignorecloaked = false;
+		bool buildings = false;
+		bool name = false;
+		bool box = false;
+		int health = 0;
+		bool chams = 0;
+		bool weapon = false;
+		int team_selection = 0;
+		int fconditions = 0;
 	};
 
 	extern SettingsESP ESP;
@@ -112,7 +139,7 @@ namespace Settings
 	{
 		bool enabled = false;
 		float fov = 0.0f;
-		char key[16] = "";
+		Hotkey* key = nullptr;
 		bool autoshoot = false;
 		float max_sim_time = 0.0f;
 		bool viewmodelaim = false;
@@ -137,7 +164,7 @@ namespace Settings
 	struct SettingsMisc
 	{
 		bool thirdperson = false;
-		char thirdperson_key[16] = "";
+		Hotkey* thirdperson_key = nullptr;
 		bool customfov_enabled = false;
 		float customfov = 90.0f;
 		bool spectatorlist = false;
@@ -151,6 +178,8 @@ namespace Settings
 		float viewmodel_offset[3] = {0, 0, 0};
 		float viewmodel_interp = 0.0f;
 		int backtrack = 0;
+
+		float thirdperson_offset[4] = {23.5, 11.5, 8.0f, 1.0f};
 	};
 
 	extern SettingsMisc Misc;
@@ -160,8 +189,7 @@ namespace Settings
 {
 	struct SettingsTriggerbot
 	{
-		char key[16] = "";
-		bool enabled = false;
+		Hotkey* key = nullptr;
 		bool hitscan = false;
 		int autobackstab = 0;
 		int autoairblast = 0;
@@ -206,9 +234,9 @@ namespace Settings
 	inline constexpr SettingEntry m_entries[]
 	{
 		// aimbot
-		{"aimbot enabled", SettingType::BOOL, &Aimbot.enabled},
+		//{"aimbot enabled", SettingType::BOOL, &Aimbot.enabled},
 		{"aimbot fov", SettingType::FLOAT, &Aimbot.fov},
-		{"aimbot key", SettingType::STRING, Aimbot.key},
+		//{"aimbot key", SettingType::STRING, Aimbot.key},
 		{"aimbot autoshot", SettingType::BOOL, &Aimbot.autoshoot},
 		{"aimbot max sim time", SettingType::FLOAT, &Aimbot.max_sim_time},
 		{"aimbot viewmodel aim", SettingType::BOOL, &Aimbot.viewmodelaim},
@@ -230,16 +258,16 @@ namespace Settings
 		{"esp buildings", SettingType::BOOL, &ESP.buildings},
 		{"esp name", SettingType::BOOL, &ESP.name},
 		{"esp box", SettingType::BOOL, &ESP.box},
-		{"esp health", SettingType::BOOL, &ESP.healthbar},
+		{"esp health", SettingType::INT, &ESP.health},
 		{"esp chams", SettingType::BOOL, &ESP.chams},
 		{"esp stencil", SettingType::INT, &ESP.stencil},
 		{"esp blur", SettingType::INT, &ESP.blur},
 		{"esp weapon", SettingType::BOOL, &ESP.weapon},
-		{"esp health", SettingType::BOOL, &ESP.healthbar},
+		{"esp conditions", SettingType::INT, &ESP.fconditions},
 
 		// misc
 		{"misc thirdperson", SettingType::BOOL, &Misc.thirdperson},
-		{"misc thirdperson key",SettingType::STRING,  Misc.thirdperson_key},
+		{"misc thirdperson key",SettingType::BIND, &Misc.thirdperson_key},
 		{"misc customfov enabled", SettingType::BOOL, &Misc.customfov_enabled},
 		{"misc customfov", SettingType::FLOAT, &Misc.customfov},
 		{"misc spectatorlist", SettingType::BOOL, &Misc.spectatorlist},
@@ -256,10 +284,10 @@ namespace Settings
 		{"misc no recoil", SettingType::BOOL, &Misc.norecoil},
 
 		//triggerbot
-		{"trigger enabled", SettingType::BOOL, &Trigger.enabled},
+		//{"trigger enabled", SettingType::BOOL, &Trigger.enabled},
 		{"trigger hitscan", SettingType::BOOL, &Trigger.hitscan},
 		{"trigger autobackstab", SettingType::INT, &Trigger.autobackstab},
-		{"trigger key", SettingType::STRING, Trigger.key},
+		//{"trigger key", SettingType::STRING, Trigger.key},
 		{"trigger autoairblast", SettingType::INT, &Trigger.autoairblast},
 
 		// colors
@@ -290,9 +318,9 @@ namespace Settings
 		// warp
 		{"warp enabled", SettingType::BOOL, &AntiAim.warp_enabled},
 		{"warp speed", SettingType::INT, &AntiAim.warp_speed},
-		{"warp key", SettingType::STRING, AntiAim.warp_key},
-		{"warp recharge key", SettingType::STRING, AntiAim.warp_recharge_key},
-		{"doubletap key", SettingType::STRING, AntiAim.warp_dt_key},
+		//{"warp key", SettingType::STRING, AntiAim.warp_key},
+		//{"warp recharge key", SettingType::STRING, AntiAim.warp_recharge_key},
+		//{"doubletap key", SettingType::STRING, AntiAim.warp_dt_key},
 
 		// fakelag
 		{"fakelag enabled", SettingType::BOOL, &AntiAim.fakelag_enabled},

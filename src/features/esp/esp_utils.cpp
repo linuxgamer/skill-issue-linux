@@ -38,6 +38,16 @@ bool ESP_Utils::IsValidPlayer(CTFPlayer* pLocal, CBaseEntity* entity)
 	if (player->InCond(TF_COND_CLOAKED) && Settings::ESP.ignorecloaked)
 		return false;
 
+	const ESPTeamSelectionMode mode = static_cast<ESPTeamSelectionMode>(Settings::ESP.team_selection);
+
+	bool bIsEnemy = pLocal->m_iTeamNum() != entity->m_iTeamNum();
+
+	if (bIsEnemy && mode == ESPTeamSelectionMode::TEAMMATES)
+		return false;
+
+	if (!bIsEnemy && mode == ESPTeamSelectionMode::ENEMIES)
+		return false;
+
 	return true;
 }
 
@@ -47,6 +57,19 @@ bool ESP_Utils::IsValidBuilding(CTFPlayer* pLocal, CBaseObject* entity)
 		return false;
 
 	if (entity->IsDormant())
+		return false;
+
+	const ESPTeamSelectionMode mode = static_cast<ESPTeamSelectionMode>(Settings::ESP.team_selection);
+
+	if (mode >= ESPTeamSelectionMode::MAX || mode <= ESPTeamSelectionMode::INVALID)
+		return false;
+
+	bool bIsEnemy = pLocal->m_iTeamNum() != entity->m_iTeamNum();
+
+	if (bIsEnemy && mode == ESPTeamSelectionMode::TEAMMATES)
+		return false;
+
+	if (!bIsEnemy && mode == ESPTeamSelectionMode::ENEMIES)
 		return false;
 
 	return true;
