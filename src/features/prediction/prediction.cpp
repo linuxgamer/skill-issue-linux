@@ -67,32 +67,31 @@ void CPrediction::BeginPrediction(CTFPlayer* pEntity, float flTargetSeconds)
 	if (!sv_bounce)
 		return Logs::Error("[CPrediction::BeginPrediction] sv_bounce is nullptr!");
 	
-	m_pTarget = pEntity;
+	m_filter.pSkip = m_pTarget = pEntity;
 	
 	m_flAccelerate = sv_accelerate->GetFloat();
 	m_flGravity = GetGravity();
 	m_flFriction = sv_friction->GetFloat();
 	m_flStopSpeed = sv_stopspeed->GetFloat();
 	m_flStepSize = pEntity->m_flStepSize();
-	
-	// janky ahh shit
-	m_vecAbsOrigin = pEntity->m_vecOrigin() + Vector{0, 0, 1.0f};
+
+	m_bAllowAutoMovement = pEntity->m_bAllowAutoMovement();
+	m_bIsOnGround = pEntity->GetFlags() & FL_ONGROUND;
+
 	m_vecMaxs = pEntity->m_vecMaxs();
 	m_vecMins = pEntity->m_vecMins();
 	m_vecVelocity = pEntity->EstimateAbsVelocity();
 	m_vecBaseVelocity = pEntity->m_vecBaseVelocity();
+	m_vecAbsOrigin = m_bIsOnGround ? pEntity->m_vecOrigin() + Vec3{0, 0, 1} : pEntity->m_vecOrigin();
+
 	m_flBounce = sv_bounce->GetFloat();
 	m_flMaxSpeed = pEntity->m_flMaxspeed();
 	m_flTargetSeconds = flTargetSeconds;
-	
-	m_filter.pSkip = pEntity;
 
 	m_vecWishDir = m_vecVelocity;
 	m_vecWishDir.z = 0;
 	m_vecWishDir.Normalize();
 
-	m_bAllowAutoMovement = pEntity->m_bAllowAutoMovement();
-	m_bIsOnGround = IsOnGround();
 	m_bIsStarted = true;
 }
 
