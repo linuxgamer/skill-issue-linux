@@ -95,7 +95,7 @@ bool CAimbotProjectile::CheckTrajectory(CBaseEntity* pTarget, const Vector vecSt
 		Vector prevPos = vecStartPos + (velocity * prevT);
 		prevPos.z -= (0.5f * flGravity * prevT * prevT);
 
-		helper::engine::TraceHull(prevPos, pos, min, prjInfo.hull, MASK_SHOT_HULL, &filter, &trace);
+		helper::engine::TraceHull(prevPos, pos, min, prjInfo.hull, MASK_SHOT, &filter, &trace);
 
 		if (trace.fraction < 1.0f)
 			return false;
@@ -383,6 +383,8 @@ void CAimbotProjectile::RunMain(CTFPlayer* pLocal, CTFWeaponBase* pWeapon)
 
 	Vector vecEyePos = pLocal->GetEyePos();
 
+	float flPrimeTime = pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER ? 0.7f : 0;
+
 	for (const auto& target : vTargets)
 	{
 		if (target.entity == nullptr)
@@ -391,6 +393,8 @@ void CAimbotProjectile::RunMain(CTFPlayer* pLocal, CTFWeaponBase* pWeapon)
 		float flTime = target.distance/prjInfo.speed;
 		if (flTime > Settings::Aimbot.max_sim_time)
 			continue;
+
+		flTime += flPrimeTime;
 
 		Vector vecAimPos{};
 		std::vector<Vector> vPath;

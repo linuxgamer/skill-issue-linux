@@ -22,9 +22,6 @@ namespace LuaFuncs
 
 			for (const auto& entry : Settings::m_entries)
 			{
-				if (entry.ptr == nullptr)
-					continue;
-
 				if (entry.name != key)
 					continue;
 
@@ -59,12 +56,8 @@ namespace LuaFuncs
 
 			for (auto& entry : Settings::m_entries)
 			{
-				if (entry.ptr == nullptr)
-					continue;
-
 				if (entry.name != key)
 					continue;
-
 				
 				switch (entry.type)
 				{

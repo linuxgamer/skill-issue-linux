@@ -1,8 +1,7 @@
 #include "settings.h"
-#include <cstring>
-#include <fstream>
+
 #include "../features/logs/logs.h"
-#include "type.h"
+#include "../simpleini/SimpleIni.h"
 
 bool Settings::menu_open = false;
 
@@ -19,109 +18,29 @@ namespace Settings
 
 void Settings::Load(const std::string& fullPath)
 {
-	std::ifstream file(fullPath);
-	if (!file.is_open())
-		return Logs::Error("Tried loading. File is not open");
-	
-	std::string line;
-	
-	while (std::getline(file, line))
+	CSimpleIniA ini;
+	ini.SetUnicode();
+
+	SI_Error rc = ini.LoadFile(fullPath.c_str());
+
+	if (rc < 0) return Logs::Error("Failed to load settings file");
+
+	for (auto& setting : m_entries)
 	{
-		if (line.empty())
-			continue;
-	
-		const auto separatorPos = line.find('=');
-		if (separatorPos == std::string::npos)
-			continue;
-	
-		std::string key = line.substr(0, separatorPos);
-		std::string value = line.substr(separatorPos + 1);
-	
-		for (auto& setting : m_entries)
-		{
-			if (setting.name != key || setting.ptr == nullptr)
-				continue;
-
-			switch (setting.type)
-			{
-				case SettingType::BOOL:
-				{
-					*static_cast<bool*>(setting.ptr) = (value == "1" || value == "true");
-					break;
-				}
-
-				case SettingType::INT:
-				{
-					*static_cast<int*>(setting.ptr) = std::stoi(value);
-					break;
-				}
-
-				case SettingType::FLOAT:
-				{
-					*static_cast<float*>(setting.ptr) = std::stof(value);
-					break;
-				}
-
-				case SettingType::STRING:
-				{
-					char* buffer = static_cast<char*>(setting.ptr);
-					strncpy(buffer, value.c_str(), 15);
-					buffer[15] = '\0';
-					break;
-				}
-
-				case SettingType::BIND:
-				{
-					Hotkey* hk = static_cast<Hotkey*>(setting.ptr);
-					hk->m_iKey = std::stoi(value);
-					hk->m_bCapturing = false;
-					break;
-				}
-			}
-
-			break;
-		}
+		const char* val = ini.GetValue("Settings", std::string(setting.name).c_str());
+		if (val)
+			setting.load(val);
 	}
-
-	file.close();
 }
 
 void Settings::Save(const std::string &fullPath)
 {
-	std::ofstream file(fullPath, std::ios::app);
-	if (!file.is_open())
-		return Logs::Error("Tried saving. File is not open");
+	CSimpleIniA ini;
 
 	for (const auto& setting : m_entries)
-        {
-		if (setting.ptr == nullptr)
-			continue;
+		ini.SetValue("Settings", std::string(setting.name).c_str(), setting.get().c_str());
 
-		file << setting.name << "=";
-
-		switch(setting.type)
-		{
-                case SettingType::BOOL:
-			file << (*static_cast<bool*>(setting.ptr) ? 1 : 0);
-			break;
-                case SettingType::INT:
-			file << *static_cast<int*>(setting.ptr);
-			break;
-                case SettingType::FLOAT:
-			file << *static_cast<float*>(setting.ptr);
-			break;
-                case SettingType::STRING:
-			file << static_cast<char*>(setting.ptr);
-                	break;
-		case SettingType::BIND:
-			file << static_cast<int>(static_cast<Hotkey*>(setting.ptr)->m_iKey);
-			break;
-                }
-
-		file << "\n";
-        }
-
-	file.close();
+	ini.SaveFile(fullPath.c_str());
 }
 
 void Settings::InitBinds()

@@ -87,6 +87,7 @@ void CPrediction::BeginPrediction(CTFPlayer* pEntity, float flTargetSeconds)
 	m_flBounce = sv_bounce->GetFloat();
 	m_flMaxSpeed = pEntity->m_flMaxspeed();
 	m_flTargetSeconds = flTargetSeconds;
+	m_flAirSpeedCap = GetAirSpeedCap();
 
 	m_vecWishDir = m_vecVelocity;
 	m_vecWishDir.z = 0;
@@ -239,12 +240,12 @@ bool CPrediction::IsOnGround()
 
 	TryTouchGround(vecStart, vecEnd, m_vecMins, m_vecMaxs, MASK_PLAYERSOLID, m_filter, trace);
 
-	if (trace.fraction == 0.0f && trace.plane.normal.z > 0.7f)
+	if (trace.fraction < 1.0f && trace.plane.normal.z >= 0.7f)
 		return true;
 
 	TryTouchGroundInQuadrants(vecStart, vecEnd, MASK_PLAYERSOLID, m_filter, trace);
 
-	return trace.fraction == 0.0f && trace.plane.normal.z > 0.7f;
+	return trace.fraction < 1.0f && trace.plane.normal.z >= 0.7f;
 }
 
 void CPrediction::StayOnGround()
@@ -751,8 +752,8 @@ void CPrediction::AirAccelerate( Vector& wishdir, float wishspeed, float accel )
 	wishspd = wishspeed;
 
 	// Cap speed
-	/*if ( wishspd > GetAirSpeedCap() )
-		wishspd = GetAirSpeedCap();*/
+	if ( wishspd > m_flAirSpeedCap )
+		wishspd = m_flAirSpeedCap;
 
 	// Determine veer amount
 	currentspeed = m_vecVelocity.Dot(wishdir);
@@ -837,6 +838,26 @@ bool CPrediction::Simulate(std::vector<Vector>& path)
 Vector& CPrediction::GetAbsOrigin()
 {
 	return m_vecAbsOrigin;
+}
+
+float CPrediction::GetAirSpeedCap()
+{
+	if (m_pTarget->InCond(TF_COND_SHIELD_CHARGE))
+	{
+		static ConVar* tf_max_charge_speed = interfaces::Cvar->FindVar("tf_max_charge_speed");
+		return tf_max_charge_speed->GetFloat();
+	}
+
+	float flCap = 30.0f;
+
+	if (m_pTarget->InCond(TF_COND_PARACHUTE_DEPLOYED))
+	{
+		static ConVar* tf_parachute_aircontrol = interfaces::Cvar->FindVar("tf_parachute_aircontrol");
+		flCap *= tf_parachute_aircontrol->GetFloat();
+	}
+
+	float mod_air_control = AttributeHookValue(1.0f, "mod_air_control", m_pTarget, nullptr, true);
+	return flCap * mod_air_control;
 }
 
 CPrediction gPrediction{};

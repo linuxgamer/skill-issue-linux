@@ -9,6 +9,7 @@
 #include "settingentry.h"
 #include "type.h"
 #include "../features/binds/binds.h"
+#include <sstream>
 
 enum class PitchMode
 {
@@ -240,114 +241,157 @@ namespace Settings
 	extern SettingsRadar Radar;
 }
 
+#define CONFIG_INT(name, var) \
+{ name, SettingType::INT, \
+	[](std::ofstream& f){ f << (var); }, \
+	[](const std::string& v){ var = std::stoi(v); }, \
+	[](){ return std::to_string(var); }, \
+	[](const std::string& v){ var = std::stoi(v); } \
+}
+
+#define CONFIG_BOOL(name, var) \
+{ name, SettingType::BOOL, \
+	[](std::ofstream& f){ f << ((var) ? 1 : 0); }, \
+	[](const std::string& v){ var = std::stoi(v) != 0; }, \
+	[](){ return std::to_string(var); }, \
+	[](const std::string& v){ var = std::stoi(v) != 0; } \
+}
+
+#define CONFIG_FLOAT(name, var) \
+{ name, SettingType::FLOAT, \
+	[](std::ofstream& f){ f << (var); }, \
+	[](const std::string& v){ var = std::stof(v); }, \
+	[](){ return std::to_string(var); }, \
+	[](const std::string& v){ var = std::stof(v); } \
+}
+
+#define CONFIG_STRING(name, var) \
+{ name, SettingType::STRING, \
+	[](std::ofstream& f){ f << (var); }, \
+	[](const std::string& v){ var = v; }, \
+	[](){ return std::string(var); }, \
+	[](const std::string& v){ var = v; } \
+}
+
+#define CONFIG_ENUM(name, var, EnumType) \
+{ name, SettingType::INT, \
+	[](std::ofstream& f){ f << static_cast<int>(var); }, \
+	[](const std::string& v){ var = static_cast<EnumType>(std::stoi(v)); }, \
+	[](){ return std::to_string(static_cast<int>(var)); }, \
+	[](const std::string& v){ var = static_cast<EnumType>(std::stoi(v)); } \
+}
+
+#define CONFIG_KEY(name, var) \
+CONFIG_INT(name " key", var->m_iKey), \
+CONFIG_ENUM(name " mode", var->m_iMode, HotkeyMode), \
+CONFIG_ENUM(name " type", var->m_iType, InputType)
+
+#define CONFIG_FLOAT3(name, var) \
+CONFIG_FLOAT(name " x", var[0]), \
+CONFIG_FLOAT(name " y", var[1]), \
+CONFIG_FLOAT(name " z", var[2])
+
+#define CONFIG_FLOAT4(name, var) \
+CONFIG_FLOAT3(name, var), \
+CONFIG_FLOAT(name, var[3])
+
 namespace Settings
 {
 	extern bool menu_open;
-	inline constexpr SettingEntry m_entries[]
+	inline SettingEntry m_entries[]
 	{
 		// aimbot
-		//{"aimbot enabled", SettingType::BOOL, &Aimbot.enabled},
-		{"aimbot fov", SettingType::FLOAT, &Aimbot.fov},
-		//{"aimbot key", SettingType::STRING, Aimbot.key},
-		{"aimbot autoshot", SettingType::BOOL, &Aimbot.autoshoot},
-		{"aimbot max sim time", SettingType::FLOAT, &Aimbot.max_sim_time},
-		{"aimbot viewmodel aim", SettingType::BOOL, &Aimbot.viewmodelaim},
-		{"aimbot draw fov indicator", SettingType::BOOL, &Aimbot.draw_fov_indicator},
-		{"aimbot ignore cloaked", SettingType::BOOL, &Aimbot.ignorecloaked},
-		{"aimbot ignore ubered", SettingType::BOOL, &Aimbot.ignoreubered},
-		{"aimbot ignore hoovy", SettingType::BOOL, &Aimbot.ignorehoovy},
-		{"aimbot ignore bonked", SettingType::BOOL, &Aimbot.ignorebonked},
-		{"aimbot melee", SettingType::INT, &Aimbot.melee},
-		{"aimbot wait for charge", SettingType::BOOL, &Aimbot.waitforcharge},
-		{"aimbot mode", SettingType::INT, &Aimbot.mode},
-		{"aimbot smoothness", SettingType::FLOAT, &Aimbot.smoothness},
-		{"aimbot team mode", SettingType::INT, &Aimbot.teamMode},
-		{"aimbot hold minigun spin", SettingType::BOOL, &Aimbot.hold_minigun_spin},
-		{"aimbot indicator", SettingType::BOOL, &Aimbot.indicator},
+		CONFIG_FLOAT("aimbot fov", Aimbot.fov),
+		CONFIG_BOOL("aimbot autoshot", Aimbot.autoshoot),
+		CONFIG_FLOAT("aimbot max sim time", Aimbot.max_sim_time),
+		CONFIG_BOOL("aimbot viewmodel aim", Aimbot.viewmodelaim),
+		CONFIG_BOOL("aimbot draw fov indicator", Aimbot.draw_fov_indicator),
+		CONFIG_BOOL("aimbot ignore cloaked", Aimbot.ignorecloaked),
+		CONFIG_BOOL("aimbot ignore ubered", Aimbot.ignoreubered),
+		CONFIG_BOOL("aimbot ignore hoovy", Aimbot.ignorehoovy),
+		CONFIG_BOOL("aimbot ignore bonked", Aimbot.ignorebonked),
+		CONFIG_INT("aimbot melee", Aimbot.melee),
+		CONFIG_BOOL("aimbot wait for charge", Aimbot.waitforcharge),
+		CONFIG_INT("aimbot mode", Aimbot.mode),
+		CONFIG_FLOAT("aimbot smoothness", Aimbot.smoothness),
+		CONFIG_INT("aimbot team mode", Aimbot.teamMode),
+		CONFIG_BOOL("aimbot hold minigun spin", Aimbot.hold_minigun_spin),
+		CONFIG_BOOL("aimbot indicator", Aimbot.indicator),
+		CONFIG_KEY("aimbot key", Aimbot.key),
+		CONFIG_INT("aimbot path", Aimbot.path),
+		CONFIG_INT("aimbot indicator", Aimbot.indicator),
 
 		// esp
-		{"esp enabled", SettingType::BOOL, &ESP.enabled},
-		{"esp ignore cloaked", SettingType::BOOL, &ESP.ignorecloaked},
-		{"esp buildings", SettingType::BOOL, &ESP.buildings},
-		{"esp name", SettingType::BOOL, &ESP.name},
-		{"esp box", SettingType::BOOL, &ESP.box},
-		{"esp health", SettingType::INT, &ESP.health},
-		{"esp chams", SettingType::BOOL, &ESP.chams},
-		{"esp stencil", SettingType::INT, &ESP.stencil},
-		{"esp blur", SettingType::INT, &ESP.blur},
-		{"esp weapon", SettingType::BOOL, &ESP.weapon},
-		{"esp conditions", SettingType::INT, &ESP.fconditions},
+		CONFIG_BOOL("esp enabled", ESP.enabled),
+		CONFIG_BOOL("esp ignore cloaked", ESP.ignorecloaked),
+		CONFIG_BOOL("esp buildings", ESP.buildings),
+		CONFIG_BOOL("esp name", ESP.name),
+		CONFIG_BOOL("esp box", ESP.box),
+		CONFIG_INT("esp health", ESP.health),
+		CONFIG_BOOL("esp chams", ESP.chams),
+		CONFIG_INT("esp stencil", ESP.stencil),
+		CONFIG_INT("esp blur", ESP.blur),
+		CONFIG_BOOL("esp weapon", ESP.weapon),
+		CONFIG_INT("esp conditions", ESP.fconditions),
+		CONFIG_INT("esp team", ESP.team_selection),
 
 		// misc
-		{"misc thirdperson", SettingType::BOOL, &Misc.thirdperson},
-		{"misc thirdperson key",SettingType::BIND, &Misc.thirdperson_key},
-		{"misc customfov enabled", SettingType::BOOL, &Misc.customfov_enabled},
-		{"misc customfov", SettingType::FLOAT, &Misc.customfov},
-		{"misc spectatorlist", SettingType::BOOL, &Misc.spectatorlist},
-		{"misc backpack_expander", SettingType::BOOL, &Misc.backpack_expander},
-		{"misc sv pure bypass", SettingType::BOOL, &Misc.sv_pure_bypass},
-		{"misc streamer mode", SettingType::BOOL, &Misc.streamer_mode},
-		{"misc bhop",SettingType::BOOL,  &Misc.bhop},
-		{"misc accept item drop", SettingType::BOOL, &Misc.accept_item_drop},
-		{"misc playerlist", SettingType::BOOL, &Misc.playerlist},
-		{"misc viewmodel offset x", SettingType::FLOAT, &Misc.viewmodel_offset[0]},
-		{"misc viewmodel offset y", SettingType::FLOAT, &Misc.viewmodel_offset[1]},
-		{"misc viewmodel offset z", SettingType::FLOAT, &Misc.viewmodel_offset[2]},
-		{"misc viewmodel interp", SettingType::FLOAT, &Misc.viewmodel_interp},
-		{"misc no recoil", SettingType::BOOL, &Misc.norecoil},
+		CONFIG_KEY("misc thirdperson key", Misc.thirdperson_key),
+		CONFIG_FLOAT3("misc thirdperson offset", Misc.thirdperson_offset),
+		CONFIG_BOOL("misc customfov enabled", Misc.customfov_enabled),
+		CONFIG_FLOAT("misc customfov", Misc.customfov),
+		CONFIG_BOOL("misc spectatorlist", Misc.spectatorlist),
+		CONFIG_BOOL("misc backpack_expander", Misc.backpack_expander),
+		CONFIG_BOOL("misc sv pure bypass", Misc.sv_pure_bypass),
+		CONFIG_BOOL("misc streamer mode", Misc.streamer_mode),
+		CONFIG_BOOL("misc bhop", Misc.bhop),
+		CONFIG_BOOL("misc accept item drop", Misc.accept_item_drop),
+		CONFIG_BOOL("misc playerlist", Misc.playerlist),
+		CONFIG_FLOAT3("misc viewmodel offset", Misc.viewmodel_offset),
+		CONFIG_FLOAT("misc viewmodel interp", Misc.viewmodel_interp),
+		CONFIG_BOOL("misc no recoil", Misc.norecoil),
+		CONFIG_INT("misc backtrack", Misc.backtrack),
+		CONFIG_BOOL("misc no engine sleep", Misc.no_engine_sleep),
 
 		//triggerbot
-		//{"trigger enabled", SettingType::BOOL, &Trigger.enabled},
-		{"trigger hitscan", SettingType::BOOL, &Trigger.hitscan},
-		{"trigger autobackstab", SettingType::INT, &Trigger.autobackstab},
-		//{"trigger key", SettingType::STRING, Trigger.key},
-		{"trigger autoairblast", SettingType::INT, &Trigger.autoairblast},
+		CONFIG_KEY("trigger key", Trigger.key),
+		CONFIG_BOOL("trigger hitscan", Trigger.hitscan),
+		CONFIG_INT("trigger autobackstab", Trigger.autobackstab),
+		CONFIG_INT("trigger autoairblast", Trigger.autoairblast),
 
 		// colors
-		/*{"colors red team r", SettingType::INT, Colors.red_team[0]},
-		{"colors red team g", SettingType::INT, Colors.red_team[1]},
-		{"colors red team b", SettingType::INT, Colors.red_team[2]},
-		{"colors red team a", SettingType::INT, Colors.red_team[3]},
-		{"colors blu team r", SettingType::INT, Colors.blu_team[0]},
-		{"colors blu team g", SettingType::INT, Colors.blu_team[1]},
-		{"colors blu team b", SettingType::INT, Colors.blu_team[2]},
-		{"colors blu team a", SettingType::INT, Colors.blu_team[3]},
-		{"colors aimbot target r", SettingType::INT, &Colors.aimbot_target[0]},
-		{"colors aimbot target g", SettingType::INT, &Colors.aimbot_target[1]},
-		{"colors aimbot target b", SettingType::INT, &Colors.aimbot_target[2]},
-		{"colors aimbot target a", SettingType::INT, &Colors.aimbot_target[3]},
-		{"colors weapon r", SettingType::INT, &Colors.weapon[0]},
-		{"colors weapon g", SettingType::INT, &Colors.weapon[1]},
-		{"colors weapon b", SettingType::INT, &Colors.weapon[2]},
-		{"colors weapon a", SettingType::INT, &Colors.weapon[3]},*/
+		CONFIG_FLOAT4("colors red team", Colors.red_team),
+		CONFIG_FLOAT4("colors blu team", Colors.blu_team),
+		CONFIG_FLOAT4("colors aimbot target", Colors.aimbot_target),
+		CONFIG_FLOAT4("colors weapon", Colors.weapon),
 
 		// antiaim
-		{"antiaim enabled", SettingType::BOOL, &AntiAim.enabled},
-		{"antiaim pitch mode", SettingType::INT, &AntiAim.pitch_mode},
-		{"antiaim real yaw mode", SettingType::INT, &AntiAim.real_yaw_mode},
-		{"antiaim fake yaw mode", SettingType::INT, &AntiAim.fake_yaw_mode},
-		{"antiaim spin speed", SettingType::FLOAT, &AntiAim.spin_speed},
+		CONFIG_BOOL("antiaim enabled", AntiAim.enabled),
+		CONFIG_INT("antiaim pitch mode", AntiAim.pitch_mode),
+		CONFIG_INT("antiaim real yaw mode", AntiAim.real_yaw_mode),
+		CONFIG_INT("antiaim fake yaw mode", AntiAim.fake_yaw_mode),
+		CONFIG_FLOAT("antiaim spin speed", AntiAim.spin_speed),
 
 		// warp
-		{"warp enabled", SettingType::BOOL, &AntiAim.warp_enabled},
-		{"warp speed", SettingType::INT, &AntiAim.warp_speed},
-		//{"warp key", SettingType::STRING, AntiAim.warp_key},
-		//{"warp recharge key", SettingType::STRING, AntiAim.warp_recharge_key},
-		//{"doubletap key", SettingType::STRING, AntiAim.warp_dt_key},
+		CONFIG_BOOL("warp enabled", AntiAim.warp_enabled),
+		CONFIG_INT("warp speed", AntiAim.warp_speed),
+		CONFIG_KEY("warp key", AntiAim.warp_key),
+		CONFIG_KEY("warp recharge key", AntiAim.warp_recharge_key),
+		CONFIG_KEY("doubletap key", AntiAim.warp_dt_key),
 
 		// fakelag
-		{"fakelag enabled", SettingType::BOOL, &AntiAim.fakelag_enabled},
-		{"fakelag ticks", SettingType::INT, &AntiAim.fakelag_ticks},
+		CONFIG_BOOL("fakelag enabled", AntiAim.fakelag_enabled),
+		CONFIG_INT("fakelag ticks", AntiAim.fakelag_ticks),
 
 		// radar
-		{"radar enabled", SettingType::BOOL, &Radar.enabled,},
-		{"radar size", SettingType::INT, &Radar.size,},
-		{"radar range", SettingType::INT, &Radar.range,},
-		{"radar players", SettingType::BOOL, &Radar.players,},
-		{"radar buildings", SettingType::BOOL, &Radar.buildings,},
-		{"radar objective", SettingType::BOOL, &Radar.objective,},
-		{"radar projectiles", SettingType::BOOL, &Radar.projectiles,},
-		{"radar icon size", SettingType::INT, &Radar.icon_size,},
+		CONFIG_BOOL("radar enabled", Radar.enabled),
+		CONFIG_INT("radar size", Radar.size),
+		CONFIG_INT("radar range", Radar.range),
+		CONFIG_BOOL("radar players", Radar.players),
+		CONFIG_BOOL("radar buildings", Radar.buildings),
+		CONFIG_BOOL("radar objective", Radar.objective),
+		CONFIG_BOOL("radar projectiles", Radar.projectiles),
+		CONFIG_INT("radar icon size", Radar.icon_size),
 	};
 
 	void Save(const std::string& fullPath);
@@ -361,7 +405,8 @@ namespace Settings
 			if (entry.name != key)
 				continue;
 
-			out = *static_cast<T*>(entry.ptr);
+			std::stringstream ss(entry.get());
+			ss >> out;
 			return true;
 		}
 
@@ -376,13 +421,26 @@ namespace Settings
 			if (entry.name != key)
 				continue;
 
-			*static_cast<T*>(entry.ptr) = value;
+			// this is next level stupid
+			// why do i have to do this?
+			// why the fuck std::to_string can't handle a fucking string?
+			// fuck you C++
+			if constexpr(std::is_same_v<T, std::string>)
+				entry.set(value);
+			else
+				entry.set(std::to_string(value));
 			return true;
 		}
 
 		return false;
 	}
 };
+
+#undef CONFIG_INT
+#undef CONFIG_FLOAT
+#undef CONFIG_BOOL
+#undef CONFIG_ENUM
+#undef CONFIG_STRING
 
 namespace Settings
 {

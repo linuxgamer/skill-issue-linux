@@ -16,6 +16,8 @@ This is made for Linux, so trying to build it on Windows or non Unix-like system
 
 ocornut - [imgui](https://github.com/ocornut/imgui)
 
+brofield - [simpleini](https://github.com/brofield/simpleini)
+
 ## How to attach
 
 Run the `attach.sh` file as **sudo**/**root**!

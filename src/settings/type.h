@@ -5,5 +5,4 @@ enum class SettingType {
 	INT,
 	FLOAT,
 	STRING,
-	BIND,
 };

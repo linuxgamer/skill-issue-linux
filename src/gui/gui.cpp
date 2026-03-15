@@ -449,7 +449,7 @@ void RefreshConfigList(const std::string& folder)
 
 	for (const auto& entry : std::filesystem::directory_iterator(folder))
 	{
-		if (entry.is_regular_file() && entry.path().extension() == ".txt")
+		if (entry.is_regular_file() && entry.path().extension() == ".ini")
 		{
 			GUI::configs.push_back(entry.path().stem().string());
 		}
@@ -485,7 +485,7 @@ void DrawConfigTab()
 	{
 		if (strlen(GUI::newConfigName) > 0)
 		{
-			std::string filename = std::string(GUI::newConfigName) + ".txt";
+			std::string filename = std::string(GUI::newConfigName) + ".ini";
 			std::string fullPath = configFolder + "/" + filename;
 
 			Settings::Save(fullPath);
@@ -508,7 +508,7 @@ void DrawConfigTab()
 
 			if (isSelected)
 			{
-				std::string fullPath = configFolder + "/" + GUI::configs[i] + ".txt";
+				std::string fullPath = configFolder + "/" + GUI::configs[i] + ".ini";
 
 				if (ImGui::Button("Load"))
 					Settings::Load(fullPath);

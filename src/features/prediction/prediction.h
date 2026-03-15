@@ -24,6 +24,7 @@ public:
 	bool Simulate(std::vector<Vector>& path);
 
 protected:
+	float GetAirSpeedCap();
 	float GetGravity();
 	void BeginGravity();
 	void EndGravity();
@@ -63,6 +64,7 @@ private:
 	float m_flBounce;
 	float m_flTargetSeconds;
 	float m_flMaxSpeed;
+	float m_flAirSpeedCap;
 
 	bool m_bAllowAutoMovement;
 	bool m_bIsOnGround;
