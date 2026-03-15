@@ -126,6 +126,8 @@ namespace Aimbot
 			return;
 
 		DrawFOVIndicator();
+
+		gAimProjectile.RunPath();
 		gAimProjectile.RunIndicator();
 	}
 };

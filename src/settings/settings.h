@@ -88,6 +88,14 @@ enum class ESPConditionFlags
 	Jarated = 1 << 3,
 };
 
+enum class AimbotIndicatorStyle
+{
+	NONE = 0,
+	CIRCLE,
+	SQUARE,
+	TRIANGLE,
+};
+
 namespace Settings
 {
 	struct SettingsAntiAim
@@ -154,7 +162,8 @@ namespace Settings
 		int melee = 0;
 		int teamMode = 0;
 		float smoothness = 0.0f;
-		bool indicator = false;
+		int indicator = 0;
+		bool path = false;
 	};
 
 	extern SettingsAimbot Aimbot;
@@ -181,6 +190,8 @@ namespace Settings
 		int backtrack = 0;
 
 		float thirdperson_offset[4] = {23.5, 11.5, 8.0f, 1.0f};
+
+		bool no_engine_sleep = false;
 	};
 
 	extern SettingsMisc Misc;

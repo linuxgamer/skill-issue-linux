@@ -62,10 +62,20 @@ void DrawAimbotTab()
 		ImGui::Checkbox("Viewmodel Aim", &Settings::Aimbot.viewmodelaim);
 		ImGui::Checkbox("Draw FOV Indicator", &Settings::Aimbot.draw_fov_indicator);
 		ImGui::Checkbox("Wait For Charge", &Settings::Aimbot.waitforcharge);
-		ImGui::Checkbox("Indicator", &Settings::Aimbot.indicator);
+		ImGui::Checkbox("Draw Path", &Settings::Aimbot.path);
 		ImGui::SliderFloat("Fov", &Settings::Aimbot.fov, 0.0f, 180.0f);
 		ImGui::SliderFloat("Max Sim Time", &Settings::Aimbot.max_sim_time, 0.0f, 5.0f);
 		ImGui::SliderFloat("Smoothness", &Settings::Aimbot.smoothness, 0.0f, 100.0f);
+
+		{
+			constexpr const char* items[]{
+				"None",
+				"Circle",
+				"Square",
+				"Triangle",
+			};
+			ImGui::Combo("Indicator Style", &Settings::Aimbot.indicator, items, 4);
+		}
 
 		{
 			constexpr const char* items[]{"None", "Legit", "Rage"};
@@ -205,6 +215,7 @@ void DrawMiscTab()
 	ImGui::Checkbox("Accept Item Drops", &Settings::Misc.accept_item_drop);
 
 	ImGui::Checkbox("No Recoil", &Settings::Misc.norecoil);
+	ImGui::Checkbox("No Engine Sleep", &Settings::Misc.no_engine_sleep);
 
 	ImGui::Separator();
 

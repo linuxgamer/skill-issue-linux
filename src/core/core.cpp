@@ -38,6 +38,7 @@
 #include "../hooks/chlclient_levelpostentity.h"
 #include "../hooks/dxvk.h"
 #include "../hooks/cthirdperson_manager.h"
+#include "../hooks/iinputsystem_sleepuntilinput.h"
 
 CApp::CApp() : m_bInitialized(false) {}
 
@@ -107,6 +108,7 @@ bool CApp::StartHooks()
 	Hook_Interpolate();
 	Hook_DataTable_Warning();
 	Hook_CThirdPersonManager_Update();
+	Hook_SleepUntilInput();
 
 	m_bInitialized = true;
 	return true;

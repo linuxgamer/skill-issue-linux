@@ -14,6 +14,7 @@ public:
 	void RunMain(CTFPlayer* pLocal, CTFWeaponBase* pWeapon);
 	void RunAim(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, AimbotState& pState);
 	void RunIndicator();
+	void RunPath();
 
 	void Reset();
 	void ResetIndicator();

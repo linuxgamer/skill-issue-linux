@@ -2,6 +2,7 @@
 
 #include "../../prediction/prediction.h"
 #include "../../logs/logs.h"
+#include <cmath>
 
 CAimbotProjectile::CAimbotProjectile()
 {
@@ -514,7 +515,13 @@ void CAimbotProjectile::ResetIndicator()
 
 void CAimbotProjectile::RunIndicator()
 {
-	if (!Settings::Aimbot.indicator)
+	if (!Settings::Aimbot.key->IsEnabled())
+		return;
+
+	if (interfaces::Engine->IsTakingScreenshot())
+		return ResetIndicator();
+
+	if (Settings::Aimbot.indicator == static_cast<int>(AimbotIndicatorStyle::NONE))
 		return ResetIndicator();
 
 	CTFPlayer* pLocal = EntityList::GetLocal();
@@ -539,24 +546,76 @@ void CAimbotProjectile::RunIndicator()
 	Vector screenPos;
 	if (helper::engine::WorldToScreen(m_vecOldIndicatorPos, screenPos))
 	{
-		//const int iSize = 5;
-
+		const int iSize = 5;
+	
 		interfaces::Surface->DrawSetColor(255, 255, 255, 255);
-		/*interfaces::Surface->DrawFilledRect
-		(
-			(int)screenPos.x - iSize,
-			(int)screenPos.y - iSize,
-			(int)screenPos.x + iSize,
-			(int)screenPos.y + iSize
-		);*/
 
-		interfaces::Surface->DrawOutlinedCircle((int)screenPos.x, (int)screenPos.y, 6, 68);
-	}
+		switch(static_cast<AimbotIndicatorStyle>(Settings::Aimbot.indicator))
+		{
+		case AimbotIndicatorStyle::NONE:
+			break;
+
+                case AimbotIndicatorStyle::CIRCLE:
+		{
+			interfaces::Surface->DrawOutlinedCircle((int)screenPos.x, (int)screenPos.y, iSize, 68);
+			break;
+		}
+                case AimbotIndicatorStyle::SQUARE:
+		{
+			interfaces::Surface->DrawFilledRect
+			(
+				screenPos.x - iSize,
+				screenPos.y - iSize,
+				screenPos.x + iSize,
+				screenPos.y + iSize
+			);
+			break;
+		}
+                case AimbotIndicatorStyle::TRIANGLE:
+		{
+			Vec2 p1, p2, p3;
+			p1 = {screenPos.x - iSize, screenPos.y + iSize};
+			p2 = {screenPos.x, screenPos.y - iSize};
+			p3 = {screenPos.x + iSize, screenPos.y + iSize};
+
+			// left point
+			interfaces::Surface->DrawLine(p1.x, p1.y, p2.x, p2.y);
+
+			// top center point
+			interfaces::Surface->DrawLine(p2.x, p2.y, p3.x, p3.y);
+
+			// right point
+			interfaces::Surface->DrawLine(p1.x, p1.y, p3.x, p3.y);
+			break;
+		}
+
+                default: break;
+                }
+        }
 }
 
 float CAimbotProjectile::GetAimDrop(float flGravity, float flTimeSeconds)
 {
 	return flGravity * flTimeSeconds * flTimeSeconds;
+}
+
+void CAimbotProjectile::RunPath()
+{
+	if (!Settings::Aimbot.path || m_pTarget == nullptr || m_vecPath.empty())
+		return;
+
+	interfaces::Surface->DrawSetColor(255, 255, 255, 255);
+
+	for (int i = 1; i < m_vecPath.size(); i++)
+	{
+		Vector vecPrevScreen, vecCurrScreen;
+
+		bool bIsPreviousVisible = helper::engine::WorldToScreen(m_vecPath[i - 1], vecPrevScreen);
+		bool bIsCurrentVisible = helper::engine::WorldToScreen(m_vecPath[i], vecCurrScreen);
+
+		if (bIsPreviousVisible && bIsCurrentVisible)
+			interfaces::Surface->DrawLine(vecPrevScreen.x, vecPrevScreen.y, vecCurrScreen.x, vecCurrScreen.y);
+	}
 }
 
 CAimbotProjectile gAimProjectile{};
