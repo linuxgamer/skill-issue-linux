@@ -228,6 +228,14 @@ void Backtrack::DoPostScreenSpaceEffects()
 	if (pLocal == nullptr || !pLocal->IsAlive())
 		return;
 
+	CTFWeaponBase* pWeapon = HandleAs<CTFWeaponBase*>(pLocal->GetActiveWeapon());
+	if (pWeapon == nullptr)
+		return;
+
+	// only hitscan and melee!
+	if (!(pWeapon->IsMelee() || pWeapon->IsHitscan()))
+		return;
+
 	BacktrackMode mode = static_cast<BacktrackMode>(Settings::Misc.backtrack);
 	if (mode >= BacktrackMode::MAX || mode <= BacktrackMode::INVALID)
 		return;
@@ -321,35 +329,23 @@ void Backtrack::DoPostScreenSpaceEffects()
 
 bool Backtrack::GetRecords(CTFPlayer* pEntity, std::vector<LagCompRecord>& out)
 {
-	// if backtrack is disabled
-	// return only their origin
-	BacktrackMode mode = static_cast<BacktrackMode>(Settings::Misc.backtrack);
-	if (mode >= BacktrackMode::MAX || mode <= BacktrackMode::INVALID || mode == BacktrackMode::NONE)
-	{
-		matrix3x4 bones[MAXSTUDIOBONES];
-		if (!pEntity->SetupBones(bones, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, interfaces::GlobalVars->curtime))
-			return false;
-
-		LagCompRecord origin
-		(
-			bones,
-			pEntity->m_flSimulationTime(),
-			pEntity->GetCenter(),
-			pEntity->m_angEyeAngles(),
-			pEntity->EstimateAbsVelocity()
-		);
-
-		out.push_back(origin);
-		return true;
-	}
-
 	auto records = m_records[pEntity->GetIndex()];
 
 	if (records.empty())
 		return false;
 
+	// if backtrack is disabled
+	// return only the first real record
+	BacktrackMode mode = static_cast<BacktrackMode>(Settings::Misc.backtrack);
+	if (mode >= BacktrackMode::MAX || mode <= BacktrackMode::INVALID || mode == BacktrackMode::NONE)
+	{
+		LagCompRecord& front = records.front();
+		out.emplace_back(front.m_Bones, front.m_flSimTime, front.m_vecAbsCenter, front.m_vecViewAngles, front.m_vecVelocity);
+		return true;
+	}
+
 	for (const auto& record : records)
-		out.push_back(record);
+		out.emplace_back(record);
 
 	return true;
 }
