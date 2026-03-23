@@ -28,6 +28,7 @@ namespace interfaces
 	CBaseHudChat* gHUD = nullptr;
 	IStudioRender* StudioRender = nullptr;
 	//CEconNotificationQueue* g_notificationQueue = nullptr;
+	IPhysics* Physics = nullptr;
 }
 
 namespace factories
@@ -41,6 +42,7 @@ namespace factories
 	CreateInterfaceFn inputsystem = nullptr;
 	CreateInterfaceFn materialsystem = nullptr;
 	CreateInterfaceFn studiorender = nullptr;
+	CreateInterfaceFn vphysics = nullptr;
 };
 
 template <typename T>
@@ -130,6 +132,14 @@ bool InitializeInterfaces()
 		factories::studiorender = reinterpret_cast<CreateInterfaceFn>(dlsym(studiorender, "CreateInterface"));
 	}
 
+	{	// vphysics factory
+		void *vphysics = dlopen("./bin/linux64/vphysics.so", RTLD_NOLOAD | RTLD_NOW);
+		if (!vphysics)
+			return false;
+
+		factories::vphysics = reinterpret_cast<CreateInterfaceFn>(dlsym(vphysics, "CreateInterface"));
+	}
+
 	// get interfaces
 	// i should probably check if they return false
 	
@@ -179,6 +189,9 @@ bool InitializeInterfaces()
 		//return false;
 
 	if (!GetInterface(interfaces::ModelInfoClient, factories::engine, "VModelInfoClient006"))
+		return false;
+
+	if (!GetInterface(interfaces::Physics, factories::vphysics, VPHYSICS_INTERFACE_VERSION))
 		return false;
 
 	{ // ClientModeShared?

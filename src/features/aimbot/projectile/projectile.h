@@ -39,6 +39,7 @@ private:
 
 	Vector m_vecOldIndicatorPos;
 	CBaseEntity* m_pOldIndicatorTarget;
+	//IPhysicsEnvironment* m_pPhysEnv;
 };
 
 extern CAimbotProjectile gAimProjectile;

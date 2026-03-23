@@ -1,14 +1,15 @@
 #pragma once
 
 #include <dlfcn.h>
+#include "createinterface.h"
+
+#include "../../libsigscan.h"
+#include "../../vtables.h"
 
 #include "../definitions/ivengineclient.h"
 #include "../definitions/iinput.h"
 #include "../definitions/iclientmode.h"
 #include "../definitions/cvar.h"
-#include "../../libsigscan.h"
-#include "../../vtables.h"
-#include "createinterface.h"
 #include "../definitions/isurface.h"
 #include "../definitions/icliententitylist.h"
 #include "../definitions/ienginevgui.h"
@@ -28,11 +29,10 @@
 #include "../definitions/ivmodelinfoclient.h"
 #include "../definitions/hudbasechat.h"
 #include "../definitions/ceconnotificationqueue.h"
+#include "../definitions/vphysics_interface.h"
 
 using AttributeHookValueFn = float(*)(float defaultValue, const char* attribName, CBaseEntity* pEntity, void*, bool);
 extern AttributeHookValueFn AttributeHookValue;
-
-//using AttributeHookValueInt = int(*)(int)
 
 extern HCursor cursor;
 
@@ -61,6 +61,7 @@ namespace interfaces
 	extern IStudioRender* StudioRender;
 	//extern IGameMovement* GameMovement;
 	//extern CEconNotificationQueue* g_notificationQueue;
+	extern IPhysics* Physics;
 }
 
 namespace factories
@@ -74,6 +75,7 @@ namespace factories
 	extern CreateInterfaceFn inputsystem;
 	extern CreateInterfaceFn materialsystem;
 	extern CreateInterfaceFn studiorender;
+	extern CreateInterfaceFn vphysics;
 };
 
 template <typename T>

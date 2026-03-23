@@ -64,7 +64,7 @@ bool CAimbotProjectile::SolveBallisticArc(Vector &outAngle, const Vector p0, con
 }
 
 // Yes, I know this isn't predicting right
-bool CAimbotProjectile::CheckTrajectory(CBaseEntity* pTarget, const Vector vecStartPos,const Vector vecTargetPos, const Vector vecAngle, const ProjectileInfo_t& prjInfo, float flGravity)
+bool CAimbotProjectile::CheckTrajectory(CBaseEntity* pTarget, const Vector vecStartPos, const Vector vecTargetPos, const Vector vecAngle, const ProjectileInfo_t& prjInfo, float flGravity)
 {
 	if (pTarget == nullptr)
 		return false;

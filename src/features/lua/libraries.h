@@ -206,6 +206,7 @@ namespace LuaFuncs
 		int TextUnformatted(lua_State* L);
 		int SliderFloat(lua_State* L);
 		int End(lua_State* L);
+		int InputText(lua_State* L);
 	}
 
 	namespace aimbot

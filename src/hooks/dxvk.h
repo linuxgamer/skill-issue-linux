@@ -16,8 +16,8 @@
 
 #include "../features/radar/radar.h"
 #include "../features/warp/warp.h"
-
 #include "../features/binds/binds.h"
+#include "../features/visuals/eyetrace/eyetrace.h"
 
 typedef struct IDirect3DDevice9 *LPDIRECT3DDEVICE9;
 
@@ -136,6 +136,9 @@ inline void RenderImGui()
 
 	if (LuaHookManager::HasHooks("ImGui"))
 		LuaHookManager::Call(Lua::m_luaState, "ImGui", 0);
+
+	// ts doesnt work
+	//EyeTrace_Run();
 
 	if (Settings::AntiAim.warp_key->IsEnabled())
 		Warp::RunWindow();

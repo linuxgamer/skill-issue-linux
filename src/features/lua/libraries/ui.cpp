@@ -13,6 +13,7 @@ namespace LuaFuncs
 			{"TextUnformatted", TextUnformatted},
 			{"SliderFloat", SliderFloat},
 			{"End", End},
+			{"InputText", InputText},
 			{nullptr, nullptr}
 		};
 
@@ -20,7 +21,7 @@ namespace LuaFuncs
 		{
 			lua_newtable(L);
 			luaL_setfuncs(L, uilib, 0);
-			lua_setglobal(L, "ui");
+			lua_setglobal(L, "imgui");
 		}
 		
 		int Begin(lua_State* L)
@@ -81,6 +82,20 @@ namespace LuaFuncs
 		{
 			ImGui::End();
 			return 1;
+		}
+
+		// local text = imgui.InputText("id")
+		// while true do _, text = imgui.InputText("id") end
+		int InputText(lua_State* L)
+		{
+			char strBuf[128] = "\0";
+
+			const char* strLabel = luaL_checkstring(L, 1);
+			bool bRet = ImGui::InputText(strLabel, strBuf, sizeof(strBuf));
+
+			lua_pushboolean(L, bRet);
+			lua_pushstring(L, strBuf);
+			return 2;
 		}
 	}
 }
