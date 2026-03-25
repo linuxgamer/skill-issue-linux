@@ -97,6 +97,14 @@ enum class AimbotIndicatorStyle
 	TRIANGLE,
 };
 
+enum class ESPFont
+{
+	INVALID = -1,
+	TF2BUILD,
+	ARIAL,
+	COUNT,
+};
+
 namespace Settings
 {
 	struct SettingsAntiAim
@@ -137,6 +145,7 @@ namespace Settings
 		bool weapon = false;
 		int team_selection = 0;
 		int fconditions = 0;
+		int font = 0;
 	};
 
 	extern SettingsESP ESP;
@@ -336,6 +345,7 @@ namespace Settings
 		CONFIG_BOOL("esp weapon", ESP.weapon),
 		CONFIG_INT("esp conditions", ESP.fconditions),
 		CONFIG_INT("esp team", ESP.team_selection),
+		CONFIG_INT("esp font", ESP.font),
 
 		// misc
 		CONFIG_KEY("misc thirdperson key", Misc.thirdperson_key),
