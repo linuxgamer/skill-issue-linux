@@ -5,17 +5,45 @@
 #include "../features/entitylist/entitylist.h"
 #include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+static void AS_LevelInitPostEntity_Callback()
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("LevelInitPostEntity", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
 
 DECLARE_VTABLE_HOOK(LevelInitPostEntity, void, (CHLClient* thisptr))
 {
 	EntityList::Reserve();
 	ViewmodelAim::ResetStopTime();
 
+	#if 0
 	if (LuaHookManager::HasHooks("LevelInitPostEntity"))
 		LuaHookManager::Call(Lua::m_luaState, "LevelInitPostEntity", 0);
+	#endif
+
+	
 
 	originalLevelInitPostEntity(thisptr);
 }

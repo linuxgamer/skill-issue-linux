@@ -4,10 +4,14 @@
 // engine.so 55 48 89 E5 41 57 41 56 4C 8D B5 C0 F9 FF FF
 
 #include "../libdetour/libdetour.h"
+#include "../libsigscan.h"
+#include "../sdk/interfaces/interfaces.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
 #include <string>
 
 DETOUR_DECL_TYPE(bool, ExecuteStringCommand, void* self, const char* pCommandString);
@@ -17,11 +21,13 @@ inline bool HookedExecuteStringCommand(void* self, const char* pCommandString)
 {
 	std::string cmd = pCommandString;
 
+	#if 0
 	if (LuaHookManager::HasHooks("ExecStringCmd"))
 	{
 		LuaClasses::StringCmd::push(Lua::m_luaState, cmd);
 		LuaHookManager::Call(Lua::m_luaState, "ExecStringCmd", 1);
 	}
+	#endif
 
 	bool ret;
 	DETOUR_ORIG_GET(&execstringcmd_ctx, ret, ExecuteStringCommand, self, cmd.c_str());

@@ -8,7 +8,10 @@
 #include "../features/ticks/ticks.h"
 #include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
 #include "../features/visuals/viewmodel_interp/viewmodel_interp.h"
+#include "../features/angelscript/api/api.h"
+
 #include "../gui/gui.h"
+
 #include "../hooks/cbaseanimating_interpolate.h"
 #include "../hooks/cbaseentity_baseinterpolatepart1.h"
 #include "../hooks/cgameclient_executestringcommand.h"
@@ -39,6 +42,10 @@
 #include "../hooks/dxvk.h"
 #include "../hooks/cthirdperson_manager.h"
 #include "../hooks/iinputsystem_sleepuntilinput.h"
+#include "../hooks/ctfwearable_shoulddraw.h"
+#include "../hooks/iclientmode_shoulddrawviewmodel.h"
+#include "../hooks/cbaseplayer_shoulddrawlocalplayer.h"
+//#include "../hooks/cbaseentity_shoulddraw.h"
 
 CApp::CApp() : m_bInitialized(false) {}
 
@@ -57,7 +64,7 @@ void CApp::Setup()
 	Netvars::Setup();
 
 	Settings::InitBinds();
-	Lua::InitPluto();
+	API::Initialize();
 
 	GUI::Init();
 	TickManager::Init();
@@ -109,6 +116,10 @@ bool CApp::StartHooks()
 	Hook_DataTable_Warning();
 	Hook_CThirdPersonManager_Update();
 	Hook_SleepUntilInput();
+	Hook_CTFWearable_ShouldDraw();
+	Hook_ShouldDrawViewModel();
+	Hook_CBasePlayer_ShouldDrawLocalPlayer();
+	//Hook_CBaseEntity_ShouldDraw();
 
 	m_bInitialized = true;
 	return true;

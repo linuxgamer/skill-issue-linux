@@ -13,10 +13,14 @@ IMaterial* MaterialManager::CreateMaterial(const std::string& name, const std::s
 	kv->LoadFromBuffer(name.c_str(), vmt.c_str());
 
 	IMaterial* mat = interfaces::MaterialSystem->CreateMaterial(name.c_str(), kv);
-	mat->IncrementReferenceCount();
 
 	if (mat == nullptr)
+	{
+		kv->DeleteThis();
 		return nullptr;
+	}
+
+	mat->IncrementReferenceCount();
 
 	m_Materials.emplace(std::pair<std::string, IMaterial*>(name, mat));
 	return mat;

@@ -8,13 +8,38 @@
 #include "../settings/settings.h"
 #include <string>
 
+#if 0
 #include "../features/lua/classes.h"
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
+#endif
 
 #include "../features/visuals/customfov/customfov.h"
 #include "../features/visuals/norecoil/norecoil.h"
 #include "../features/visuals/thirdperson/thirdperson.h"
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+static void AS_OverrideView_Callback(CViewSetup* pView)
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("OverrideView", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->SetArgObject(0, pView);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
 
 DECLARE_VTABLE_HOOK(OverrideView, void, (IClientMode *thisptr, CViewSetup *pView))
 {
@@ -23,11 +48,14 @@ DECLARE_VTABLE_HOOK(OverrideView, void, (IClientMode *thisptr, CViewSetup *pView
 	if (pView == nullptr)
 		return;
 
+	#if 0
 	if (LuaHookManager::HasHooks("OverrideView"))
 	{
 		LuaClasses::ViewSetupLua::push_viewsetup(Lua::m_luaState, pView);
 		LuaHookManager::Call(Lua::m_luaState, "OverrideView", 1);
 	}
+	#endif
+	AS_OverrideView_Callback(pView);
 
 	if (CTFPlayer* pLocal = EntityList::GetLocal(); pLocal != nullptr)
 	{

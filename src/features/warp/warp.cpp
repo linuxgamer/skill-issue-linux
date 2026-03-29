@@ -10,7 +10,6 @@ namespace Warp
 	bool m_bShifting = false;
 	bool m_bRecharging = false;
 	int m_iShiftAmount = 0;
-	bool m_bDoubleTap = false;
 
 	void Reset()
 	{
@@ -19,7 +18,6 @@ namespace Warp
 		m_bShifting = false;
 		m_bRecharging = false;
 		m_iShiftAmount = 0;
-		m_bDoubleTap = false;
 	}
 
 	int GetMaxTicks()
@@ -31,7 +29,6 @@ namespace Warp
 	void RunCreateMove(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
 	{
 		if (!Settings::AntiAim.warp_key->IsActive()
-		&& !Settings::AntiAim.warp_dt_key->IsActive()
 		&& !Settings::AntiAim.warp_recharge_key->IsActive())
 			Warp::m_iDesiredState = WarpState::WAITING;
 
@@ -43,54 +40,6 @@ namespace Warp
 
 		if (interfaces::EngineVGui->IsGameUIVisible() || interfaces::EngineVGui->IsConsoleVisible())
 			return;
-
-		// this is some shitty ass work
-		// and it doesn't work right either
-		if (m_iDesiredState == WarpState::DT_MOVING)
-		{
-			const Vector vecVelocity = pLocal->GetVelocity();
-			float flSpeed = vecVelocity.Length2D();
-
-			if (flSpeed <= 20.0f)
-			{
-				m_iDesiredState = WarpState::DT;
-				return;
-			}
-
-			Vector vecForward, vecRight;
-			Math::AngleVectors(pCmd->viewangles, &vecForward, &vecRight);
-
-			const float forwardVel = vecVelocity.Dot(vecForward);
-			const float sideVel = vecVelocity.Dot(vecRight);
-
-			// why ts looks like the user just stops pressing WASD?
-			// just fucking kill me already
-			pCmd->forwardmove = -forwardVel;
-			pCmd->sidemove = -sideVel;
-			pCmd->buttons &= ~IN_ATTACK;
-			return;
-		}
-
-		if (Settings::AntiAim.warp_dt_key->IsActive() && Warp::m_iStoredTicks >= Warp::GetMaxTicks())
-		{
-			if (!IsValidWeapon(pWeapon))
-				return;
-
-			if (helper::localplayer::IsAttacking(pLocal, pWeapon, pCmd))
-			{
-				if (pLocal->GetVelocity().Length2D() > 0.0f)
-				{
-					m_iDesiredState = WarpState::DT_MOVING;
-					pCmd->buttons &= ~IN_ATTACK;
-					return;
-				}
-				else
-				{
-					m_iDesiredState = WarpState::DT;
-					return;
-				}
-			}
-		}
 
 		if (Settings::AntiAim.warp_key->IsActive() && Warp::m_iStoredTicks > 0)
 		{

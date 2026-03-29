@@ -111,7 +111,6 @@ namespace Settings
 	{
 		Hotkey* warp_key = nullptr;
 		Hotkey* warp_recharge_key = nullptr;
-		Hotkey* warp_dt_key = nullptr;
 
 		int spin_speed = 0;
 		bool enabled = false;
@@ -203,6 +202,9 @@ namespace Settings
 		float thirdperson_offset[4] = {23.5, 11.5, 8.0f, 1.0f};
 
 		bool no_engine_sleep = false;
+
+		bool no_scope_overlay = false;
+		bool no_zoom = false;
 	};
 
 	extern SettingsMisc Misc;
@@ -365,6 +367,8 @@ namespace Settings
 		CONFIG_BOOL("misc no recoil", Misc.norecoil),
 		CONFIG_INT("misc backtrack", Misc.backtrack),
 		CONFIG_BOOL("misc no engine sleep", Misc.no_engine_sleep),
+		CONFIG_BOOL("no scope overlay", Misc.no_scope_overlay),
+		CONFIG_BOOL("no zoom", Misc.no_zoom),
 
 		//triggerbot
 		CONFIG_KEY("trigger key", Trigger.key),
@@ -390,7 +394,6 @@ namespace Settings
 		CONFIG_INT("warp speed", AntiAim.warp_speed),
 		CONFIG_KEY("warp key", AntiAim.warp_key),
 		CONFIG_KEY("warp recharge key", AntiAim.warp_recharge_key),
-		CONFIG_KEY("doubletap key", AntiAim.warp_dt_key),
 
 		// fakelag
 		CONFIG_BOOL("fakelag enabled", AntiAim.fakelag_enabled),

@@ -12,7 +12,7 @@ void CustomFov::Run(CTFPlayer* pLocal, CViewSetup* pView)
 	else
 		m_flFov = fov_desired->GetFloat();
 
-	if (pLocal->InCond(TF_COND_ZOOMED))
+	if (pLocal->InCond(TF_COND_ZOOMED) && !Settings::Misc.no_zoom)
 		m_flFov = TF_WEAPON_ZOOM_FOV;
 
 	float delta = m_flFov - m_flOldFov;

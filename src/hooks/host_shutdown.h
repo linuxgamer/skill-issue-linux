@@ -5,17 +5,35 @@
 #include "../libdetour/libdetour.h"
 #include <cstdlib>
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 inline detour_ctx_t shutdownctx;
 DETOUR_DECL_TYPE(void, originalHost_ShutdownFn, void);
 
 static void HookedHost_ShutdownFn(void)
 {
-	if (LuaHookManager::HasHooks("GameShutdown"))
-		LuaHookManager::Call(Lua::m_luaState, "GameShutdown");
+	std::vector<ASHook> hooks;
+	if (Hooks_GetHooks("GameShutdown", hooks))
+	{
+		auto engine = API::GetScriptEngine();
+
+		for (const auto& hook : hooks)
+		{
+			asIScriptContext* ctx = engine->RequestContext();
+
+			ctx->Prepare(hook.func);
+			ctx->Execute();
+
+			engine->ReturnContext(ctx);
+		}
+	}
 
 	DETOUR_ORIG_CALL(&shutdownctx, originalHost_ShutdownFn);
 }

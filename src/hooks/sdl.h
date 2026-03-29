@@ -17,7 +17,6 @@
 #include "../settings/settings.h"
 #include "../gui/gui.h"
 #include "../features/esp/esp.h"
-#include "../features/lua/hookmgr.h"
 
 #include "../features/radar/radar.h"
 #include "../features/warp/warp.h"
@@ -162,8 +161,10 @@ inline void Hooked_SwapWindow(SDL_Window* window)
 
 	gBinds.Update();
 
+	#if 0
 	if (LuaHookManager::HasHooks("ImGui"))
 		LuaHookManager::Call(Lua::m_luaState, "ImGui");
+	#endif
 
 	if (Settings::AntiAim.warp_key->IsEnabled())
 		Warp::RunWindow();

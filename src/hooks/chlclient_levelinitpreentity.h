@@ -4,17 +4,46 @@
 #include "../sdk/helpers/helper.h"
 #include "../features/entitylist/entitylist.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+static void AS_LevelInitPreEntity_Callback(const char* mapName)
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("LevelInitPreEntity", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	std::string name(mapName);
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->SetArgObject(0, &name);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
 
 DECLARE_VTABLE_HOOK(LevelInitPreEntity, void, (CHLClient* thisptr, const char* mapName))
 {
+	#if 0
 	if (LuaHookManager::HasHooks("LevelInitPreEntity"))
 	{
 		lua_pushstring(Lua::m_luaState, mapName);
 		LuaHookManager::Call(Lua::m_luaState, "LevelInitPreEntity", 1);
 	}
+	#endif
 
 	originalLevelInitPreEntity(thisptr, mapName);
 }

@@ -5,6 +5,8 @@
 #include "../features/logs/logs.h"
 #include "../features/binds/binds.h"
 
+#include "../features/angelscript/api/api.h"
+
 TextEditor GUI::editor;
 int GUI::tab = 0;
 bool GUI::openDeletePopup = false;
@@ -222,6 +224,9 @@ void DrawMiscTab()
 	ImGui::Checkbox("No Recoil", &Settings::Misc.norecoil);
 	ImGui::Checkbox("No Engine Sleep", &Settings::Misc.no_engine_sleep);
 
+	ImGui::Checkbox("No Scope Overlay", &Settings::Misc.no_scope_overlay);
+	ImGui::Checkbox("No Zoom", &Settings::Misc.no_zoom);
+
 	ImGui::Separator();
 
 	ImGui::Checkbox("Custom Fov Enabled", &Settings::Misc.customfov_enabled);
@@ -297,7 +302,6 @@ void DrawAntiaimTab()
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::AntiAim.warp_key->IsEnabled() ? 1.0f : 0.5f); 
 	{
 		gBinds.RenderHotkey("Warp Recharge Key", Settings::AntiAim.warp_recharge_key);
-		gBinds.RenderHotkey("Warp DoubleTap Key", Settings::AntiAim.warp_dt_key);
 		ImGui::SliderInt("Speed", &Settings::AntiAim.warp_speed, 1, 24);
 	}
 	ImGui::PopStyleVar();
@@ -320,36 +324,29 @@ void DrawLuaTab()
 	{
 		constexpr const char* keywords[]
 		{
-			"begin", "switch", "continue", "number",
-			"int", "float", "boolean", "bool",
-			"function", "table", "userdata", "nil",
-			"any", "void", "enum", "export",
-			"class", "new", "parent", "try",
-			"catch",
+			"null", "UserCmd",
+			"Entity", "Vector",
+			"ViewSetup", "GameEvent",
+			"DrawModelContext", "Material",
+			"Texture", "ConVar"
 		};
 
 		constexpr const char* myIdentifiers[]
 		{
-			"globals", "engine",
-			"hooks", "vector3",
-			"entities", "draw",
-			"render", "materials",
-			"client", "bitbuffer",
-			"clientstate", "ui",
-			"menu", "aimbot",
-			"radar", "colors",
-			"fonts", "warp",
-			"esp", "color"
+			"print", "warn",
+			"EntityList", "Engine",
+			"Hooks", "Materials",
+			"Draw", "Render",
+			"Client", "ClientState"
 		};
 
-		auto def = TextEditor::LanguageDefinition::Lua();
-		def.mPreprocChar = '$';
+		auto def = TextEditor::LanguageDefinition::CPlusPlus();
 
 		for (auto& k: keywords)
 			def.mKeywords.insert(k);
 
 		TextEditor::Identifier id;
-		id.mDeclaration = "Custom Library";
+		id.mDeclaration = "Library";
 
 		for (auto& k : myIdentifiers)
 			def.mIdentifiers.insert(std::make_pair(std::string(k), id));
@@ -357,52 +354,23 @@ void DrawLuaTab()
 		GUI::editor.SetLanguageDefinition(def);
 		GUI::editor.SetPalette(TextEditor::GetDarkPalette());
 		GUI::editor.SetShowWhitespaces(false);
+		GUI::editor.SetText("void main()\n{\n\t// Code goes here\n}");
 		init = true;
 	}
 
 	ImGui::BeginGroup();
 
-	if (ImGui::BeginTabBar("LuaTab"))
-	{
-		if (ImGui::BeginTabItem("Console Tab"))
-		{
-			ImVec2 size = ImGui::GetContentRegionAvail();
-			size.y -= 30;
-
-			ImGui::InputTextMultiline(
-				"##ConsoleText",
-				&consoleText,
-				size,
-				ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_WordWrap
-			);
-
-			ImGui::Spacing();
-
-			if (ImGui::Button("Clear"))
-				consoleText = "";
-
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem("Editor Tab"))
-		{
-			GUI::editor.Render("Editor", ImVec2(0, -25));
+	GUI::editor.Render("Editor", ImVec2(0, -25));
 	
-			ImGui::Spacing();
+	ImGui::Spacing();
 	
-			if (ImGui::Button("Run Code"))
-				Lua::RunCode(GUI::editor.GetText());
+	if (ImGui::Button("Run Code"))
+		API::RunCode(GUI::editor.GetText());
 	
-			ImGui::SameLine();
+	ImGui::SameLine();
 	
-			if (ImGui::Button("Clear"))
-				GUI::editor.SetText("");
-
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-	}
+	if (ImGui::Button("Clear"))
+		GUI::editor.SetText("");
 
 	ImGui::EndGroup();
 }

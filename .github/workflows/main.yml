@@ -35,5 +35,5 @@ jobs:
             build/*.so
             build/*.sh
             build/*.debug
-            lua-docs
+            angelscript-docs
             src

@@ -23,6 +23,12 @@ DECLARE_VTABLE_HOOK(PaintTraverse, void, (IPanel* thisptr, VPANEL vguiPanel, boo
 		}
 	}
 
+	if (Settings::Misc.no_scope_overlay)
+	{
+		if (fnv::Hash(panelName) == fnv::HashConst("HudScope"))
+			return;
+	}
+
 	originalPaintTraverse(thisptr, vguiPanel, forceRepaint, allowForce);
 }
 

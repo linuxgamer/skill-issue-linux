@@ -48,7 +48,6 @@ void Settings::InitBinds()
 	Aimbot.key = gBinds.RegisterHotkey("aimbot key");
 	AntiAim.warp_key = gBinds.RegisterHotkey("warp key");
 	AntiAim.warp_recharge_key = gBinds.RegisterHotkey("warp recharge key");
-	AntiAim.warp_dt_key = gBinds.RegisterHotkey("doubletap key");
 	Misc.thirdperson_key = gBinds.RegisterHotkey("thirdperson key");
 	Trigger.key = gBinds.RegisterHotkey("trigger key");
 }

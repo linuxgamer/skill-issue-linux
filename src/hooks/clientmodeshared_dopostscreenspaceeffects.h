@@ -8,18 +8,64 @@
 #include "../features/chams/chams.h"
 #include "../features/glow/glow.h"
 #include "../features/backtrack/backtrack.h"
+#include "../features/visuals/thirdperson/thirdperson.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
+#endif
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+static void AS_DPPSE_Callback()
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("DoPostScreenSpaceEffects", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
 
 DECLARE_VTABLE_HOOK(DoPostScreenSpaceEffects, bool, (IClientMode* thisptr, CViewSetup* setup))
 {
+	#if 0
 	if (LuaHookManager::HasHooks("DoPostScreenSpaceEffects"))
 		LuaHookManager::Call(Lua::m_luaState, "DoPostScreenSpaceEffects", 0);
+	#endif
+
+	
 
 	Backtrack::DoPostScreenSpaceEffects();
 	Chams::Run();
 	Glow::Run();
+
+	if (Settings::Misc.no_zoom)
+	{
+		if (auto pLocal = EntityList::GetLocal(); pLocal != nullptr && pLocal->IsAlive())
+		{
+			if (pLocal->InCond(TF_COND_ZOOMED) && Thirdperson::IsThirdPerson(pLocal))
+			{
+				pLocal->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+				auto ent = pLocal->FirstShadowChild();
+				while (ent != nullptr)
+				{
+					ent->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+					ent->NextShadowPeer();
+				}
+			}
+		}
+	}
 
 	return originalDoPostScreenSpaceEffects(thisptr, setup);
 }

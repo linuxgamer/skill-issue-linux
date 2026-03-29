@@ -1,9 +1,8 @@
 #pragma once
 
 #include "../libdetour/libdetour.h"
-#include "../features/lua/hookmgr.h"
-#include "../features/lua/api.h"
-#include "../features/lua/classes.h"
+#include "../libsigscan.h"
+#include "../sdk/interfaces/interfaces.h"
 
 // sig 55 48 89 E5 41 56 41 89 D6 41 55 49 89 FD 41 54 4C 8D 65 DC
 // client.so

@@ -134,8 +134,10 @@ inline void RenderImGui()
 
 	gBinds.Update();
 
+	#if 0
 	if (LuaHookManager::HasHooks("ImGui"))
 		LuaHookManager::Call(Lua::m_luaState, "ImGui", 0);
+	#endif
 
 	// ts doesnt work
 	//EyeTrace_Run();

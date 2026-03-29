@@ -11,25 +11,46 @@
 #include "../features/glow/glow.h"
 #include "../features/backtrack/backtrack.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
 
-struct DrawModelContext
+#include "../features/angelscript/api/classes/drawmodelcontext/drawmodelcontext.h"
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+static void AS_DrawModelExecute_Callback(DrawModelContext& ctx)
 {
-	IVModelRender* thisptr;
-	DrawModelState_t state;
-	ModelRenderInfo_t pInfo;
-	matrix3x4* pCustomBoneToWorld;
-};
+	std::vector<ASHook> hooks;
+	if (Hooks_GetHooks("DrawModel", hooks))
+	{
+		auto engine = API::GetScriptEngine();
 
-static DrawModelContext ctx;
-static int LuaCallDME(lua_State* L);
+		for (const auto& hook : hooks)
+		{
+			asIScriptContext* ctx = engine->RequestContext();
+
+			ctx->Prepare(hook.func);
+			ctx->SetArgObject(0, &ctx);
+			ctx->Execute();
+
+			engine->ReturnContext(ctx);
+		}
+
+		ctx.valid = false;
+	}
+}
 
 DECLARE_VTABLE_HOOK(DrawModelExecute, void, (IVModelRender* thisptr, const DrawModelState_t &state, const ModelRenderInfo_t &pInfo, matrix3x4 *pCustomBoneToWorld))
 {
 	//if (settings.esp.chams && !Chams::m_bRunning && Chams::ShouldHide(pInfo.entity_index))
 		//return;
+
+	if (AS_ShouldCallOriginal())
+		return originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
 
 	if (interfaces::Engine->IsTakingScreenshot())
 		return originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
@@ -45,6 +66,7 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void, (IVModelRender* thisptr, const DrawM
 		interfaces::ModelRender->ForcedMaterialOverride(nullptr);
 	}
 
+	#if 0
 	if (LuaHookManager::HasHooks("DrawModel"))
 	{
 		lua_newtable(Lua::m_luaState);
@@ -74,6 +96,17 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void, (IVModelRender* thisptr, const DrawM
 
 		LuaHookManager::Call(Lua::m_luaState, "DrawModel", 1);
 	}
+	#endif
+
+	{
+		DrawModelContext ctx;
+		ctx.valid = true;
+		ctx.state = state;
+		ctx.pCustomBoneToWorld = pCustomBoneToWorld;
+		ctx.pInfo = pInfo;
+		ctx.thisptr = thisptr;
+		AS_DrawModelExecute_Callback(ctx);
+	}
 
 	if (Chams::m_bRunning || Glow::m_bRunning)
 		return originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
@@ -84,11 +117,13 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void, (IVModelRender* thisptr, const DrawM
 	originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
 }
 
+#if 0
 static int LuaCallDME(lua_State* L)
 {
 	originalDrawModelExecute(ctx.thisptr, ctx.state, ctx.pInfo, ctx.pCustomBoneToWorld);
 	return 0;
 }
+#endif
 
 inline void HookDrawModelExecute(void)
 {

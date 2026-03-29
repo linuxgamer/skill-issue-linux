@@ -5,10 +5,8 @@
 #include "../settings/settings.h"
 #include "../sdk/helpers/helper.h"
 #include "../imgui/TextEditor.h"
-#include "console.h"
 #include "../sdk/definitions/eteam.h"
 
-#include "../features/lua/api.h"
 #include "../features/antiaim/antiaim.h"
 #include "../features/aimbot/utils/utils.h"
 #include "../features/entitylist/entitylist.h"

@@ -14,12 +14,38 @@
 
 #include "../libdetour/libdetour.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
+
+#include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 inline detour_ctx_t calcViewModel_ctx;
 DETOUR_DECL_TYPE(void, original_CalcViewModelView, void* thisptr, CBaseEntity*, const Vector&, const QAngle&);
+
+static void AS_CalcViewModelView_Callback(Vector& eyePos, Vector& eyeAngles)
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("CalcViewModelView", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->SetArgObject(0, &eyePos);
+		ctx->SetArgObject(1, &eyeAngles);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
 
 inline void HookedCalcViewModelView(void* thisptr, CBaseEntity* owner, const Vector& eyePosition, const QAngle& eyeAngles)
 {
@@ -28,6 +54,7 @@ inline void HookedCalcViewModelView(void* thisptr, CBaseEntity* owner, const Vec
 
 	if (owner)
 	{
+		#if 0
 		if (LuaHookManager::HasHooks("CalcViewModelView"))
 		{
 			LuaClasses::Vector3::push(Lua::m_luaState, position);
@@ -35,6 +62,9 @@ inline void HookedCalcViewModelView(void* thisptr, CBaseEntity* owner, const Vec
 
 			LuaHookManager::Call(Lua::m_luaState, "CalcViewModelView", 2);
 		}
+		#endif
+
+		AS_CalcViewModelView_Callback(position, angle);
 
 		ViewmodelInterp::Run(angle);
 		ViewmodelAim::Run(angle);

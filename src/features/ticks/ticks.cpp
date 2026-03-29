@@ -11,13 +11,12 @@
 #include "../fakelag/fakelag.h"
 #include "../backtrack/backtrack.h"
 
-#include "../lua/api.h"
-#include "../lua/hookmgr.h"
-#include "../lua/classes/usercmdlua.h"
-
 #include "../../sdk/definitions/host.h"
 #include "../../sdk/definitions/protocol.h"
 #include "../../sdk/definitions/con_nprint.h"
+
+#include "../angelscript/api/libraries/hooks/hooks.h"
+#include "../angelscript/api/api.h"
 
 // Host_ShouldRun(void) 48 8B 15 ? ? ? ? B8 01 00 00 00 8B 72 58
 // func to get net_time CReplayServer::GetOnlineTime(CReplayServer*) 48 8D 05 ? ? ? ? 66 0F EF C9 F3 0F 5A 8F DC 93 00 00
@@ -33,6 +32,7 @@ uint8_t TickManager::m_iChokedCommands = 0;
 
 void TickManager::Lua_CreateMove_Callback(CUserCmd* pCmd)
 {
+	#if 0
 	if (!LuaHookManager::HasHooks("CreateMove"))
 		return;
 
@@ -43,6 +43,27 @@ void TickManager::Lua_CreateMove_Callback(CUserCmd* pCmd)
 	lcmd->valid = false;
 
 	lua_pop(Lua::m_luaState, 1);
+	#endif
+}
+
+void AS_CreateMove_Callback(CUserCmd* pCmd)
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("CreateMove", hooks))
+		return;
+
+	auto engine = API::GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->SetArgObject(0, pCmd);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
 }
 
 void TickManager::Post_CreateMove(int sequence_number)
@@ -78,7 +99,7 @@ void TickManager::Post_CreateMove(int sequence_number)
 	Aimbot::Run(pLocal, pWeapon, pCmd);
 	Triggerbot::Run(pLocal, pWeapon, pCmd);
 
-	Lua_CreateMove_Callback(pCmd);
+	AS_CreateMove_Callback(pCmd);
 
 	if (reinterpret_cast<CClientState*>(interfaces::ClientState)->chokedcommands >= 21)
 		m_bSendPacket = true;
@@ -310,24 +331,6 @@ void TickManager::Run(float accumulated_extra_samples, bool bFinalTick)
 
 		Warp::m_iDesiredState = WarpState::WAITING;
 		Warp::m_bShifting = false;
-		return;
-	}
-
-	if (Warp::m_iDesiredState == WarpState::DT && Warp::m_iStoredTicks >= Warp::GetMaxTicks())
-	{
-		const int ticks = Warp::m_iStoredTicks;
-
-		Warp::m_bShifting = true;
-		Warp::m_bDoubleTap = true;
-		Warp::m_iShiftAmount = ticks;
-
-		for (int n = 0; n < ticks; n++)
-			CL_Move(accumulated_extra_samples, n == ticks - 1);
-		
-		Warp::m_iStoredTicks = 0;
-		Warp::m_iDesiredState = WarpState::WAITING;
-		Warp::m_bShifting = false;
-		Warp::m_bDoubleTap = false;
 		return;
 	}
 }

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../features/lua/hookmgr.h"
-#include "../features/lua/api.h"
-#include "../features/lua/classes.h"
+#include "../sdk/interfaces/interfaces.h"
 #include "../vtables.h"
 
 DECLARE_VTABLE_HOOK(GetUserCmd, CUserCmd*, (void* input, int sequence_number))

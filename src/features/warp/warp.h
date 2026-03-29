@@ -6,8 +6,6 @@ enum class WarpState
 	WAITING = 0,
 	RUNNING,
 	RECHARGING,
-	DT_MOVING,
-	DT
 };
 
 namespace Warp
@@ -16,7 +14,6 @@ namespace Warp
 	extern WarpState m_iDesiredState;
 	extern bool m_bShifting;
 	extern bool m_bRecharging;
-	extern bool m_bDoubleTap;
 	extern int m_iShiftAmount;
 
 	bool IsValidWeapon(CTFWeaponBase* pWeapon);

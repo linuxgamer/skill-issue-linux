@@ -4,7 +4,7 @@ CC=g++
 MAKEFLAGS := --jobs=$(shell nproc)
 
 # Compiler flags
-CFLAGS = -march=x86-64-v3 -shared -std=c++17 -O2 -fPIC -Werror -fno-exceptions -g
+CFLAGS = -march=x86-64-v3 -shared -std=c++17 -O2 -fPIC -Werror -g
 
 # Linker flags
 LDFLAGS = -lSDL2 -lvulkan -lm -ldl  -g

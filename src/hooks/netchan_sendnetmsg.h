@@ -9,20 +9,24 @@
 #include "../sdk/definitions/inetchannel.h"
 #include "../features/warp/warp.h"
 
+#if 0
 #include "../features/lua/hookmgr.h"
 #include "../features/lua/api.h"
 #include "../features/lua/classes.h"
+#endif
 
 inline detour_ctx_t SendNetMsg_ctx;
 DETOUR_DECL_TYPE(bool, originalSendNetMsg, void* ptr, INetMessage& msg, bool bForceReliable, bool bVoice);
 
 inline bool Hooked_SendNetMsg(void* ptr, INetMessage& msg, bool bForceReliable, bool bVoice)
 {
+	#if 0
 	if (LuaHookManager::HasHooks("SendNetMsg"))
 	{
 		LuaClasses::NetMessageLua::push_netmessage(Lua::m_luaState, &msg);
 		LuaHookManager::Call(Lua::m_luaState, "SendNetMsg", 1);
 	}
+	#endif
 
 	bool ret;
 	DETOUR_ORIG_GET(&SendNetMsg_ctx, ret, originalSendNetMsg, ptr, msg, bForceReliable, bVoice);

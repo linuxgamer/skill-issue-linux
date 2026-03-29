@@ -8,9 +8,3 @@ void init(void)
 
 	HookEngineVGuiPaint();
 }
-
-__attribute__((destructor))
-void uninit(void)
-{
-	Lua::ClosePluto();
-}

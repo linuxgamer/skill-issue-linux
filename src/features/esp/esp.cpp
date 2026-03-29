@@ -4,7 +4,7 @@
 #include "elements/BonkCondElement.h"
 #include "elements/HealthTextElement.h"
 #include "elements/JaratedCondElement.h"
-#include "elements/LuaElement.h"
+//#include "elements/LuaElement.h"
 #include "elements/NameElement.h"
 #include "elements/UberedCondElement.h"
 #include "elements/ZoomedCondElement.h"
@@ -16,7 +16,7 @@
 namespace ESP
 {
 	std::vector<std::unique_ptr<IBaseElement>> m_builtinElements = {};
-	std::vector<std::unique_ptr<LuaElement>> m_luaElements = {};
+	//std::vector<std::unique_ptr<LuaElement>> m_luaElements = {};
 
 	void Init()
 	{
@@ -34,7 +34,7 @@ namespace ESP
 		m_builtinElements.push_back(std::make_unique<JaratedCondElement>());
 		m_builtinElements.push_back(std::make_unique<BonkedCondElement>());
 
-		m_luaElements.reserve(5);
+		//m_luaElements.reserve(5);
 	}
 
 	bool GetData(const EntityListEntry& entry, ESP_Data& out)
@@ -211,7 +211,7 @@ namespace ESP
 			};
 
 			run(m_builtinElements);
-			run(m_luaElements);
+			//run(m_luaElements);
 		}
 	}
 

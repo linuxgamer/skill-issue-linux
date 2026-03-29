@@ -6,10 +6,6 @@
 #include "../handle_utils.h"
 #include "ihandleentity.h"
 
-#include "../../features/lua/classes.h"
-#include "../../features/lua/api.h"
-#include "../../gui/console.h"
-
 bool CTraceFilterHitscan::ShouldHitEntity(IHandleEntity* pServerEntity, int nContentsMask)
 {
 	if (!pServerEntity || pServerEntity == pSkip)
@@ -158,9 +154,10 @@ TraceType_t CTraceFilterLua::GetTraceType() const
 	return TRACE_EVERYTHING;
 }
 
+
 bool CTraceFilterLua::ShouldHitEntity(IHandleEntity* pServerEntity, int nContentsMask)
 {
-	luaL_checktype(Lua::m_luaState, 4, LUA_TFUNCTION);
+	/*luaL_checktype(Lua::m_luaState, 4, LUA_TFUNCTION);
 	lua_pushvalue(Lua::m_luaState, 4);
 
 	int callbackRef = luaL_ref(Lua::m_luaState, LUA_REGISTRYINDEX);
@@ -189,4 +186,6 @@ bool CTraceFilterLua::ShouldHitEntity(IHandleEntity* pServerEntity, int nContent
 	luaL_unref(Lua::m_luaState, LUA_REGISTRYINDEX, callbackRef);
 
 	return result;
+	*/
+	return false;
 }

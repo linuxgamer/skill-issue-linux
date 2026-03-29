@@ -8,6 +8,7 @@
 #include "../definitions/icliententity.h"
 #include "../netvars/netvar.h"
 #include "../handle_utils.h"
+#include "../definitions/iclientleafsystem.h"
 
 #define MULTIPLAYER_BACKUP 90
 
@@ -272,5 +273,54 @@ public:
 	bool IsEnemyOf(CBaseEntity* pEntity)
 	{
 		return m_iTeamNum() != pEntity->m_iTeamNum();
+	}
+
+	void AddToLeafSystem(RenderGroup_t group)
+	{
+		using AddToLeafSystemFn = void(*)(void* self, RenderGroup_t group);
+		static AddToLeafSystemFn original = reinterpret_cast<AddToLeafSystemFn>(sigscan_module("client.so", "55 89 F2 48 89 E5 41 54"));
+		original(this, group);
+	}
+
+	inline bool IsEffectsActive(int nEffects)
+	{
+		// xref: CalcAimEntPositions
+		/*
+		do {
+			// we want the 0xa8
+			while ((*(byte *)(*(long *)(DAT_02ecc4c0 + lVar5 * 8) + 0xa8) & 1) == 0) {
+				lVar5 = lVar5 + 1;
+				if (iVar1 <= (int)lVar5) goto LAB_0162bf68;
+			}
+			FUN_0162b390();
+			lVar5 = lVar5 + 1;
+		} while ((int)lVar5 < iVar1);
+		*/
+
+		//auto& effects = GetEffects();
+
+		// i want to kms :sob:
+		return (m_fEffects() & nEffects) != 0;
+	}
+
+	inline void AddEffects(uint8_t effects)
+	{
+		//auto addr = reinterpret_cast<uintptr_t>(this) + 0xa8;
+		//*reinterpret_cast<uint8_t*>(addr) |= effects;
+		m_fEffects() |= effects;
+	}
+
+	inline void RemoveEffects(uint8_t effects)
+	{
+		//aut o addr = reinterpret_cast<uintptr_t>(this) + 0xa8;
+		// *reinterpret_cast<uint8_t*>(addr) &= ~effects;
+		m_fEffects() &= ~effects;
+	}
+
+	void UpdateVisibility()
+	{
+		using UpdateVisibilityFn = void(*)(void* self);
+		static UpdateVisibilityFn original = reinterpret_cast<UpdateVisibilityFn>(sigscan_module("client.so", "55 48 89 E5 41 54 49 89 FC 53 48 83 EC 10 48 8D 1D ? ? ? ? 48 8B 3B 48 8B 07 FF 90 60 02 00 00"));
+		original(this);
 	}
 };
