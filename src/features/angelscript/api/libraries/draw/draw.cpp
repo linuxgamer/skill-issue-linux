@@ -1,5 +1,6 @@
 #include "draw.h"
 
+#include "../../globals.h"
 #include "../../../../../sdk/interfaces/interfaces.h"
 #include "../../../../../sdk/helpers/draw/draw.h"
 #include "../../../../../sdk/FontManager/fontmanager.h"
@@ -84,6 +85,7 @@ void Draw_RegisterLibrary(asIScriptEngine* engine)
 
 	engine->SetDefaultNamespace("Draw");
 	{
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_DRAW);
 		engine->RegisterGlobalFunction("void Line(int x0, int y0, int x1, int y1)", asFUNCTION(Line), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void SetColor(int r, int g, int b, int a)", asFUNCTION(SetColor), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void GetTextSize(const string &in text, int &out w, int &out h)", asFUNCTION(GetTextSize), asCALL_CDECL);

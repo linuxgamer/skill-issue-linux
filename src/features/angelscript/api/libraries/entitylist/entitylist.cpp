@@ -48,6 +48,7 @@ void Interface_EntityList_Register(asIScriptEngine* engine)
 	const char* strDefaultNamespace = engine->GetDefaultNamespace();
 
 	engine->SetDefaultNamespace("EntityList");
+	engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_ENTITYLIST);
 	engine->RegisterGlobalFunction("Entity@ GetClientEntity(int entindex)", asFUNCTION(EL_GetClientEntity), asCALL_CDECL);
 	engine->RegisterGlobalFunction("int GetMaxEntities()", asFUNCTION(EL_GetMaxEntities), asCALL_CDECL);
 	engine->RegisterGlobalFunction("Entity@ GetLocalPlayer()", asFUNCTION(EL_GetLocalPlayer), asCALL_CDECL);

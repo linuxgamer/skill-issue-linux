@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include "../../../../../sdk/interfaces/interfaces.h"
+#include "../../globals.h"
 
 void Input_RegisterLibrary(asIScriptEngine* engine)
 {
@@ -8,6 +9,7 @@ void Input_RegisterLibrary(asIScriptEngine* engine)
 
 	engine->SetDefaultNamespace("Input");
 	{
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_INPUT);
 		engine->RegisterGlobalFunction("bool IsButtonDown(int button)", asFUNCTION(Input_IsButtonDown), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool IsButtonPressed(int button)", asFUNCTION(Input_IsButtonPressed), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool IsButtonReleased(int button)", asFUNCTION(Input_IsButtonReleased), asCALL_CDECL);

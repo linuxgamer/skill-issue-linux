@@ -17,8 +17,12 @@
 #include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
 
+#include "../sdk/signatures/signatures.h"
+
 inline detour_ctx_t calcViewModel_ctx;
 DETOUR_DECL_TYPE(void, original_CalcViewModelView, void* thisptr, CBaseEntity*, const Vector&, const QAngle&);
+
+ADD_SIG(CBaseViewModel_CalcViewModelView, "client.so", "55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 49 89 FC 53 48 83 EC 48 8B 41 08")
 
 static void AS_CalcViewModelView_Callback(Vector& eyePos, Vector& eyeAngles)
 {
@@ -60,8 +64,7 @@ inline void HookedCalcViewModelView(void* thisptr, CBaseEntity* owner, const Vec
 
 inline void HookCalcViewModelView()
 {
-	void* original = (sigscan_module("client.so", "55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 49 89 FC 53 48 83 EC 48 8B 41 08"));
-	detour_init(&calcViewModel_ctx, original, (void*)&HookedCalcViewModelView);
+	detour_init(&calcViewModel_ctx, Sigs::CBaseViewModel_CalcViewModelView.GetPointer(), (void*)&HookedCalcViewModelView);
 	detour_enable(&calcViewModel_ctx);
 
 	#ifdef DEBUG

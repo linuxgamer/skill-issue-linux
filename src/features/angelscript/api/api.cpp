@@ -3,6 +3,8 @@
 #include "../../../sdk/interfaces/interfaces.h"
 
 #define AS_USE_STLNAMES 1
+#include "libraries/imgui/imgui.h"
+#include "classes/vector2/vec2.h"
 #include "libraries/client/client.h"
 #include "libraries/clientstate/clientstate.h"
 #include "classes/convar/convar.h"
@@ -21,6 +23,12 @@
 #include "libraries/entitylist/entitylist.h"
 #include "../add_on/scriptstdstring/scriptstdstring.h"
 #include "../add_on/scriptarray/scriptarray.h"
+#include "../add_on/scriptmath/scriptmath.h"
+#include "../add_on/datetime/datetime.h"
+#include "../add_on/scriptfile/scriptfile.h"
+#include "../add_on/scriptfile/scriptfilesystem.h"
+#include "../add_on/scriptmath/scriptmathcomplex.h"
+#include "../add_on/scriptdictionary/scriptdictionary.h"
 #include "libraries/common/common.h"
 #include "classes/vector/vector3.h"
 #include "enums/enums.h"
@@ -59,28 +67,55 @@ void API::Initialize()
 
 	engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL);
 
-	RegisterStdString(engine);
-	RegisterScriptArray(engine, true);
+	{
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_STRING);
+		RegisterStdString(engine);
+	
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_ARRAY);
+		RegisterScriptArray(engine, true);
+	
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_DICT);
+		RegisterScriptDictionary(engine);
+	
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_MATH);
+		RegisterScriptMath(engine);
+		RegisterScriptMathComplex(engine);
+	
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_DATETIME);
+		RegisterScriptDateTime(engine);
+	
+		engine->SetDefaultAccessMask(SCRIPT_MASK_ALLOW_FILESYSTEM);
+		RegisterScriptFile(engine);
+		RegisterScriptFileSystem(engine);
+	}
+
+	// enums
 	Enums_Register(engine);
-	Common_RegisterLibrary(engine);
+
+	// classes
 	Vector3_RegisterClass(engine);
-	Engine_RegisterLibrary(engine);
+	Vector2_RegisterClass(engine);
 	Entity_RegisterClass(engine);
 	UserCmd_RegisterClass(engine);
 	ViewSetup_RegisterClass(engine);
 	Material_RegisterClass(engine);
 	GameEvent_RegisterClass(engine);
 	DrawModelContext_RegisterClass(engine);
+	Texture_RegisterClass(engine);
+	ConVar_RegisterClass(engine);
+
+	// libraries
+	Common_RegisterLibrary(engine);
+	Engine_RegisterLibrary(engine);
 	ClientState_RegisterLibrary(engine);
 	Hooks_RegisterLibrary(engine);
 	Draw_RegisterLibrary(engine);
-	Texture_RegisterClass(engine);
-	ConVar_RegisterClass(engine);
 	Materials_RegisterLibrary(engine);
 	Interface_EntityList_Register(engine);
 	Render_RegisterLibrary(engine);
 	Input_RegisterLibrary(engine);
 	Client_RegisterLibrary(engine);
+	ImGui_RegisterLibrary(engine);
 
 	s_bInitialized = true;
 }
@@ -105,6 +140,7 @@ bool API::RunCode(const std::string& text)
 	asIScriptModule* mod = engine->GetModule("code", asGM_ALWAYS_CREATE);
 
 	mod->AddScriptSection("script", text.c_str());
+	mod->SetAccessMask(GetScriptAccessMask());
 	mod->Build();
 
 	auto ctx = GetScriptContext();

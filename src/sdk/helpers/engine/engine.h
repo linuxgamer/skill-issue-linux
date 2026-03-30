@@ -73,7 +73,7 @@ namespace helper
 		// pasted from amalgam
 		// i was gonna use cazz's tutorial
 		// but his viewmatrix doesn't make sense to me
-		inline bool WorldToScreen(const Vector& pos, Vector& screenPosOut)
+		inline bool WorldToScreen(const Vector& pos, Vec2& screenPosOut)
 		{
 			VMatrix vm;
 			if (!GetViewMatrix(vm))

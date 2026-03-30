@@ -1,5 +1,7 @@
 #include "clientstate.h"
 
+#include "../../globals.h"
+
 #include "../../../../../sdk/interfaces/interfaces.h"
 #include "../../../../../sdk/definitions/cclientstate.h"
 #include "../../../../logs/logs.h"
@@ -52,6 +54,7 @@ void ClientState_RegisterLibrary(asIScriptEngine* engine)
 
 	engine->SetDefaultNamespace("ClientState");
 	{
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENTSTATE);
 		engine->RegisterGlobalFunction("int GetChokedCommands()", asFUNCTION(GetChokedCommands), asCALL_CDECL);
 		engine->RegisterGlobalFunction("int GetLastOutgoingCommand()", asFUNCTION(GetLastOutgoingCommand), asCALL_CDECL);
 		engine->RegisterGlobalFunction("int GetLastCommandAck()", asFUNCTION(GetLastCommandAck), asCALL_CDECL);

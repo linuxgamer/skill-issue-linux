@@ -12,32 +12,32 @@ std::string GetName(IGameEvent* event)
 	return event ? event->GetName() : "Invalid Event";
 }
 
-bool  IsReliable(IGameEvent* event)
+bool IsReliable(IGameEvent* event)
 {
 	if (!event) return false;
 	return event->IsReliable();
 }
 
-bool  IsLocal(IGameEvent* event)
+bool IsLocal(IGameEvent* event)
 {
 	if (!event) return false;
 	return event->IsLocal();
 }
 
-bool  IsEmpty(IGameEvent* event, const std::string& keyName)
+bool IsEmpty(IGameEvent* event, const std::string& keyName)
 {
 	if (!event) return false;
 	return event->IsEmpty(keyName.c_str());
 }
 	
 // Data access
-bool  GetBool( IGameEvent* event, const std::string& keyName, bool defaultValue )
+bool GetBool( IGameEvent* event, const std::string& keyName, bool defaultValue )
 {
 	if (!event) return 0;
 	return event->GetBool(keyName.c_str(), defaultValue);
 }
 
-int   GetInt( IGameEvent* event, const std::string& keyName, int defaultValue )
+int GetInt( IGameEvent* event, const std::string& keyName, int defaultValue )
 {
 	if (!event) return 0;
 	return event->GetInt(keyName.c_str(), defaultValue);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../sdk/interfaces/interfaces.h"
 #include "../vtables.h"
+#include "../sdk/interfaces/interfaces.h"
 
 DECLARE_VTABLE_HOOK(GetUserCmd, CUserCmd*, (void* input, int sequence_number))
 {

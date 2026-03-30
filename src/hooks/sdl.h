@@ -161,11 +161,6 @@ inline void Hooked_SwapWindow(SDL_Window* window)
 
 	gBinds.Update();
 
-	#if 0
-	if (LuaHookManager::HasHooks("ImGui"))
-		LuaHookManager::Call(Lua::m_luaState, "ImGui");
-	#endif
-
 	if (Settings::AntiAim.warp_key->IsEnabled())
 		Warp::RunWindow();
 
@@ -178,8 +173,7 @@ inline void Hooked_SwapWindow(SDL_Window* window)
 	if (Settings::Misc.playerlist)
 		GUI::RunPlayerList();
 
-	if (Settings::menu_open)
-		GUI::RunMainWindow();
+	GUI::RunMainWindow();
 
 	gBinds.DrawWindow(Settings::menu_open);
 

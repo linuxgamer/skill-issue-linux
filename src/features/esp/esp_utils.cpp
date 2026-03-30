@@ -92,17 +92,17 @@ bool ESP_Utils::IsValidEntity(CTFPlayer* pLocal, const EntityListEntry& entry)
 bool ESP_Utils::GetEntityBounds(CBaseEntity* ent, ESP_Data& out)
 {
 	Vector origin = ent->GetAbsOrigin();
-	Vector bottom = {};
+	Vec2 bottom = {};
 
 	if (!helper::engine::WorldToScreen(origin, bottom))
 		return false;
 
-	Vector top;
+	Vec2 top;
 	Vector absHead = origin + Vector{0, 0, ent->m_vecMaxs().z};
 	if (!helper::engine::WorldToScreen(absHead, top))
 		return false;
 	
-	float h = (bottom - top).Length2D();
+	float h = (bottom - top).Length();
 	float w = ent->IsTeleporter() ? (h * 2.0f) : (h * 0.3f);
 
 	out.bottom = Vec2(bottom.x, bottom.y);

@@ -39,7 +39,7 @@ namespace Chams
 		savedBlend = interfaces::RenderView->GetBlend();
 
 		interfaces::RenderView->GetColorModulation(savedColor);
-		interfaces::RenderView->SetBlend(0.5f);
+		interfaces::RenderView->SetBlend(Settings::ESP.chams_alpha);
 		interfaces::ModelRender->ForcedMaterialOverride(m_mFlatMat);
 
 		for (auto& entry : EntityList::GetEntities())

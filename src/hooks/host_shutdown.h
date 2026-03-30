@@ -1,12 +1,17 @@
 #pragma once
 
-#include "../sdk/interfaces/interfaces.h"
+#include <cstdlib>
+
 #include "../settings/settings.h"
 #include "../libdetour/libdetour.h"
-#include <cstdlib>
+
+#include "../sdk/interfaces/interfaces.h"
+#include "../sdk/signatures/signatures.h"
 
 #include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+ADD_SIG(Host_Shutdown, "engine.so", "80 3D ? ? ? ? 00 0F 85 ? ? ? ? 55 31 F6")
 
 inline detour_ctx_t shutdownctx;
 DETOUR_DECL_TYPE(void, originalHost_ShutdownFn, void);
@@ -34,8 +39,7 @@ static void HookedHost_ShutdownFn(void)
 
 static void HookHost_Shutdown()
 {
-	void* original = sigscan_module("engine.so", "80 3D ? ? ? ? 00 0F 85 ? ? ? ? 55 31 F6");
-	detour_init(&shutdownctx, original, (void*)&HookedHost_ShutdownFn);
+	detour_init(&shutdownctx, Sigs::Host_Shutdown.GetPointer(), (void*)&HookedHost_ShutdownFn);
 	detour_enable(&shutdownctx);
 
 	#ifdef DEBUG

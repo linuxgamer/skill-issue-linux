@@ -1,5 +1,11 @@
 # Vector Class
 
+## Constructor
+### > Vector()
+Returns a Vector with x, y and z as 0
+
+### > Vector(float x, float y, float z)
+
 ## Fields
 
 ### > float x

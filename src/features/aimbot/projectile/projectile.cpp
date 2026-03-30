@@ -576,7 +576,7 @@ void CAimbotProjectile::RunIndicator()
 
 	m_vecOldIndicatorPos = m_vecOldIndicatorPos.Lerp(m_vecAimPos, interfaces::GlobalVars->frametime * 10.0f);
 
-	Vector screenPos;
+	Vec2 screenPos;
 	if (helper::engine::WorldToScreen(m_vecOldIndicatorPos, screenPos))
 	{
 		const int iSize = 5;
@@ -645,7 +645,7 @@ void CAimbotProjectile::DrawPath(const std::vector<Vector>& vPath)
 {
 	for (int i = 1; i < vPath.size(); i++)
 	{
-		Vector vecPrevScreen, vecCurrScreen;
+		Vec2 vecPrevScreen, vecCurrScreen;
 
 		bool bIsPreviousVisible = helper::engine::WorldToScreen(vPath[i - 1], vecPrevScreen);
 		bool bIsCurrentVisible = helper::engine::WorldToScreen(vPath[i], vecCurrScreen);

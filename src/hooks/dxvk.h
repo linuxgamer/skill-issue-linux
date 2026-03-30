@@ -153,8 +153,7 @@ inline void RenderImGui()
 	if (Settings::Misc.playerlist)
 		GUI::RunPlayerList();
 
-	if (Settings::menu_open)
-		GUI::RunMainWindow();
+	GUI::RunMainWindow();
 
 	gBinds.DrawWindow(Settings::menu_open);
 

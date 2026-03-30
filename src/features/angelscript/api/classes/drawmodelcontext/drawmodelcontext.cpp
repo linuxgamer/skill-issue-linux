@@ -14,21 +14,33 @@ bool AS_ShouldCallOriginal()
 
 int GetEntityIndex(DrawModelContext* ctx)
 {
-	return ctx ? ctx->pInfo.entity_index : -1;
+	if (!ctx || !ctx->valid)
+		return -1;
+
+	return ctx->pInfo.entity_index;
 }
 
 bool IsChamsModel(DrawModelContext* ctx)
 {
+	if (!ctx || !ctx->valid)
+		return false;
+
 	return Chams::m_bRunning;
 }
 
 bool IsGlowModel(DrawModelContext* ctx)
 {
+	if (!ctx || !ctx->valid)
+		return false;
+
 	return Glow::m_bRunning;
 }
 
 void CallOriginal(DrawModelContext* ctx)
 {
+	if (!ctx || !ctx->valid)
+		return;
+
 	AS_Calling_DrawModelExecute = true;
 	interfaces::ModelRender->DrawModelExecute(ctx->state, ctx->pInfo, ctx->pCustomBoneToWorld);
 	AS_Calling_DrawModelExecute = false;

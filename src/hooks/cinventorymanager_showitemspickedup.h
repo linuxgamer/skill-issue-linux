@@ -1,15 +1,19 @@
 #pragma once
 
+#include <string>
+
+#include "../settings/settings.h"
+#include "../libdetour/libdetour.h"
+
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/classes/entity.h"
 #include "../sdk/classes/player.h"
 #include "../sdk/helpers/helper.h"
-#include "../settings/settings.h"
-#include <string>
+#include "../sdk/signatures/signatures.h"
 
 #include "../features/aimbot/aimbot.h"
 
-#include "../libdetour/libdetour.h"
+ADD_SIG(CInventoryManager_ShowItemsPickedUp, "client.so", "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 48 48 8B 07")
 
 inline detour_ctx_t showitemsctx;
 DETOUR_DECL_TYPE(bool, original_ShowItemsPickedUpFn, void* thisptr, bool bForce, bool bReturnToGame, bool bNoPanel);
@@ -30,8 +34,7 @@ static bool HookedShowItemsPickedUpFn(void* thisptr, bool bForce, bool bReturnTo
 
 static void HookShowItemsPickedUp()
 {
-	void* original = sigscan_module("client.so", "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 48 48 8B 07");
-	detour_init(&showitemsctx, original, (void*)&HookedShowItemsPickedUpFn);
+	detour_init(&showitemsctx, Sigs::CInventoryManager_ShowItemsPickedUp.GetPointer(), (void*)&HookedShowItemsPickedUpFn);
 	detour_enable(&showitemsctx);
 
 	#ifdef DEBUG

@@ -46,6 +46,7 @@
 #include "../hooks/iclientmode_shoulddrawviewmodel.h"
 #include "../hooks/cbaseplayer_shoulddrawlocalplayer.h"
 //#include "../hooks/cbaseentity_shoulddraw.h"
+#include "../sdk/signatures/signatures.h"
 
 CApp::CApp() : m_bInitialized(false) {}
 
@@ -61,6 +62,9 @@ bool CApp::StartInterfaces()
 
 void CApp::Setup()
 {
+	if (!Sigs_InitAll())
+		return;
+
 	Netvars::Setup();
 
 	Settings::InitBinds();

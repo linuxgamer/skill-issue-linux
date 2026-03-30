@@ -1,6 +1,8 @@
 #include "materials.h"
 #include <string>
+
 #include "../../../../../sdk/MaterialManager/materialmanager.h"
+#include "../../globals.h"
 
 IMaterial* CreateMat(const std::string& name, const std::string& vmt)
 {
@@ -28,6 +30,7 @@ void Materials_RegisterLibrary(asIScriptEngine *engine)
 
 	engine->SetDefaultNamespace("Materials");
 	{
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_MATERIALS);
 		engine->RegisterGlobalFunction("Material@ CreateMaterial(const string &in name, const string &in vmt)", asFUNCTION(CreateMat), asCALL_CDECL);
 		//engine->RegisterGlobalFunction("bool FreeMaterial(const string &in name)", asFUNCTION(FreeMat), asCALL_CDECL);
 		engine->RegisterGlobalFunction("Material@ GetMaterial(const string &in name)", asFUNCTION(GetMat), asCALL_CDECL);

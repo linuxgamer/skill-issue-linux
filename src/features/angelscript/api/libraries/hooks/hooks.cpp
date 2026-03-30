@@ -1,5 +1,6 @@
 #include "hooks.h"
 #include <unordered_map>
+#include "../../globals.h"
 
 std::unordered_map<std::string, std::vector<ASHook>>& GetHookList()
 {
@@ -74,6 +75,7 @@ void Hooks_RegisterLibrary(asIScriptEngine* engine)
 	engine->SetDefaultNamespace("Hooks");
 	{
 		// small amount of overloading
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_HOOKS);
 		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, CreateMoveHook @cb)", asFUNCTION(Add), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, GenericHook @cb)", asFUNCTION(Add), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, CalcViewModelHook @cb)", asFUNCTION(Add), asCALL_CDECL);

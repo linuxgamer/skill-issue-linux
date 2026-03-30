@@ -18,33 +18,25 @@
 #include "../angelscript/api/libraries/hooks/hooks.h"
 #include "../angelscript/api/api.h"
 
+#include "../../sdk/signatures/signatures.h"
+
 // Host_ShouldRun(void) 48 8B 15 ? ? ? ? B8 01 00 00 00 8B 72 58
 // func to get net_time CReplayServer::GetOnlineTime(CReplayServer*) 48 8D 05 ? ? ? ? 66 0F EF C9 F3 0F 5A 8F DC 93 00 00
 
 // host_frametime_unbounded	F3 0F 10 00 48 8D 05 ?? ?? ?? ?? F3 0F 10 08 48 8B 07 48 8B 40 68 48 39 D0 0F 85 ?? ?? ?? ?? 8B 47 10
 // host_frametime_stddeviation	F3 0F 10 08 48 8B 07 48 8B 40 68 48 39 D0 0F 85 ?? ?? ?? ?? 8B 47 10
 
+ADD_SIG(net_time_addr, "engine.so", "48 8D 05 ? ? ? ? 66 0F EF C9 F3 0F 5A 8F DC 93 00 00")
+ADD_SIG(host_frametime_unbounded_addr, "engine.so", "48 8D 05 ? ? ? ? F3 0F 10 08 48 8B 07 48 8B 40 ?")
+ADD_SIG(host_frametime_stddeviation_addr, "engine.so", "48 8D 05 ? ? ? ? 48 8D 15 ? ? ? ? 49 8B BC 24 ? ? ? ?")
+ADD_SIG(host_state_addr, "engine.so", "48 8D 05 ? ? ? ? 48 83 38 00 74 ? E9")
+ADD_SIG(Con_NXPrintf, "engine.so", "55 49 89 F2 48 89 E5 41 55 41 54 49 89 FC 48 81 EC D0 10 00 00")
+ADD_SIG(Host_ShouldRun, "engine.so", "48 8B 15 ? ? ? ? B8 01 00 00 00 8B 72 58")
+
 using Host_ShouldRunFn = bool(*)(void);
-static Host_ShouldRunFn originalHost_ShouldRun = nullptr;
 
 bool TickManager::m_bSendPacket = true;
 uint8_t TickManager::m_iChokedCommands = 0;
-
-void TickManager::Lua_CreateMove_Callback(CUserCmd* pCmd)
-{
-	#if 0
-	if (!LuaHookManager::HasHooks("CreateMove"))
-		return;
-
-	LuaUserCmd* lcmd = LuaClasses::UserCmd::push(Lua::m_luaState, *pCmd);
-
-	LuaHookManager::Call(Lua::m_luaState, "CreateMove", 1, false);
-	lcmd->WriteToUserCmd(pCmd);
-	lcmd->valid = false;
-
-	lua_pop(Lua::m_luaState, 1);
-	#endif
-}
 
 void AS_CreateMove_Callback(CUserCmd* pCmd)
 {
@@ -166,25 +158,17 @@ void TickManager::CL_Move(float accumulated_extra_samples, bool bFinalTick)
 	static ConVar* cl_cmdrate = interfaces::Cvar->FindVar("cl_cmdrate");
 
 	// returns the right thing
-	static uintptr_t net_time_addr = reinterpret_cast<uintptr_t>(sigscan_module("engine.so", "48 8D 05 ? ? ? ? 66 0F EF C9 F3 0F 5A 8F DC 93 00 00"));
-	double net_time = *reinterpret_cast<double*>(vtable::ResolveRIP(net_time_addr, 3, 7));
-
-	// I'll make these sigs good later, I just need something that works right now
-	static uintptr_t host_frametime_unbounded_addr = reinterpret_cast<uintptr_t>(sigscan_module("engine.so", "48 8D 05 ? ? ? ? F3 0F 10 08 48 8B 07 48 8B 40 ?"));
-	float host_frametime_unbounded = *reinterpret_cast<float*>(vtable::ResolveRIP(host_frametime_unbounded_addr, 3, 7));
-
-	static uintptr_t host_frametime_stddeviation_addr = reinterpret_cast<uintptr_t>(sigscan_module("engine.so", "48 8D 05 ? ? ? ? 48 8D 15 ? ? ? ? 49 8B BC 24 ? ? ? ?"));
-	float host_frametime_stddeviation = *reinterpret_cast<float*>(vtable::ResolveRIP(host_frametime_stddeviation_addr, 3, 7));
-
-	static uintptr_t host_state_addr = reinterpret_cast<uintptr_t>(sigscan_module("engine.so", "48 8D 05 ? ? ? ? 48 83 38 00 74 ? E9"));
-	CCommonHostState* host_state = reinterpret_cast<CCommonHostState*>(vtable::ResolveRIP(host_state_addr, 3, 7));
+	double net_time = *reinterpret_cast<double*>(vtable::ResolveRIP(uintptr_t(Sigs::net_time_addr.GetPointer()), 3, 7));
+	float host_frametime_unbounded = *reinterpret_cast<float*>(vtable::ResolveRIP(uintptr_t(Sigs::host_frametime_unbounded_addr.GetPointer()), 3, 7));
+	float host_frametime_stddeviation = *reinterpret_cast<float*>(vtable::ResolveRIP(uintptr_t(Sigs::host_frametime_stddeviation_addr.GetPointer()), 3, 7));
+	CCommonHostState* host_state = reinterpret_cast<CCommonHostState*>(vtable::ResolveRIP(uintptr_t(Sigs::host_state_addr.GetPointer()), 3, 7));
 
 	//interfaces::Cvar->ConsolePrintf("net_time: %f\n", net_time);
 
 	if (!(cl->m_nSignonState >= SIGNONSTATE_CONNECTED))
 		return;
 
-	if (!originalHost_ShouldRun())
+	if (!reinterpret_cast<Host_ShouldRunFn>(Sigs::Host_ShouldRun.GetPointer())())
 		return;
 
 	m_bSendPacket = true;
@@ -249,7 +233,7 @@ void TickManager::CL_Move(float accumulated_extra_samples, bool bFinalTick)
 	if (hasProblem && cl->m_nDeltaTick != -1)
 	{
 		using Con_NXPrintf = void(*)(const con_nprint_t*, const char* fmt, ...);
-		static auto original = reinterpret_cast<Con_NXPrintf>(sigscan_module("engine.so", "55 49 89 F2 48 89 E5 41 55 41 54 49 89 FC 48 81 EC D0 10 00 00"));
+		static auto original = reinterpret_cast<Con_NXPrintf>(Sigs::Con_NXPrintf.GetPointer());
 
 		con_nprint_t np;
 		np.time_to_live = 1.0;
@@ -297,7 +281,6 @@ void TickManager::CL_Move(float accumulated_extra_samples, bool bFinalTick)
 
 void TickManager::Init()
 {
-	originalHost_ShouldRun = reinterpret_cast<Host_ShouldRunFn>(sigscan_module("engine.so", "48 8B 15 ? ? ? ? B8 01 00 00 00 8B 72 58"));
 	m_bSendPacket = true; // just in case yk
 	m_iChokedCommands = 0;
 }

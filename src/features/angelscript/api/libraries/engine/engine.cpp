@@ -1,5 +1,6 @@
 #include "engine.h"
 
+#include "../../globals.h"
 #include "../../../../../sdk/interfaces/interfaces.h"
 #include "../../../../../sdk/helpers/engine/engine.h"
 
@@ -48,7 +49,7 @@ void SetViewAngles(Vector& viewangle)
 	interfaces::Engine->SetViewAngles(viewangle);
 }
 
-bool WorldToScreen(Vector worldAbsPos, Vector& outPos)
+bool WorldToScreen(Vector worldAbsPos, Vec2& outPos)
 {
 	return helper::engine::WorldToScreen(worldAbsPos, outPos);
 }
@@ -73,6 +74,7 @@ void Engine_RegisterLibrary(asIScriptEngine *engine)
 	const char* strDefaultNamespace = engine->GetDefaultNamespace();
 
 	engine->SetDefaultNamespace("Engine");
+	engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_ENGINE);
 	engine->RegisterGlobalFunction("void PlaySound(const string &in sound)", asFUNCTION(PlaySound), asCALL_CDECL);
 	engine->RegisterGlobalFunction("void ClientCmd(const string &in cmd, bool unrestricted)", asFUNCTION(ClientCmd), asCALL_CDECL);
 	engine->RegisterGlobalFunction("int GetMaxClients()", asFUNCTION(GetMaxClients), asCALL_CDECL);
@@ -80,7 +82,7 @@ void Engine_RegisterLibrary(asIScriptEngine *engine)
 	engine->RegisterGlobalFunction("bool IsConnected()", asFUNCTION(IsConnected), asCALL_CDECL);
 	engine->RegisterGlobalFunction("Vector GetViewAngles()", asFUNCTION(GetViewAngles), asCALL_CDECL);
 	engine->RegisterGlobalFunction("void SetViewAngles(Vector &in angle)", asFUNCTION(SetViewAngles), asCALL_CDECL);
-	engine->RegisterGlobalFunction("bool WorldToScreen(const Vector &in worldPos, Vector &out outPos)", asFUNCTION(WorldToScreen), asCALL_CDECL);
+	engine->RegisterGlobalFunction("bool WorldToScreen(const Vector &in worldPos, Vector2D &out outPos)", asFUNCTION(WorldToScreen), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsGameUIVisible()", asFUNCTION(IsGameUIVisible), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsConsoleVisible()", asFUNCTION(IsConsoleVisible), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsTakingScreenshot()", asFUNCTION(IsTakingScreenshot), asCALL_CDECL);

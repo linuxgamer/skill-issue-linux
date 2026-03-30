@@ -3,6 +3,9 @@
 #include "../libdetour/libdetour.h"
 #include "../libsigscan.h"
 #include "../sdk/interfaces/interfaces.h"
+#include "../sdk/signatures/signatures.h"
+
+ADD_SIG(CInput_ValidateUserCmd, "client.so", "55 48 89 E5 41 56 41 89 D6 41 55 49 89 FD 41 54 4C 8D 65 DC")
 
 // sig 55 48 89 E5 41 56 41 89 D6 41 55 49 89 FD 41 54 4C 8D 65 DC
 // client.so
@@ -15,7 +18,7 @@
       if (from == *(int *)(pppuVar3 + 1)) {
         if (pppuVar3 == (undefined ***)0x0) goto LAB_017370a0;
 LAB_01736f98:
-        ValidadeUserCmd(self,pppuVar3,from);
+==>     ValidadeUserCmd(self,pppuVar3,from);
         pcVar4 = *(code **)(*self + 0x40);
       }
       else {
@@ -33,8 +36,7 @@ inline void Hooked_ValidateUserCmd(void* input, CUserCmd* pCmd, int sequence_num
 
 inline void Hook_ValidateUserCmd(void)
 {
-	void* original = sigscan_module("client.so", "55 48 89 E5 41 56 41 89 D6 41 55 49 89 FD 41 54 4C 8D 65 DC");
-	detour_init(&validate_ctx, original, (void*)&Hooked_ValidateUserCmd);
+	detour_init(&validate_ctx, Sigs::CInput_ValidateUserCmd.GetPointer(), (void*)&Hooked_ValidateUserCmd);
 
 	if (!detour_enable(&validate_ctx))
 	{

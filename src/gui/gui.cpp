@@ -5,7 +5,9 @@
 #include "../features/logs/logs.h"
 #include "../features/binds/binds.h"
 
+#include "../features/angelscript/api/globals.h"
 #include "../features/angelscript/api/api.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 TextEditor GUI::editor;
 int GUI::tab = 0;
@@ -174,6 +176,7 @@ void DrawESPTab()
 	ImGui::Separator();
 
 	ImGui::Checkbox("Chams", &Settings::ESP.chams);
+	ImGui::SliderFloat("Chams Alpha", &Settings::ESP.chams_alpha, 0.0f, 1.0f);
 
 	ImGui::Separator();
 
@@ -317,6 +320,12 @@ void DrawAntiaimTab()
 	ImGui::EndDisabled();
 }
 
+struct AccessOption
+{
+	const char* label;
+	int flag;
+};
+
 void DrawLuaTab()
 {
 	static bool init = false;
@@ -328,7 +337,8 @@ void DrawLuaTab()
 			"Entity", "Vector",
 			"ViewSetup", "GameEvent",
 			"DrawModelContext", "Material",
-			"Texture", "ConVar"
+			"Texture", "ConVar",
+			"Vector2D"
 		};
 
 		constexpr const char* myIdentifiers[]
@@ -337,7 +347,8 @@ void DrawLuaTab()
 			"EntityList", "Engine",
 			"Hooks", "Materials",
 			"Draw", "Render",
-			"Client", "ClientState"
+			"Client", "ClientState",
+			"Input", "ImGui"
 		};
 
 		auto def = TextEditor::LanguageDefinition::CPlusPlus();
@@ -360,17 +371,68 @@ void DrawLuaTab()
 
 	ImGui::BeginGroup();
 
-	GUI::editor.Render("Editor", ImVec2(0, -25));
-	
-	ImGui::Spacing();
-	
-	if (ImGui::Button("Run Code"))
-		API::RunCode(GUI::editor.GetText());
-	
-	ImGui::SameLine();
-	
-	if (ImGui::Button("Clear"))
-		GUI::editor.SetText("");
+	if (ImGui::BeginTabBar("LuaTab"))
+	{
+		if (ImGui::BeginTabItem("Editor Tab"))
+		{
+			GUI::editor.Render("Editor", ImVec2(0, -25));
+
+			ImGui::Spacing();
+
+			if (ImGui::Button("Run Code"))
+				API::RunCode(GUI::editor.GetText());
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear"))
+				GUI::editor.SetText("");
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Restrictions"))
+		{
+			static const AccessOption options[]
+			{
+				{ "Allow Engine Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_ENGINE },
+				{ "Allow Client Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENT },
+				{ "Allow ClientState Library",   ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENTSTATE },
+				{ "Allow Common Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_COMMON },
+				{ "Allow Draw Library",          ScriptAccessMask::SCRIPT_MASK_ALLOW_DRAW },
+				{ "Allow EntityList Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_ENTITYLIST },
+				{ "Allow Hooks Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_HOOKS },
+				{ "Allow ImGui Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_IMGUI },
+				{ "Allow Input Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_INPUT },
+				{ "Allow Materials Library",     ScriptAccessMask::SCRIPT_MASK_ALLOW_MATERIALS },
+				{ "Allow Render Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_RENDER },
+				{ "Allow FileSystem Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_FILESYSTEM },
+				{ "Allow Math Library",          ScriptAccessMask::SCRIPT_MASK_ALLOW_MATH },
+				{ "Allow Array Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_ARRAY },
+				{ "Allow Dictionary Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_DICT },
+				{ "Allow DateTime Library",      ScriptAccessMask::SCRIPT_MASK_ALLOW_DATETIME },
+				{ "Allow String Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_STRING },
+			};
+
+			int& mask = GetScriptAccessMask();
+
+			int columns = std::max(1, (int)(ImGui::GetContentRegionAvail().x / 250.0f));
+
+			if (ImGui::BeginTable("##fdgidfojg", columns))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(options); i++)
+				{
+					ImGui::TableNextColumn();
+					ImGui::CheckboxFlags(options[i].label, &mask, options[i].flag);
+				}
+
+				ImGui::EndTable();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 
 	ImGui::EndGroup();
 }
@@ -669,8 +731,32 @@ void GUI::RunPlayerList()
 	ImGui::End();
 }
 
+void AS_ImGui_Callback()
+{
+	std::vector<ASHook> hooks;
+	if (!Hooks_GetHooks("ImGui", hooks))
+		return;
+
+	auto engine = GetScriptEngine();
+
+	for (const auto& hook : hooks)
+	{
+		asIScriptContext* ctx = engine->RequestContext();
+
+		ctx->Prepare(hook.func);
+		ctx->Execute();
+
+		engine->ReturnContext(ctx);
+	}
+}
+
 void GUI::RunMainWindow()
 {
+	AS_ImGui_Callback();
+
+	if (!Settings::menu_open)
+		return;
+
 	if (helper::engine::IsTakingScreenshot())
 		return;
 

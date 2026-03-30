@@ -140,7 +140,8 @@ namespace Settings
 		bool name = false;
 		bool box = false;
 		int health = 0;
-		bool chams = 0;
+		bool chams = false;
+		float chams_alpha = 0.5f;
 		bool weapon = false;
 		int team_selection = 0;
 		int fconditions = 0;

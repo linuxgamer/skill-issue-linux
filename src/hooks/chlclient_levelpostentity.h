@@ -5,12 +5,6 @@
 #include "../features/entitylist/entitylist.h"
 #include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
 
-#if 0
-#include "../features/lua/hookmgr.h"
-#include "../features/lua/api.h"
-#include "../features/lua/classes.h"
-#endif
-
 #include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
 

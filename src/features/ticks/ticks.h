@@ -11,7 +11,6 @@ namespace TickManager
 	void CL_SendMove(void);
 	void Post_CreateMove(int sequence_number);
 
-	void Lua_CreateMove_Callback(CUserCmd* pCmd);
 	void Init(void);
 
 	// call in CL_Move

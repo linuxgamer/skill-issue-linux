@@ -13,3 +13,9 @@ asIScriptEngine* GetScriptEngine()
 	static asIScriptEngine* engine = asCreateScriptEngine();
 	return engine;
 }
+
+int& GetScriptAccessMask()
+{
+	static int mask = -1;
+	return mask;
+}

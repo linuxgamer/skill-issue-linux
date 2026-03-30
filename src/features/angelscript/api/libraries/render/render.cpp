@@ -1,5 +1,6 @@
 #include "render.h"
 
+#include "../../globals.h"
 #include "../../../../../sdk/interfaces/interfaces.h"
 #include "../../../../../sdk/definitions/imaterial.h"
 #include "../../../../../sdk/definitions/itexture.h"
@@ -273,6 +274,7 @@ void Render_RegisterLibrary(asIScriptEngine* engine)
 
 	engine->SetDefaultNamespace("Render");
 	{
+		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_RENDER);
 		engine->RegisterGlobalFunction("void GetColorModulation(float &out r, float &out g, float &out b)", asFUNCTION(GetColorMod), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void SetColorModulation(float r, float g, float b)", asFUNCTION(SetColorMod), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetBlend()", asFUNCTION(GetBlend), asCALL_CDECL);

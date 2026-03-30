@@ -43,6 +43,7 @@ bool Execute(const std::string& text)
 
 void Common_RegisterLibrary(asIScriptEngine* engine)
 {
+	engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_COMMON);
 	engine->RegisterGlobalFunction("void print(const string &in text)", asFUNCTION(Print), asCALL_CDECL);
 	engine->RegisterGlobalFunction("void warn(const string &in text)", asFUNCTION(Warn), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool Execute(const string &in text)", asFUNCTION(Execute), asCALL_CDECL);
