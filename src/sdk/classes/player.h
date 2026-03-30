@@ -1,5 +1,6 @@
 #pragma once
 
+#include "basecombatcharacter.h"
 #include "entity.h"
 #include "../definitions/types.h"
 #include "../defs.h"
@@ -58,10 +59,10 @@ enum
 	WL_Eyes
 };
 
-class CTFPlayer : public CBaseEntity {
+class CTFPlayer : public CBaseCombatCharacter
+{
 public:
 	NETVAR(GetActiveWeapon, "CBaseCombatCharacter->m_hActiveWeapon", EHANDLE)
-	NETVAR(GetNextAttack, "CBaseCombatCharacter->m_flNextAttack", float)
 	NETVAR(GetTickBase, "CBasePlayer->m_nTickBase", int)
 	NETVAR(GetVelocity, "CBasePlayer->m_vecVelocity[0]", Vector)
 	NETVAR(GetFlags, "CBasePlayer->m_fFlags", int)
@@ -109,6 +110,5 @@ public:
 	int GetWaterLevel();
 	float GetEffectiveInvisibilityLevel();
 	uint8_t GetMoveType();
-
 	void ThirdPersonSwitch(bool state);
 };

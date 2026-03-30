@@ -64,23 +64,19 @@ bool Ent_IsPlayer(CBaseEntity* ent)
 }
 
 template<typename T>
-T GetProp(CBaseEntity* ent, const std::string& className, const std::string& prop)
+T* GetProp(CBaseEntity* ent, const std::string& className, const std::string& prop)
 {
-	if (!ent) return T{};
+	if (!ent) return nullptr;
 
 	const auto& netvars = Netvars::m_netvarMap;
 
 	auto hashed = fnv::Hash((className + "->" + prop).c_str());
 	auto it = netvars.find(hashed);
 	if (it == netvars.end())
-	{
-		auto engine = GetScriptEngine();
-		engine->WriteMessage("Entity::GetProp", 0, 0, asMSGTYPE_ERROR, "Couldn't find netvar");
-		return T{};
-	}
+		return nullptr;
 
 	uintptr_t ptr = reinterpret_cast<uintptr_t>(ent);
-	return *reinterpret_cast<T*>(ptr + it->second);
+	return reinterpret_cast<T*>(ptr + it->second);
 }
 
 template<typename T>
@@ -106,32 +102,33 @@ void SetProp(CBaseEntity* ent, const std::string& className, const std::string& 
 int GetPropInt(CBaseEntity* ent, const std::string& cls, const std::string& prop)
 {
 	if (ent == nullptr) return 0;
-	return GetProp<int>(ent, cls, prop);
+	return *GetProp<int>(ent, cls, prop);
 }
 
 float GetPropFloat(CBaseEntity* ent, const std::string& cls, const std::string& prop)
 {
 	if (ent == nullptr) return 0;
-	return GetProp<float>(ent, cls, prop);
+	return *GetProp<float>(ent, cls, prop);
 }
 
 bool GetPropBool(CBaseEntity* ent, const std::string& cls, const std::string& prop)
 {
-	if (ent == nullptr) return false;
-	return GetProp<bool>(ent, cls, prop);
+	if (ent == nullptr) return 0;
+	return *GetProp<bool>(ent, cls, prop);
 }
 
 Vector GetPropVector(CBaseEntity* ent, const std::string& cls, const std::string& prop)
 {
 	if (ent == nullptr) return {};
-	return GetProp<Vector>(ent, cls, prop);
+	return *GetProp<Vector>(ent, cls, prop);
 }
 
 CBaseEntity* GetPropEntity(CBaseEntity* ent, const std::string& cls, const std::string& prop)
 {
 	if (ent == nullptr) return nullptr;
-	auto handle = GetProp<EHANDLE>(ent, cls, prop);
-	return handle.IsValid() ? handle.Get() : nullptr;
+	EHANDLE handle = *GetProp<EHANDLE>(ent, cls, prop);
+	auto realent = HandleAs<CBaseEntity*>(handle);
+	return realent;
 }
 
 void SetPropInt(CBaseEntity* ent, const std::string& cls, const std::string& prop, int value)

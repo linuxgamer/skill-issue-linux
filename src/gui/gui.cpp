@@ -9,6 +9,8 @@
 #include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
 
+#include "../imgui/imgui_stdlib.h"
+
 TextEditor GUI::editor;
 int GUI::tab = 0;
 bool GUI::openDeletePopup = false;
@@ -40,7 +42,7 @@ void DrawTabButtons(int &tab)
 	if (ImGui::Button("RADAR", ImVec2(-1, 0)))
 		tab = TAB_RADAR;
 
-	if (ImGui::Button("PLUTO", ImVec2(-1, 0)))
+	if (ImGui::Button("CODE", ImVec2(-1, 0)))
 		tab = TAB_LUA;
 
 	if (ImGui::Button("NETVARS", ImVec2(-1, 0)))
@@ -437,10 +439,39 @@ void DrawLuaTab()
 	ImGui::EndGroup();
 }
 
+std::string& GetNetvarSearchString()
+{
+	static std::string s_Search;
+	return s_Search;
+}
+
+std::string ToLower(std::string str)
+{
+	// wtf is this syntax
+	// why the fuck do we need to specify the begin, end and then the fucking begin again??
+	// fuck you C++
+	std::transform(str.begin(), str.end(), str.begin(),
+		[](unsigned char c) { return std::tolower(c); });
+	return str;
+}
+
+bool ContainsInsensitive(const std::string& text, const std::string& search)
+{
+	// bro why can't it just be a fucking bool and return on a parameter???
+	// fuck you c++
+	return ToLower(text).find(ToLower(search)) != std::string::npos;
+}
+
 void DrawParsedNetvarData(const std::vector<NetvarClassEntry>& classes)
 {
+	const std::string& strSearch = GetNetvarSearchString();
+	bool bIsSearchEmpty = strSearch.empty();
+
 	for (const auto& cls : classes)
 	{
+		if (!bIsSearchEmpty && !ContainsInsensitive(cls.className, strSearch))
+			continue;
+
 		if (ImGui::TreeNode(cls.className.c_str()))
 		{
 			if (cls.members.empty())
@@ -456,6 +487,9 @@ void DrawParsedNetvarData(const std::vector<NetvarClassEntry>& classes)
 
 void DrawNetVarsTab()
 {
+	float maxSize = ImGui::GetContentRegionAvail().x;
+	ImGui::SetNextItemWidth(maxSize);
+	ImGui::InputText("##SearchBar", &GetNetvarSearchString());
 	if (ImGui::BeginChild("NetvarContent"))
 		DrawParsedNetvarData(Netvars::m_netvarUIVector);
 	ImGui::EndChild();

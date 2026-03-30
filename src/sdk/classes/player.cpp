@@ -1,4 +1,7 @@
 #include "player.h"
+#include "basecombatcharacter.h"
+#include "entity.h"
+#include "weaponbase.h"
 
 bool CTFPlayer::IsAlive()
 {
@@ -166,3 +169,9 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(void*)]);
 	func(this, state);
 }
+
+/*CTFWeaponBase* CTFPlayer::GetWeaponFromSlot(int index)
+{
+	assert(index >= 0 && index < MAX_WEAPONS);
+	return static_cast<CTFWeaponBase*>(m_hMyWeapons()[index].Get());
+}*/
