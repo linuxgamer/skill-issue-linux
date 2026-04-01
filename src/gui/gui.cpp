@@ -4,6 +4,7 @@
 
 #include "../features/logs/logs.h"
 #include "../features/binds/binds.h"
+#include "../features/spectators/spectators.h"
 
 #include "../features/angelscript/api/globals.h"
 #include "../features/angelscript/api/api.h"
@@ -661,6 +662,7 @@ void DrawLogsTab()
 
 void GUI::RunSpectatorList()
 {
+	/*
 	if (helper::engine::IsTakingScreenshot())
 		return;
 
@@ -716,6 +718,9 @@ void GUI::RunSpectatorList()
 	}
 
 	ImGui::End();
+	*/
+
+	Spectators::DrawList();
 }
 
 void GUI::RunPlayerList()

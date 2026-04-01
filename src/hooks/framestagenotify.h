@@ -2,9 +2,11 @@
 
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/helpers/helper.h"
+
 #include "../features/visuals/thirdperson/thirdperson.h"
 #include "../features/visuals/customfov/customfov.h"
 #include "../features/entitylist/entitylist.h"
+#include "../features/spectators/spectators.h"
 
 #include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
@@ -33,6 +35,7 @@ DECLARE_VTABLE_HOOK(FrameStageNotify, void, (CHLClient* thisptr, int stage))
 			if (pLocal == nullptr)
 				break;
 
+			Spectators::RunMain(pLocal);
 			//Thirdperson::FrameStageNotify(pLocal);
 			break;
 		}
