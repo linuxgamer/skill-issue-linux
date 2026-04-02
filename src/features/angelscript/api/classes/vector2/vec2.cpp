@@ -28,6 +28,6 @@ void Vector2_RegisterClass(asIScriptEngine* engine)
 	engine->RegisterObjectMethod(VEC2_CLASSNAME, "float LengthSqr() const", asMETHOD(Vec2, LengthSqr), asCALL_THISCALL);
 	engine->RegisterObjectMethod(VEC2_CLASSNAME, "float DistTo() const", asMETHOD(Vec2, DistTo), asCALL_THISCALL);
 	engine->RegisterObjectMethod(VEC2_CLASSNAME, "float DistToSqr() const", asMETHOD(Vec2, DistToSqr), asCALL_THISCALL);
-	engine->RegisterObjectMethod(VEC2_CLASSNAME, "float Dot()", asMETHOD(Vec2, Dot), asCALL_THISCALL);
+	engine->RegisterObjectMethod(VEC2_CLASSNAME, "float Dot() const", asMETHOD(Vec2, Dot), asCALL_THISCALL);
 	engine->RegisterObjectMethod(VEC2_CLASSNAME, "bool IsZero() const", asMETHOD(Vec2, IsZero), asCALL_THISCALL);
 }

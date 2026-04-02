@@ -63,8 +63,11 @@
 ### > bool InCond(int cond)
 
 ### > string GetClassName()
+CTFViewModel, CTFPlayer, etc.
 
 ### > string GetName()
+
+### > Entity@ GetWeaponFromSlot(int index)
 
 ## Examples
 

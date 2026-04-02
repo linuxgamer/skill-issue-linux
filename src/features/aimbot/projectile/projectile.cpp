@@ -77,7 +77,7 @@ bool CAimbotProjectile::CheckTrajectory(CBaseEntity* pTarget, const Vector vecSt
 	vecVelocity *= prjInfo.speed;
 
 	CGameTrace trace;
-	CTraceFilterWorldAndPropsOnly filter;
+	CTraceFilterCollideable filter;
 	filter.pSkip = pTarget;
 
 	Vector vecMins{ -prjInfo.hull.x, -prjInfo.hull.y, -prjInfo.hull.z };

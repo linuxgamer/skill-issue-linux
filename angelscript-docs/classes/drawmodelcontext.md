@@ -1,6 +1,7 @@
 # DrawModelContext Class
 
 ### > int GetEntityIndex()
+-1 means its a client only entity
 
 ### > bool IsChams()
 
