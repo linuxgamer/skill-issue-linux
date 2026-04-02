@@ -1,7 +1,24 @@
 #include "player.h"
-#include "basecombatcharacter.h"
 #include "entity.h"
 #include "weaponbase.h"
+
+#include "../signatures/signatures.h"
+
+/*
+xref: item_eater_recharger
+in function StartUseActionSlotItem
+Above the dynamic cast to grappling hook
+
+  lVar7 = FUN_01de8490(plVar6);
+  if (lVar7 == 0) {
+    if (((g_pGameRules == (long *)0x0) || (cVar3 = FUN_01cbf710(), cVar3 == '\0')) ||
+===>       ((lVar7 = GetEntityForLoadoutSlot(plVar6,9,0), lVar7 == 0 ||
+        (lVar7 = __dynamic_cast(lVar7,&C_BaseEntity::typeinfo,&C_TFGrapplingHook::typeinfo,0),
+        lVar7 == 0)))) {
+      DAT_02fc86a8 = '\0';
+      plVar6 = (long *)FUN_01de8230(plVar6,9,0);
+*/
+ADD_SIG(GetEntityForLoadoutSlot, "client.so", "55 8D 46 F9 48 89 E5")
 
 bool CTFPlayer::IsAlive()
 {
@@ -64,7 +81,7 @@ void CTFPlayer::UpdateClientSideAnimation()
 	if (!orig)
 		return;
 
-	orig((void*)this);
+	orig(this);
 }
 
 int CTFPlayer::GetWaterLevel()
@@ -175,3 +192,10 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 	assert(index >= 0 && index < MAX_WEAPONS);
 	return static_cast<CTFWeaponBase*>(m_hMyWeapons()[index].Get());
 }*/
+
+using GetEntityFromLoadoutSlotFn = CBaseEntity*(*)(CTFPlayer* pPlayer, int slot);
+CBaseEntity* CTFPlayer::GetEntityFromLoadoutSlot(int slot)
+{
+	static GetEntityFromLoadoutSlotFn orig = reinterpret_cast<GetEntityFromLoadoutSlotFn>(Sigs::GetEntityForLoadoutSlot.GetPointer());
+	return orig(this, slot);
+}

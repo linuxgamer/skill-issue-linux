@@ -111,4 +111,5 @@ public:
 	float GetEffectiveInvisibilityLevel();
 	uint8_t GetMoveType();
 	void ThirdPersonSwitch(bool state);
+	CBaseEntity* GetEntityFromLoadoutSlot(int slot);
 };

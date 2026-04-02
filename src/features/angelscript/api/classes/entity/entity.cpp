@@ -281,6 +281,15 @@ std::string GetName(CBaseEntity* ent)
 	return ent->GetClientClass()->networkName;
 }
 
+CBaseEntity* GetEntityFromLoadoutSlot(CBaseEntity* ent, int slot)
+{
+	if (ent == nullptr || !ent->IsPlayer())
+		return nullptr;
+
+	CTFPlayer* pPlayer = static_cast<CTFPlayer*>(ent);
+	return reinterpret_cast<CTFPlayer*>(ent)->GetEntityFromLoadoutSlot(slot/*g_SlotsToLoadoutSlotsPerClass[pPlayer->m_iClass()][slot]*/);
+}
+
 void Entity_RegisterClass(asIScriptEngine* engine)
 {
 	engine->RegisterObjectType(ENTITY_CLASSNAME, 0, asOBJ_REF);
@@ -321,4 +330,5 @@ void Entity_RegisterClass(asIScriptEngine* engine)
 	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool InCond(int cond)", asFUNCTION(InCond), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "string GetClassName()", asFUNCTION(GetClassName), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "string GetName()", asFUNCTION(GetName), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetEntityFromLoadoutSlot(int index)", asFUNCTION(GetEntityFromLoadoutSlot), asCALL_CDECL_OBJFIRST);
 }
