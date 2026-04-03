@@ -4,7 +4,6 @@
 #include "../imgui/imgui_stdlib.h"
 #include "../settings/settings.h"
 #include "../sdk/helpers/helper.h"
-#include "../imgui/TextEditor.h"
 #include "../sdk/definitions/eteam.h"
 
 #include "../features/antiaim/antiaim.h"
@@ -30,7 +29,6 @@ enum TabMenu
 namespace GUI
 {
 	extern int tab;
-	extern TextEditor editor;
 
 	extern int selectedIndex;
 	extern std::vector<std::string> configs;

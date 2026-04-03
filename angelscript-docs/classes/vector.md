@@ -1,10 +1,10 @@
 # Vector Class
 
 ## Constructor
-### > Vector()
+### > Vector3()
 Returns a Vector with x, y and z as 0
 
-### > Vector(float x, float y, float z)
+### > Vector3(float x, float y, float z)
 
 ## Fields
 
@@ -16,7 +16,7 @@ Returns a Vector with x, y and z as 0
 
 ## Methods
 
-### > Vector To2D()
+### > Vector3 To2D()
 
 ### > float Length() const
 
@@ -26,11 +26,11 @@ Returns a Vector with x, y and z as 0
 
 ### > float Normalize2D() const
 
-### > Vector Normalized()
+### > Vector3 Normalized()
 
-### > Vector Normalized2D()
+### > Vector3 Normalized2D()
 
-### > Vector Get2D()
+### > Vector3 Get2D()
 
 ### > float Length2D() const
 
@@ -46,21 +46,21 @@ Returns a Vector with x, y and z as 0
 
 ### > float Dot()
 
-### > Vector Cross()
+### > Vector3 Cross()
 
 ### > bool IsZero() const
 
-### > Vector ToAngle()
+### > Vector3 ToAngle()
 
-### > Vector FromAngle()
+### > Vector3 FromAngle()
 
 ## Examples
 
 ```cpp
 void main()
 {
-	Vector vecA = Vector(10, 5, 5);
-	Vector vecB = Vector();
+	Vector3 vecA = Vector3(10, 5, 5);
+	Vector3 vecB = Vector3();
 	print(format("{}", vecA.Dot(vecB)));
 }
 ```

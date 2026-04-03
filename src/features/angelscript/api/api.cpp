@@ -132,8 +132,3 @@ bool API::IsInitialized()
 {
 	return s_bInitialized;
 }
-
-bool API::RunCode(const std::string& text)
-{
-	return Execute(text);
-}

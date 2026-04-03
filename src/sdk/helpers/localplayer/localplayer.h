@@ -66,6 +66,9 @@ namespace helper
 						return charge == 1.0f || (!(pCmd->buttons & IN_ATTACK) && charge > 0.0f);
 					}
 
+					if (id == TF_WEAPON_LUNCHBOX)
+						return pCmd->buttons & IN_ATTACK2;
+
 					return CanShoot(pLocal, pWeapon, pCmd);
 				}
 

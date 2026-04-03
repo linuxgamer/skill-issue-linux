@@ -5,14 +5,17 @@
 #include "../features/logs/logs.h"
 #include "../features/binds/binds.h"
 #include "../features/spectators/spectators.h"
+#include "../features/scriptmanager/scriptmanager.h"
 
 #include "../features/angelscript/api/globals.h"
-#include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 #include "../imgui/imgui_stdlib.h"
 
-TextEditor GUI::editor;
+#define BASE_DIR "./skill-issue/"
+#define SCRIPT_DIR "./skill-issue/scripts/"
+#define CONFIG_DIR "./skill-issue/configs/"
+
 int GUI::tab = 0;
 bool GUI::openDeletePopup = false;
 
@@ -20,6 +23,8 @@ int GUI::selectedIndex = -1;
 std::vector<std::string> GUI::configs;
 char GUI::newConfigName[64] = "\0";
 bool GUI::firstOpenConfigTab = true;
+
+std::vector<std::string> s_vScriptFiles;
 
 void DrawTabButtons(int &tab)
 {
@@ -334,66 +339,70 @@ struct AccessOption
 	int flag;
 };
 
-void DrawLuaTab()
+void RefreshScriptList()
 {
-	static bool init = false;
-	if (!init)
+	s_vScriptFiles.clear();
+
+	const std::filesystem::path dir = SCRIPT_DIR;
+
+	if (!std::filesystem::exists(dir) || !std::filesystem::is_directory(dir))
+		return;
+
+	for (const auto& entry : std::filesystem::directory_iterator(dir))
 	{
-		constexpr const char* keywords[]
-		{
-			"null", "UserCmd",
-			"Entity", "Vector3",
-			"ViewSetup", "GameEvent",
-			"DrawModelContext", "Material",
-			"Texture", "ConVar",
-			"Vector2"
-		};
+		if (!entry.is_regular_file())
+			continue;
 
-		constexpr const char* myIdentifiers[]
-		{
-			"print", "warn",
-			"EntityList", "Engine",
-			"Hooks", "Materials",
-			"Draw", "Render",
-			"Client", "ClientState",
-			"Input", "ImGui"
-		};
+		const auto& path = entry.path();
 
-		auto def = TextEditor::LanguageDefinition::CPlusPlus();
-
-		for (auto& k: keywords)
-			def.mKeywords.insert(k);
-
-		TextEditor::Identifier id;
-		id.mDeclaration = "Library";
-
-		for (auto& k : myIdentifiers)
-			def.mIdentifiers.insert(std::make_pair(std::string(k), id));
-
-		GUI::editor.SetLanguageDefinition(def);
-		GUI::editor.SetPalette(TextEditor::GetDarkPalette());
-		GUI::editor.SetShowWhitespaces(false);
-		GUI::editor.SetText("void main()\n{\n\t// Code goes here\n}");
-		init = true;
+		if (path.extension() == ".as")
+		s_vScriptFiles.emplace_back(path.filename().string());
 	}
 
+	std::sort(s_vScriptFiles.begin(), s_vScriptFiles.end());
+}
+
+void DrawLuaTab()
+{
 	ImGui::BeginGroup();
 
 	if (ImGui::BeginTabBar("LuaTab"))
 	{
-		if (ImGui::BeginTabItem("Editor Tab"))
+		if (ImGui::BeginTabItem("Scripts"))
 		{
-			GUI::editor.Render("Editor", ImVec2(0, -25));
+			if (ImGui::Button("Refresh"))
+				RefreshScriptList();
 
-			ImGui::Spacing();
+			if (!s_vScriptFiles.empty())
+			{
+				if (ImGui::BeginChild("##ScriptList"))
+				{
+					for (int i = 0; i < s_vScriptFiles.size(); i++)
+					{
+						const std::string& file = s_vScriptFiles[i];
+						std::string fullPath = std::string(SCRIPT_DIR) + "/" + file;
 
-			if (ImGui::Button("Run Code"))
-				API::RunCode(GUI::editor.GetText());
+						Script& script = ScriptManager::GetOrCreate(fullPath);
 
-			ImGui::SameLine();
+						bool wasLoaded = script.loaded;
 
-			if (ImGui::Button("Clear"))
-				GUI::editor.SetText("");
+						if (ImGui::Checkbox(file.c_str(), &wasLoaded))
+						{
+							if (wasLoaded)
+								ScriptManager::Load(script);
+							else
+								ScriptManager::Unload(script);
+						}
+					}
+				}
+				ImGui::EndChild();
+
+			}
+			else
+			{
+				std::string dir = std::string(interfaces::Engine->GetGameDirectory()) + "/skill-issue/scripts/";
+				ImGui::Text("Add scripts in %s", dir.c_str());
+			}
 
 			ImGui::EndTabItem();
 		}
@@ -533,7 +542,7 @@ void RefreshConfigList(const std::string& folder)
 
 void DrawConfigTab()
 {
-	const std::string configFolder = "./skill-issue-configs";
+	const std::string configFolder = CONFIG_DIR;
 
 	if (GUI::firstOpenConfigTab)
 	{
@@ -662,64 +671,6 @@ void DrawLogsTab()
 
 void GUI::RunSpectatorList()
 {
-	/*
-	if (helper::engine::IsTakingScreenshot())
-		return;
-
-	ImGui::SetNextWindowSizeConstraints(
-        	ImVec2(150.0f, 0.0f),
-        	ImVec2(FLT_MAX, FLT_MAX)
-    	);
-
-	int flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
-	if (!Settings::menu_open)
-		flags |= ImGuiWindowFlags_NoMove;
-
-	ImGui::Begin("Spectator List", nullptr, flags);
-
-	int maxclients = helper::engine::GetMaxClients();
-	if (!helper::engine::IsInMatch() || maxclients <= 1)
-		return ImGui::End();
-
-	CTFPlayer* pLocal = helper::engine::GetLocalPlayer();
-	if (pLocal == nullptr || !pLocal->IsAlive())
-		return ImGui::End();
-
-	int localTeam = pLocal->m_iTeamNum();
-	int localIndex = pLocal->GetIndex();
-
-	for (const auto& entry : EntityList::GetEntities())
-	{
-		if (!(entry.flags & EntityFlags::IsPlayer))
-			continue;
-
-		CTFPlayer* player = static_cast<CTFPlayer*>(entry.ptr);
-		if (player == nullptr)
-			continue;
-
-		if (player->IsAlive() || player == pLocal)
-			continue;
-
-		if (player->m_iTeamNum() != localTeam)
-			continue;
-
-		CTFPlayer* m_hObserverTarget = HandleAs<CTFPlayer*>(player->m_hObserverTarget());
-		if (!m_hObserverTarget || m_hObserverTarget->GetIndex() != localIndex)
-			continue;
-
-		player_info_t info;
-		if (!interfaces::Engine->GetPlayerInfo(player->GetIndex(), &info))
-			continue;
-
-		int m_iObserverMode = player->m_iObserverMode();
-		bool isfirstperson = m_iObserverMode == OBS_MODE_IN_EYE;
-
-		ImGui::TextColored(isfirstperson ? ImVec4(1.0, 0.5, 0.5, 1.0) : ImVec4(1.0, 1.0, 1.0, 1.0), "%s", player->GetName().c_str());
-	}
-
-	ImGui::End();
-	*/
-
 	Spectators::DrawList();
 }
 
@@ -820,6 +771,7 @@ void GUI::RunMainWindow()
 			ImGui::EndTable();
 		}
 	}
+
 	ImGui::End();
 }
 
