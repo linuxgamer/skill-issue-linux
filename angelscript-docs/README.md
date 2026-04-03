@@ -7,7 +7,7 @@ If you don't know AngelScript, you can find more about it in the [official websi
 Here is a template you can follow to start making Angelscripts for Skill Issue:
 
 ```as
-// Caled when
+// called when
 // loading the script
 void main()
 {
