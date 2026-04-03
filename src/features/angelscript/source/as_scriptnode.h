@@ -28,11 +28,13 @@
    andreas@angelcode.com
 */
 
+
 //
 // as_scriptnode.h
 //
 // A node in the script tree built by the parser for compilation
 //
+
 
 #ifndef AS_SCRIPTNODE_H
 #define AS_SCRIPTNODE_H
@@ -106,7 +108,7 @@ class asCScriptEngine;
 
 class asCScriptNode
 {
-      public:
+public:
 	asCScriptNode(eScriptNode nodeType);
 
 	void Destroy(asCScriptEngine *engine);
@@ -129,11 +131,9 @@ class asCScriptNode
 	asCScriptNode *firstChild;
 	asCScriptNode *lastChild;
 
-      protected:
+protected:
 	// Must call Destroy instead
-	~asCScriptNode()
-	{
-	}
+	~asCScriptNode() {}
 };
 
 END_AS_NAMESPACE

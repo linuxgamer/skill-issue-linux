@@ -28,13 +28,16 @@
    andreas@angelcode.com
 */
 
+
 //
 // as_atomic.h
 //
 // The asCAtomic class provides methods for performing threadsafe
-// operations on a single dword, e.g. reference counting and
+// operations on a single dword, e.g. reference counting and 
 // bitfields.
 //
+
+
 
 #ifndef AS_ATOMIC_H
 #define AS_ATOMIC_H
@@ -45,11 +48,11 @@ BEGIN_AS_NAMESPACE
 
 class asCAtomic
 {
-      public:
+public:
 	asCAtomic();
 
 	asDWORD get() const;
-	void set(asDWORD val);
+	void    set(asDWORD val);
 
 	// Increase and return new value
 	asDWORD atomicInc();
@@ -57,7 +60,7 @@ class asCAtomic
 	// Decrease and return new value
 	asDWORD atomicDec();
 
-      protected:
+protected:
 	asDWORD value;
 };
 

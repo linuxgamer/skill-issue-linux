@@ -28,11 +28,14 @@
    andreas@angelcode.com
 */
 
+
 //
 // as_scriptcode.h
 //
 // A container class for the script code to be compiled
 //
+
+
 
 #ifndef AS_SCRIPTCODE_H
 #define AS_SCRIPTCODE_H
@@ -44,7 +47,7 @@ BEGIN_AS_NAMESPACE
 
 class asCScriptCode
 {
-      public:
+public:
 	asCScriptCode();
 	~asCScriptCode();
 
@@ -55,12 +58,12 @@ class asCScriptCode
 
 	bool TokenEquals(size_t pos, size_t len, const char *str);
 
-	asCString name;
-	char *code;
-	size_t codeLength;
-	bool sharedCode;
-	int idx;
-	int lineOffset;
+	asCString        name;
+	char            *code;
+	size_t           codeLength;
+	bool             sharedCode;
+	int              idx;
+	int              lineOffset;
 	asCArray<size_t> linePositions;
 };
 

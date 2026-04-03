@@ -28,25 +28,28 @@
    andreas@angelcode.com
 */
 
+
 //
 // as_parser.h
 //
 // This class parses the script code and builds a tree for compilation
 //
 
+
+
 #ifndef AS_PARSER_H
 #define AS_PARSER_H
 
-#include "as_builder.h"
-#include "as_scriptcode.h"
 #include "as_scriptnode.h"
+#include "as_scriptcode.h"
+#include "as_builder.h"
 #include "as_tokenizer.h"
 
 BEGIN_AS_NAMESPACE
 
 class asCParser
 {
-      public:
+public:
 	asCParser(asCBuilder *builder);
 	~asCParser();
 
@@ -66,7 +69,7 @@ class asCParser
 
 	asCScriptNode *GetScriptNode();
 
-      protected:
+protected:
 	void Reset();
 
 	void GetToken(sToken *token);
@@ -83,13 +86,13 @@ class asCParser
 	asCScriptNode *SuperficiallyParseExpression();
 	asCScriptNode *ParseType(bool allowConst, bool allowVariableType = false, bool allowAuto = false);
 	asCScriptNode *ParseTypeMod(bool isParam);
-	void ParseOptionalScope(asCScriptNode *node);
+	void           ParseOptionalScope(asCScriptNode *node);
 	asCScriptNode *ParseRealType();
 	asCScriptNode *ParseDataType(bool allowVariableType = false, bool allowAuto = false);
 	asCScriptNode *ParseIdentifier();
-	bool ParseTemplTypeList(asCScriptNode *node, bool required = true);
-	bool ParseTemplateDeclTypeList(asCScriptNode *node, bool required);
-	void ParseMethodAttributes(asCScriptNode *funcNode);
+	bool           ParseTemplTypeList(asCScriptNode *node, bool required = true);
+	bool           ParseTemplateDeclTypeList(asCScriptNode* node, bool required);
+	void           ParseMethodAttributes(asCScriptNode *funcNode);
 
 	asCScriptNode *ParseListPattern();
 
@@ -159,7 +162,7 @@ class asCParser
 	asCScriptNode *ParseLambda();
 
 	bool FindTokenAfterType(sToken &nextToken);
-	bool FindIdentifierAfterScope(sToken &nextToken);
+	bool FindIdentifierAfterScope(sToken& nextToken);
 	bool IsConstant(int tokenType);
 	bool IsOperator(int tokenType);
 	bool IsPreOperator(int tokenType);
@@ -184,14 +187,14 @@ class asCParser
 	bool isParsingAppInterface;
 
 	asCScriptEngine *engine;
-	asCBuilder *builder;
-	asCScriptCode *script;
-	asCScriptNode *scriptNode;
+	asCBuilder      *builder;
+	asCScriptCode   *script;
+	asCScriptNode   *scriptNode;
 
 	asCString tempString; // Used for reduzing amount of dynamic allocations
 
-	sToken lastToken;
-	size_t sourcePos;
+	sToken       lastToken;
+	size_t       sourcePos;
 };
 
 END_AS_NAMESPACE
