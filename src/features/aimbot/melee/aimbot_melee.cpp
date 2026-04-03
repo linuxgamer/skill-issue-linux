@@ -2,35 +2,36 @@
 
 namespace AimbotMelee
 {
-	void Run(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, AimbotState& state)
+	void Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd, AimbotState &state)
 	{
-		if (Settings::Aimbot.melee == static_cast<int>(MeleeMode::NONE) || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
+		if (Settings::Aimbot.melee == static_cast<int>(MeleeMode::NONE) ||
+		    pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 			return;
-		
+
 		std::vector<PotentialTarget> targets;
 
-		bool bIsSword = static_cast<int>(AttributeHookValue(0, "is_a_sword", pWeapon, nullptr, true));
-		float range = (bIsSword ? 72.0f : 48.0f) * 1.9f;
-		int localTeam = pLocal->m_iTeamNum();
+		bool bIsSword	= static_cast<int>(AttributeHookValue(0, "is_a_sword", pWeapon, nullptr, true));
+		float range	= (bIsSword ? 72.0f : 48.0f) * 1.9f;
+		int localTeam	= pLocal->m_iTeamNum();
 
 		Vector shootPos = pLocal->GetEyePos();
 
 		CGameTrace trace;
 		CTraceFilterHitscan filter;
 		filter.pSkip = pLocal;
-		
+
 		Vector swingMins, swingMaxs;
 		float fBoundsScale = AttributeHookValue(1.0f, "melee_bounds_multiplier", pWeapon, nullptr, true);
 		swingMins.Set(-18 * fBoundsScale, -18 * fBoundsScale, -18 * fBoundsScale);
 		swingMaxs.Set(18 * fBoundsScale, 18 * fBoundsScale, 18 * fBoundsScale);
 
 		Vector targetAngle;
-		CBaseEntity* target = nullptr;
-		float highestDot = -1.0f;
+		CBaseEntity *target = nullptr;
+		float highestDot    = -1.0f;
 
-		MeleeMode mode = static_cast<MeleeMode>(Settings::Aimbot.melee);
-		float maxFov = mode == MeleeMode::LEGIT ? 90.0f : 180.0f;
-		float smallestFov = maxFov;
+		MeleeMode mode	    = static_cast<MeleeMode>(Settings::Aimbot.melee);
+		float maxFov	    = mode == MeleeMode::LEGIT ? 90.0f : 180.0f;
+		float smallestFov   = maxFov;
 
 		Vector viewAngles, viewForward;
 		interfaces::Engine->GetViewAngles(viewAngles);
@@ -38,33 +39,35 @@ namespace AimbotMelee
 		viewForward.Normalize();
 
 		bool bCanHitTeammates = pWeapon->CanHitTeammates();
-		bool bIsWrench = pWeapon->GetWeaponID() == TF_WEAPON_WRENCH;
+		bool bIsWrench	      = pWeapon->GetWeaponID() == TF_WEAPON_WRENCH;
 
-		for (const EntityListEntry& entry : AimbotUtils::GetTargets(bCanHitTeammates, localTeam))
+		for (const EntityListEntry &entry : AimbotUtils::GetTargets(bCanHitTeammates, localTeam))
 		{
-			if (!bIsWrench && (entry.flags & EntityFlags::IsBuilding) && !(entry.flags & EntityFlags::IsEnemy))
+			if (!bIsWrench && (entry.flags & EntityFlags::IsBuilding) &&
+			    !(entry.flags & EntityFlags::IsEnemy))
 				continue;
 
-			CBaseEntity* enemy = entry.ptr;
+			CBaseEntity *enemy = entry.ptr;
 
-			Vector hitPos = enemy->GetCenter();
-			Vector dir = hitPos - shootPos;
-			float distance = dir.Normalize();
+			Vector hitPos	   = enemy->GetCenter();
+			Vector dir	   = hitPos - shootPos;
+			float distance	   = dir.Normalize();
 			if (distance > range)
 				continue;
 
 			Vector angle = Math::CalcAngle(shootPos, hitPos);
-			float fov = Math::CalcFov(viewAngles, angle);
+			float fov    = Math::CalcFov(viewAngles, angle);
 			if (fov > maxFov || fov > smallestFov)
 				continue;
 
-			helper::engine::TraceHull(shootPos, shootPos + (dir * range), swingMins, swingMaxs, MASK_SHOT_HULL, &filter, &trace);
+			helper::engine::TraceHull(shootPos, shootPos + (dir * range), swingMins, swingMaxs,
+						  MASK_SHOT_HULL, &filter, &trace);
 
 			if (!trace.DidHit() || trace.m_pEnt != enemy)
 				continue;
 
 			targetAngle = dir.ToAngle();
-			target = enemy;
+			target	    = enemy;
 			smallestFov = fov;
 		}
 
@@ -76,8 +79,8 @@ namespace AimbotMelee
 
 		if (helper::localplayer::IsAttacking(pLocal, pWeapon, pCmd))
 		{
-			Vector angle = targetAngle;
-			state.angle = angle;
+			Vector angle	 = targetAngle;
+			state.angle	 = angle;
 			pCmd->viewangles = angle;
 
 			if (Settings::Aimbot.mode == static_cast<int>(AimbotMode::SILENT))
@@ -85,17 +88,21 @@ namespace AimbotMelee
 		}
 
 		EntityList::m_pAimbotTarget = target;
-		state.running = true;
+		state.running		    = true;
 	}
 
 	std::string GetMeleeModeName()
 	{
-		switch(static_cast<MeleeMode>(Settings::Aimbot.melee))
+		switch (static_cast<MeleeMode>(Settings::Aimbot.melee))
 		{
-			case MeleeMode::NONE: return "None";
-			case MeleeMode::LEGIT: return "Legit";
-			case MeleeMode::RAGE: return "Rage";
-			default: return "Invalid";
+		case MeleeMode::NONE:
+			return "None";
+		case MeleeMode::LEGIT:
+			return "Legit";
+		case MeleeMode::RAGE:
+			return "Rage";
+		default:
+			return "Invalid";
 		}
 	}
-};
+}; // namespace AimbotMelee

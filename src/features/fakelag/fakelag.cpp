@@ -19,6 +19,6 @@ void FakeLag::Run()
 	if (TickManager::m_iChokedCommands < iGoal)
 	{
 		TickManager::m_bSendPacket = false;
-		m_bFakeLagging = true;
+		m_bFakeLagging		   = true;
 	}
 }

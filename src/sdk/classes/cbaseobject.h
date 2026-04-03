@@ -3,9 +3,9 @@
 #include "../netvars/netvar.h"
 #include "entity.h"
 
-class CBaseObject: public CBaseEntity
+class CBaseObject : public CBaseEntity
 {
-public:
+      public:
 	NETVAR(m_iHealth, "CBaseObject->m_iHealth", int);
 	NETVAR(m_iMaxHealth, "CBaseObject->m_iMaxHealth", int);
 	NETVAR(m_bHasSapper, "CBaseObject->m_bHasSapper", bool);

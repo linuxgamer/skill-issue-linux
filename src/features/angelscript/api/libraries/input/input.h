@@ -2,7 +2,7 @@
 
 #include "../../../include/angelscript.h"
 
-void Input_RegisterLibrary(asIScriptEngine* engine);
+void Input_RegisterLibrary(asIScriptEngine *engine);
 bool Input_IsButtonDown(int button);
 bool Input_IsButtonPressed(int button);
 bool Input_IsButtonReleased(int button);

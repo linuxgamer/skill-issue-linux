@@ -2,21 +2,21 @@
 
 Vector ViewmodelInterp::m_vecOldAngle = {};
 
-void ViewmodelInterp::Run(Vector& angle)
+void ViewmodelInterp::Run(Vector &angle)
 {
 	if (Settings::Misc.viewmodel_interp == 0.0f)
 		return;
 
-	CTFPlayer* pLocal = helper::engine::GetLocalPlayer();
+	CTFPlayer *pLocal = helper::engine::GetLocalPlayer();
 	if (pLocal == nullptr || !pLocal->IsAlive())
 		return;
 
-	CTFWeaponBase* pWeapon = HandleAs<CTFWeaponBase*>(pLocal->GetActiveWeapon());
+	CTFWeaponBase *pWeapon = HandleAs<CTFWeaponBase *>(pLocal->GetActiveWeapon());
 	if (pWeapon == nullptr)
 		return;
 
 	float frameTime = interfaces::GlobalVars->absolute_frametime;
-	float alpha = 1.0f - expf(-Settings::Misc.viewmodel_interp * frameTime);
+	float alpha	= 1.0f - expf(-Settings::Misc.viewmodel_interp * frameTime);
 
 	m_vecOldAngle.x += Math::NormalizeAngle(angle.x - m_vecOldAngle.x) * alpha;
 	m_vecOldAngle.z += Math::NormalizeAngle(angle.z - m_vecOldAngle.z) * alpha;

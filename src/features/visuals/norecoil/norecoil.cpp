@@ -1,6 +1,6 @@
 #include "norecoil.h"
 
-void NoRecoil::RunOverrideView(CTFPlayer* pLocal, CViewSetup* pView)
+void NoRecoil::RunOverrideView(CTFPlayer *pLocal, CViewSetup *pView)
 {
 	if (!Settings::Misc.norecoil)
 		return;
@@ -15,7 +15,7 @@ void NoRecoil::RunOverrideView(CTFPlayer* pLocal, CViewSetup* pView)
 	pView->angles -= punchAngle;
 }
 
-void NoRecoil::RunCreateMove(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
+void NoRecoil::RunCreateMove(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd)
 {
 	if (!Settings::Misc.norecoil)
 		return;

@@ -2,27 +2,27 @@
 
 namespace Bhop
 {
-	bool m_bUsedAirJump = false;
+	bool m_bUsedAirJump  = false;
 	bool m_bJumpReleased = false;
 
 	void Reset()
 	{
-		m_bUsedAirJump = false;
+		m_bUsedAirJump	= false;
 		m_bJumpReleased = false;
 	}
 
-	void Run(CTFPlayer* pLocal, CUserCmd* pCmd)
+	void Run(CTFPlayer *pLocal, CUserCmd *pCmd)
 	{
 		if (!Settings::Misc.bhop || pLocal->GetWaterLevel() > WL_Feet)
 			return;
 
-		bool wantsJump = pCmd->buttons & IN_JUMP;
+		bool wantsJump	= pCmd->buttons & IN_JUMP;
 		bool isOnGround = pLocal->GetFlags() & FL_ONGROUND;
-		bool isScout = pLocal->m_iClass() == TF_CLASS_SCOUT;
+		bool isScout	= pLocal->m_iClass() == TF_CLASS_SCOUT;
 
 		if (isOnGround)
 		{
-			m_bUsedAirJump = false;
+			m_bUsedAirJump	= false;
 			m_bJumpReleased = false;
 
 			if (wantsJump)
@@ -44,4 +44,4 @@ namespace Bhop
 			}
 		}
 	}
-}
+} // namespace Bhop

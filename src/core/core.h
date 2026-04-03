@@ -2,14 +2,15 @@
 
 class CApp
 {
-public:
+      public:
 	CApp();
 
 	bool IsInitialized();
 	void Setup();
 	bool StartInterfaces();
 	bool StartHooks();
-private:
+
+      private:
 	bool m_bInitialized;
 };
 

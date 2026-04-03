@@ -11,12 +11,12 @@
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
 
-DETOUR_DECL_TYPE(bool, ExecuteStringCommand, void* self, const char* pCommandString);
+DETOUR_DECL_TYPE(bool, ExecuteStringCommand, void *self, const char *pCommandString);
 inline detour_ctx_t execstringcmd_ctx;
 
 ADD_SIG(CGameClient_ExecuteStringCommand, "engine.so", "55 48 89 E5 41 57 41 56 4C 8D B5 C0 F9 FF FF")
 
-inline bool HookedExecuteStringCommand(void* self, const char* pCommandString)
+inline bool HookedExecuteStringCommand(void *self, const char *pCommandString)
 {
 	//std::string cmd = pCommandString;
 
@@ -28,14 +28,15 @@ inline bool HookedExecuteStringCommand(void* self, const char* pCommandString)
 
 inline void Hook_ExecuteStringCommand()
 {
-	detour_init(&execstringcmd_ctx, Sigs::CGameClient_ExecuteStringCommand.GetPointer(), (void*)&HookedExecuteStringCommand);
+	detour_init(&execstringcmd_ctx, Sigs::CGameClient_ExecuteStringCommand.GetPointer(),
+		    (void *)&HookedExecuteStringCommand);
 	if (!detour_enable(&execstringcmd_ctx))
 	{
 		interfaces::Cvar->ConsolePrintf("Failed to hook CGameClient::ExecuteStringCommand\n");
 		return;
 	}
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	interfaces::Cvar->ConsolePrintf("CGameClient::ExecuteStringCommand hooked\n");
-	#endif
+#endif
 }

@@ -6,7 +6,7 @@ void InsertLog(LogLevel level, const std::string &text)
 {
 	LogEntry entry;
 	entry.level = level;
-	entry.text = text;
+	entry.text  = text;
 	Logs::m_logs.emplace_back(entry);
 }
 
@@ -25,7 +25,7 @@ void Logs::Error(const std::string &text)
 	InsertLog(LogLevel::ERROR, text);
 }
 
-const std::vector<LogEntry>& Logs::GetLogs()
+const std::vector<LogEntry> &Logs::GetLogs()
 {
 	return m_logs;
 }

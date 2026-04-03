@@ -6,7 +6,7 @@
 
 class CBaseCombatWeapon : public CEconEntity
 {
-public:
+      public:
 	NETVAR(m_iClip1, "CBaseCombatWeapon->m_iClip1", int)
 	NETVAR(m_iClip2, "CBaseCombatWeapon->m_iClip2", int)
 	NETVAR(m_iPrimaryAmmoType, "CBaseCombatWeapon->m_iPrimaryAmmoType", int)
@@ -26,8 +26,20 @@ public:
 	NETVAR_OFFSET(m_bRemoveable, "CBaseCombatWeapon->m_iState", bool, -12)
 	NETVAR_OFFSET(m_bReloadsSingly, "CBaseCombatWeapon->m_iClip2", bool, 24)
 
-	int GetMaxClip1() { return vtable::call<390, int>(this); }
-	bool CanBeSelected() { return vtable::call<233 + 1, bool>(this); }
-	void CheckReload() { return vtable::call<278 + 1, void>(this); }
-	const char* GetName() { return vtable::call<334 + 1, const char*>(this); }
+	int GetMaxClip1()
+	{
+		return vtable::call<390, int>(this);
+	}
+	bool CanBeSelected()
+	{
+		return vtable::call<233 + 1, bool>(this);
+	}
+	void CheckReload()
+	{
+		return vtable::call<278 + 1, void>(this);
+	}
+	const char *GetName()
+	{
+		return vtable::call<334 + 1, const char *>(this);
+	}
 };

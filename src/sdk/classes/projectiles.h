@@ -1,18 +1,18 @@
 #pragma once
 
-#include "basecombatweapon.h"
 #include "../handle_utils.h"
+#include "basecombatweapon.h"
 #include "entity.h"
 
-class CBaseProjectile: public CBaseAnimating
+class CBaseProjectile : public CBaseAnimating
 {
-public:
+      public:
 	NETVAR(m_hOriginalLauncher, "CBaseProjectile->m_hOriginalLauncher", EHANDLE);
 };
 
-class CBaseGrenade: public CBaseProjectile
+class CBaseGrenade : public CBaseProjectile
 {
-public:
+      public:
 	NETVAR(m_flDamage, "CBaseGrenade->m_flDamage", float);
 	NETVAR(m_DmgRadius, "CBaseGrenade->m_DmgRadius", float);
 	NETVAR(m_bIsLive, "CBaseGrenade->m_bIsLive", bool);
@@ -21,9 +21,9 @@ public:
 	NETVAR(m_fFlags, "CBaseGrenade->m_fFlags", int);
 };
 
-class CTFWeaponBaseGrenadeProj: public CBaseGrenade
+class CTFWeaponBaseGrenadeProj : public CBaseGrenade
 {
-public:
+      public:
 	NETVAR(m_vInitialVelocity, "CTFWeaponBaseGrenadeProj->m_vInitialVelocity", Vector);
 	NETVAR(m_bCritical, "CTFWeaponBaseGrenadeProj->m_bCritical", bool);
 	NETVAR(m_iDeflected, "CTFWeaponBaseGrenadeProj->m_iDeflected", int);
@@ -32,9 +32,9 @@ public:
 	NETVAR(m_hDeflectOwner, "CTFWeaponBaseGrenadeProj->m_hDeflectOwner", EHANDLE);
 };
 
-class CTFGrenadePipebombProjectile: public CTFWeaponBaseGrenadeProj
+class CTFGrenadePipebombProjectile : public CTFWeaponBaseGrenadeProj
 {
-public:
+      public:
 	NETVAR(m_bTouched, "CTFGrenadePipebombProjectile->m_bTouched", bool);
 	NETVAR(m_iType, "CTFGrenadePipebombProjectile->m_iType", int);
 	NETVAR(m_hLauncher, "CTFGrenadePipebombProjectile->m_hLauncher", EHANDLE);
@@ -42,10 +42,11 @@ public:
 
 	float GetLiveTime()
 	{
-		static ConVar* tf_grenadelauncher_livetime = interfaces::Cvar->FindVar("tf_grenadelauncher_livetime");
-		float flLiveTime = tf_grenadelauncher_livetime->GetFloat();
+		static ConVar *tf_grenadelauncher_livetime = interfaces::Cvar->FindVar("tf_grenadelauncher_livetime");
+		float flLiveTime			   = tf_grenadelauncher_livetime->GetFloat();
 
-		AttributeHookValue(flLiveTime, "sticky_arm_time", HandleAs<CBaseEntity*>(m_hLauncher()), nullptr, true);
+		AttributeHookValue(flLiveTime, "sticky_arm_time", HandleAs<CBaseEntity *>(m_hLauncher()), nullptr,
+				   true);
 
 		// check for powerups here!
 

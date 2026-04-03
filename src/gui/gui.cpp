@@ -809,7 +809,7 @@ void GUI::RunMainWindow()
 void GUI::Init()
 {
 	configs.reserve(5);
-	selectedIndex = -1;
+	selectedIndex	   = -1;
 	firstOpenConfigTab = true;
 	openDeletePopup = false;
 }

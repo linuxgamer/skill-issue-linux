@@ -15,7 +15,7 @@ namespace helper
 		static bool CheckButtonPressedTick(ButtonCode_t btn)
 		{
 			static int lasttickpressed = 0;
-			int tick = interfaces::InputSystem->GetButtonPressedTick(btn);
+			int tick		   = interfaces::InputSystem->GetButtonPressedTick(btn);
 			if (tick > lasttickpressed)
 			{
 				lasttickpressed = tick;
@@ -40,5 +40,5 @@ namespace helper
 
 			return false;
 		}
-	}
-}
+	} // namespace input
+} // namespace helper

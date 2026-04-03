@@ -1,17 +1,17 @@
 #include "utils.h"
 
-#define ARRAYSIZE(x) sizeof((x))/sizeof((x[0]))
+#define ARRAYSIZE(x) sizeof((x)) / sizeof((x[0]))
 
 namespace AimbotUtils
 {
-	bool IsValidEntity(CBaseEntity* entity)
+	bool IsValidEntity(CBaseEntity *entity)
 	{
 		if (entity == nullptr)
 			return false;
 
 		if (entity->IsPlayer())
 		{
-			auto* player = static_cast<CTFPlayer*>(entity);
+			auto *player = static_cast<CTFPlayer *>(entity);
 			if (player == nullptr)
 				return false;
 
@@ -20,7 +20,7 @@ namespace AimbotUtils
 
 			if (player->IsUbercharged())
 				return false;
-	
+
 			if (player->IsGhost())
 				return false;
 
@@ -33,7 +33,8 @@ namespace AimbotUtils
 			if (Settings::Aimbot.ignoreubered && player->InCond(ETFCond::TF_COND_INVULNERABLE))
 				return false;
 
-			if (Settings::Aimbot.ignorehoovy && player->m_iClass() == ETFClass::TF_CLASS_HEAVYWEAPONS && (player->GetFlags() & FL_DUCKING))
+			if (Settings::Aimbot.ignorehoovy && player->m_iClass() == ETFClass::TF_CLASS_HEAVYWEAPONS &&
+			    (player->GetFlags() & FL_DUCKING))
 				return false;
 
 			return true;
@@ -48,17 +49,17 @@ namespace AimbotUtils
 	// Is this optimized? absolutely fucking not
 	// I need to think of a better way
 	// I should probably check bones
-	bool GetVisiblePoint(Vector& out, CTFPlayer* pLocal, Vector origin, Vector mins, Vector maxs)
+	bool GetVisiblePoint(Vector &out, CTFPlayer *pLocal, Vector origin, Vector mins, Vector maxs)
 	{
-		static float points[] = {0.15f, 0.35f, 0.5f, 0.75f, 0.85f};
+		static float points[]		 = {0.15f, 0.35f, 0.5f, 0.75f, 0.85f};
 		static constexpr int points_size = ARRAYSIZE(points);
 		CGameTrace trace;
 		CTraceFilterWorldAndPropsOnly filter;
 		filter.pSkip = pLocal;
 
 		Vector absMax, absMin;
-		absMax = origin + maxs;
-		absMin = origin + mins;
+		absMax	      = origin + maxs;
+		absMin	      = origin + mins;
 
 		Vector eyePos = pLocal->GetAbsOrigin() + pLocal->m_vecViewOffset();
 
@@ -85,28 +86,37 @@ namespace AimbotUtils
 
 	std::string GetAimbotModeName()
 	{
-		switch(static_cast<AimbotMode>(Settings::Aimbot.mode))
+		switch (static_cast<AimbotMode>(Settings::Aimbot.mode))
 		{
-			case AimbotMode::PLAIN: return "Plain";
-			case AimbotMode::SMOOTH: return "Smooth";
-			case AimbotMode::ASSISTANCE: return "Assistance";
-			case AimbotMode::SILENT: return "Silent";
-			default: return "Invalid";
-                }
-        }
+		case AimbotMode::PLAIN:
+			return "Plain";
+		case AimbotMode::SMOOTH:
+			return "Smooth";
+		case AimbotMode::ASSISTANCE:
+			return "Assistance";
+		case AimbotMode::SILENT:
+			return "Silent";
+		default:
+			return "Invalid";
+		}
+	}
 
 	std::string GetTeamModeName()
 	{
-		switch(static_cast<TeamMode>(Settings::Aimbot.teamMode))
+		switch (static_cast<TeamMode>(Settings::Aimbot.teamMode))
 		{
-			case TeamMode::ONLYENEMY: return "Only Enemy";
-			case TeamMode::ONLYTEAMMATE: return "Only Teammate";
-			case TeamMode::BOTH: return "Both";
-			default: return "Invalid";
-                }
-        }
+		case TeamMode::ONLYENEMY:
+			return "Only Enemy";
+		case TeamMode::ONLYTEAMMATE:
+			return "Only Teammate";
+		case TeamMode::BOTH:
+			return "Both";
+		default:
+			return "Invalid";
+		}
+	}
 
-	bool CanDamageWithSniperRifle(CTFPlayer* pLocal, CBaseEntity* pTarget, CTFWeaponBase* pWeapon)
+	bool CanDamageWithSniperRifle(CTFPlayer *pLocal, CBaseEntity *pTarget, CTFWeaponBase *pWeapon)
 	{
 		if (pLocal == nullptr || pTarget == nullptr || pWeapon == nullptr)
 			return false;
@@ -116,22 +126,22 @@ namespace AimbotUtils
 
 		if (pTarget->IsPlayer())
 		{
-			CTFPlayer* player = static_cast<CTFPlayer*>(pTarget);
+			CTFPlayer *player = static_cast<CTFPlayer *>(pTarget);
 			if (player == nullptr)
 				return false;
 
 			int health = player->GetHealth();
-			return static_cast<CTFSniperRifle*>(pWeapon)->GetChargedDamage() >= health;
+			return static_cast<CTFSniperRifle *>(pWeapon)->GetChargedDamage() >= health;
 		}
 
 		if (pTarget->IsBuilding())
 		{
-			CBaseObject* obj = static_cast<CBaseObject*>(pTarget);
+			CBaseObject *obj = static_cast<CBaseObject *>(pTarget);
 			if (obj == nullptr)
 				return false;
 
 			int health = obj->m_iHealth();
-			return static_cast<CTFSniperRifle*>(pWeapon)->GetChargedDamage() >= health;
+			return static_cast<CTFSniperRifle *>(pWeapon)->GetChargedDamage() >= health;
 		}
 
 		return false;
@@ -139,13 +149,13 @@ namespace AimbotUtils
 
 	float GetFovScaled(float flFov)
 	{
-		float cameraFOV = CustomFov::GetFov();
+		float cameraFOV		    = CustomFov::GetFov();
 
-		float radAimbotHalf = DEG2RAD(flFov / 2.0f);
-		float radPlayerHalf = DEG2RAD(cameraFOV / 2.0f);
+		float radAimbotHalf	    = DEG2RAD(flFov / 2.0f);
+		float radPlayerHalf	    = DEG2RAD(cameraFOV / 2.0f);
 		constexpr float radBaseHalf = DEG2RAD(90.0f / 2.0f);
 
-		float scaledRad = atan(tan(radAimbotHalf) * (tan(radPlayerHalf) / tan(radBaseHalf)));
+		float scaledRad		    = atan(tan(radAimbotHalf) * (tan(radPlayerHalf) / tan(radBaseHalf)));
 
 		return RAD2DEG(scaledRad) * 2.0f;
 	}
@@ -155,11 +165,11 @@ namespace AimbotUtils
 		return GetFovScaled(Settings::Aimbot.fov);
 	}
 
-	std::vector<EntityListEntry> GetTargets(const bool& bCanHitTeammates, int localTeam)
+	std::vector<EntityListEntry> GetTargets(const bool &bCanHitTeammates, int localTeam)
 	{
 		std::vector<EntityListEntry> vecEntities;
 
-		for (const auto& entry : EntityList::GetEntities())
+		for (const auto &entry : EntityList::GetEntities())
 		{
 			if (entry.ptr == EntityList::m_pLocalPlayer)
 				continue;
@@ -174,7 +184,7 @@ namespace AimbotUtils
 				continue;
 
 			TeamMode teamMode = static_cast<TeamMode>(Settings::Aimbot.teamMode);
-			int teamNum = entry.ptr->m_iTeamNum();
+			int teamNum	  = entry.ptr->m_iTeamNum();
 
 			if (!bCanHitTeammates || teamMode == TeamMode::ONLYENEMY)
 			{
@@ -193,4 +203,4 @@ namespace AimbotUtils
 
 		return vecEntities;
 	}
-};
+}; // namespace AimbotUtils

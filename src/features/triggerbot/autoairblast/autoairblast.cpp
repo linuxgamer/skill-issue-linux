@@ -2,7 +2,7 @@
 
 // This is probabaly not as good as doing with traces and stuff
 // But couldn't get it to work lol
-bool AutoAirblast::CanAirblastHit(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CBaseEntity* pTarget, Vector& vecForward)
+bool AutoAirblast::CanAirblastHit(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CBaseEntity *pTarget, Vector &vecForward)
 {
 	Vector dir = (pTarget->GetCenter() - pLocal->GetCenter());
 
@@ -11,18 +11,21 @@ bool AutoAirblast::CanAirblastHit(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CBa
 		return false;
 
 	float dot = vecForward.Dot(dir);
-	float flAirblastConeScale = std::clamp(1.0f - AttributeHookValue(0.2f, "mult_airblast_cone_scale", pWeapon, nullptr, true), 0.0f, 1.0f);
+	float flAirblastConeScale =
+	    std::clamp(1.0f - AttributeHookValue(0.2f, "mult_airblast_cone_scale", pWeapon, nullptr, true), 0.0f, 1.0f);
 
 	return dot >= flAirblastConeScale;
 }
 
-void LegitAirblast(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
+void LegitAirblast(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd)
 {
-	Vector viewAngles; interfaces::Engine->GetViewAngles(viewAngles);
-	Vector viewForward; Math::AngleVectors(viewAngles, &viewForward);
+	Vector viewAngles;
+	interfaces::Engine->GetViewAngles(viewAngles);
+	Vector viewForward;
+	Math::AngleVectors(viewAngles, &viewForward);
 	viewForward.Normalize();
 
-	for (auto& entry : EntityList::GetEntities())
+	for (auto &entry : EntityList::GetEntities())
 	{
 		if (!(entry.flags & EntityFlags::IsProjectile))
 			continue;
@@ -41,15 +44,17 @@ void LegitAirblast(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
 	}
 }
 
-void RageAirblast(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, bool* pSendPacket)
+void RageAirblast(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd, bool *pSendPacket)
 {
-	Vector viewAngles; interfaces::Engine->GetViewAngles(viewAngles);
-	Vector viewForward; Math::AngleVectors(viewAngles, &viewForward);
+	Vector viewAngles;
+	interfaces::Engine->GetViewAngles(viewAngles);
+	Vector viewForward;
+	Math::AngleVectors(viewAngles, &viewForward);
 	viewForward.Normalize();
 
 	Vector shootPos = pLocal->GetCenter();
 
-	for (auto& entry : EntityList::GetEntities())
+	for (auto &entry : EntityList::GetEntities())
 	{
 		if (!(entry.flags & EntityFlags::IsProjectile))
 			continue;
@@ -60,8 +65,8 @@ void RageAirblast(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, boo
 		if (entry.ptr == nullptr)
 			continue;
 
-		Vector center = entry.ptr->GetCenter();
-		Vector dir = center - shootPos;
+		Vector center  = entry.ptr->GetCenter();
+		Vector dir     = center - shootPos;
 		float distance = dir.Normalize();
 		if (distance > 276.0f)
 			continue;
@@ -72,7 +77,7 @@ void RageAirblast(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, boo
 	}
 }
 
-void AutoAirblast::Run(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd, bool* pSendPacket)
+void AutoAirblast::Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd, bool *pSendPacket)
 {
 	if (!pWeapon->CanAirblast())
 		return;
@@ -80,16 +85,20 @@ void AutoAirblast::Run(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd
 	if (Settings::Trigger.autoairblast == static_cast<int>(GenericMode::LEGIT))
 		LegitAirblast(pLocal, pWeapon, pCmd);
 	else
-	 	RageAirblast(pLocal, pWeapon, pCmd, pSendPacket);
+		RageAirblast(pLocal, pWeapon, pCmd, pSendPacket);
 }
 
 std::string AutoAirblast::GetModeName()
 {
-	switch(static_cast<GenericMode>(Settings::Trigger.autoairblast))
+	switch (static_cast<GenericMode>(Settings::Trigger.autoairblast))
 	{
-        case GenericMode::NONE: return "None";
-        case GenericMode::LEGIT: return "Legit";
-        case GenericMode::RAGE: return "Rage";
-        default: return "Invalid";
-        }
+	case GenericMode::NONE:
+		return "None";
+	case GenericMode::LEGIT:
+		return "Legit";
+	case GenericMode::RAGE:
+		return "Rage";
+	default:
+		return "Invalid";
+	}
 }

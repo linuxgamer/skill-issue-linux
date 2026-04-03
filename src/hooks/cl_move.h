@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
 #include "../features/ticks/ticks.h"
+#include "../libdetour/libdetour.h"
 
 #include "../sdk/signatures/signatures.h"
 
@@ -19,15 +19,15 @@ inline void HookedCL_Move(float accumulated_extra_samples, bool bFinalTick)
 
 inline void HookCL_Move(void)
 {
-	detour_init(&move_ctx, Sigs::CL_Move.GetPointer(), (void*)&HookedCL_Move);
-	
+	detour_init(&move_ctx, Sigs::CL_Move.GetPointer(), (void *)&HookedCL_Move);
+
 	if (!detour_enable(&move_ctx))
 	{
 		interfaces::Cvar->ConsolePrintf("Couldn't hook CL_Move\n");
 		return;
 	}
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	interfaces::Cvar->ConsolePrintf("CL_Move hooked\n");
-	#endif
+#endif
 }

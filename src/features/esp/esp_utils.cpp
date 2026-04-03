@@ -1,25 +1,26 @@
 #include "esp_utils.h"
 #include "structs.h"
 
-Color ESP_Utils::GetEntityColor(CBaseEntity* entity)
+Color ESP_Utils::GetEntityColor(CBaseEntity *entity)
 {
 	if (entity == EntityList::m_pAimbotTarget)
 		return Settings::Colors.aimbot_target;
 
 	switch (entity->m_iTeamNum())
 	{
-		case ETeam::TEAM_RED:
-			return Settings::Colors.red_team;
-		case ETeam::TEAM_BLU:
-			return Settings::Colors.blu_team;
-		default: break;
+	case ETeam::TEAM_RED:
+		return Settings::Colors.red_team;
+	case ETeam::TEAM_BLU:
+		return Settings::Colors.blu_team;
+	default:
+		break;
 	}
 
 	Color defaultColor = {255, 255, 255, 255};
 	return defaultColor;
 }
 
-bool ESP_Utils::IsValidPlayer(CTFPlayer* pLocal, CBaseEntity* entity)
+bool ESP_Utils::IsValidPlayer(CTFPlayer *pLocal, CBaseEntity *entity)
 {
 	if (entity == nullptr)
 		return false;
@@ -30,7 +31,7 @@ bool ESP_Utils::IsValidPlayer(CTFPlayer* pLocal, CBaseEntity* entity)
 	if (!interfaces::CInput->CAM_IsThirdPerson() && entity->GetIndex() == pLocal->GetIndex())
 		return false;
 
-	CTFPlayer* player = static_cast<CTFPlayer*>(entity);
+	CTFPlayer *player = static_cast<CTFPlayer *>(entity);
 
 	if (!player->IsAlive())
 		return false;
@@ -40,7 +41,7 @@ bool ESP_Utils::IsValidPlayer(CTFPlayer* pLocal, CBaseEntity* entity)
 
 	const ESPTeamSelectionMode mode = static_cast<ESPTeamSelectionMode>(Settings::ESP.team_selection);
 
-	bool bIsEnemy = pLocal->m_iTeamNum() != entity->m_iTeamNum();
+	bool bIsEnemy			= pLocal->m_iTeamNum() != entity->m_iTeamNum();
 
 	if (bIsEnemy && mode == ESPTeamSelectionMode::TEAMMATES)
 		return false;
@@ -51,7 +52,7 @@ bool ESP_Utils::IsValidPlayer(CTFPlayer* pLocal, CBaseEntity* entity)
 	return true;
 }
 
-bool ESP_Utils::IsValidBuilding(CTFPlayer* pLocal, CBaseObject* entity)
+bool ESP_Utils::IsValidBuilding(CTFPlayer *pLocal, CBaseObject *entity)
 {
 	if (entity == nullptr)
 		return false;
@@ -75,24 +76,24 @@ bool ESP_Utils::IsValidBuilding(CTFPlayer* pLocal, CBaseObject* entity)
 	return true;
 }
 
-bool ESP_Utils::IsValidEntity(CTFPlayer* pLocal, const EntityListEntry& entry)
+bool ESP_Utils::IsValidEntity(CTFPlayer *pLocal, const EntityListEntry &entry)
 {
 	if (!entry.ptr)
 		return false;
 
 	if (entry.flags & EntityFlags::IsPlayer)
-		return IsValidPlayer(pLocal, static_cast<CTFPlayer*>(entry.ptr));
+		return IsValidPlayer(pLocal, static_cast<CTFPlayer *>(entry.ptr));
 
 	if (entry.flags & EntityFlags::IsBuilding)
-		return IsValidBuilding(pLocal, static_cast<CBaseObject*>(entry.ptr));
+		return IsValidBuilding(pLocal, static_cast<CBaseObject *>(entry.ptr));
 
 	return false;
 }
-	
-bool ESP_Utils::GetEntityBounds(CBaseEntity* ent, ESP_Data& out)
+
+bool ESP_Utils::GetEntityBounds(CBaseEntity *ent, ESP_Data &out)
 {
 	Vector origin = ent->GetAbsOrigin();
-	Vec2 bottom = {};
+	Vec2 bottom   = {};
 
 	if (!helper::engine::WorldToScreen(origin, bottom))
 		return false;
@@ -101,13 +102,13 @@ bool ESP_Utils::GetEntityBounds(CBaseEntity* ent, ESP_Data& out)
 	Vector absHead = origin + Vector{0, 0, ent->m_vecMaxs().z};
 	if (!helper::engine::WorldToScreen(absHead, top))
 		return false;
-	
-	float h = (bottom - top).Length();
-	float w = ent->IsTeleporter() ? (h * 2.0f) : (h * 0.3f);
+
+	float h	   = (bottom - top).Length();
+	float w	   = ent->IsTeleporter() ? (h * 2.0f) : (h * 0.3f);
 
 	out.bottom = Vec2(bottom.x, bottom.y);
 	out.height = h;
-	out.width = w;
-	out.top = Vec2(top.x, top.y);
+	out.width  = w;
+	out.top	   = Vec2(top.x, top.y);
 	return true;
 }

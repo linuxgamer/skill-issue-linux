@@ -5,7 +5,7 @@
 
 namespace Triggerbot
 {
-	void Hitscan(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
+	void Hitscan(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd)
 	{
 		if (pLocal == nullptr || pWeapon == nullptr)
 			return;
@@ -21,8 +21,8 @@ namespace Triggerbot
 		interfaces::Engine->GetViewAngles(viewAngles);
 		Math::AngleVectors(viewAngles, &forward);
 
-		Vector start = pLocal->GetAbsOrigin() + pLocal->m_vecViewOffset();
-		Vector end = start + (forward * 8192);
+		Vector start  = pLocal->GetAbsOrigin() + pLocal->m_vecViewOffset();
+		Vector end    = start + (forward * 8192);
 
 		int localTeam = pLocal->m_iTeamNum();
 
@@ -41,7 +41,7 @@ namespace Triggerbot
 		pCmd->buttons |= IN_ATTACK;
 	}
 
-	void Run(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserCmd* pCmd)
+	void Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd)
 	{
 		if (pLocal == nullptr || pWeapon == nullptr || pCmd == nullptr)
 			return;
@@ -52,10 +52,11 @@ namespace Triggerbot
 		if (Settings::Trigger.hitscan && pWeapon->IsHitscan())
 			Hitscan(pLocal, pWeapon, pCmd);
 
-                if (Settings::Trigger.autobackstab != static_cast<int>(GenericMode::NONE) && pWeapon->IsMelee())
+		if (Settings::Trigger.autobackstab != static_cast<int>(GenericMode::NONE) && pWeapon->IsMelee())
 			AutoBackstab::Run(pLocal, pWeapon, pCmd, &TickManager::m_bSendPacket);
 
-		if (Settings::Trigger.autoairblast != static_cast<int>(GenericMode::NONE) && pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER)
+		if (Settings::Trigger.autoairblast != static_cast<int>(GenericMode::NONE) &&
+		    pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER)
 			AutoAirblast::Run(pLocal, pWeapon, pCmd, &TickManager::m_bSendPacket);
 	}
-}
+} // namespace Triggerbot

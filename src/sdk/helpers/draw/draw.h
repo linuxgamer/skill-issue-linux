@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../interfaces/interfaces.h"
-#include "../../definitions/color.h"
+#include "../../FontManager/fontmanager.h"
 #include "../../classes/player.h"
 #include "../../classes/weaponbase.h"
+#include "../../definitions/color.h"
+#include "../../interfaces/interfaces.h"
 #include "../math.h"
-#include "../../FontManager/fontmanager.h"
 
 #include <cmath>
 #include <csignal>
@@ -16,12 +16,13 @@ namespace helper
 {
 	namespace draw
 	{
-		inline HFont CreateFont(const std::string& id, const std::string& name, int height, int weight, int flags = 0)
+		inline HFont CreateFont(const std::string &id, const std::string &name, int height, int weight,
+					int flags = 0)
 		{
 			return FontManager::CreateFont(id, name, height, weight, flags);
 		}
 
-		inline void SetFont(const std::string& id)
+		inline void SetFont(const std::string &id)
 		{
 			FontManager::SetFont(id);
 		}
@@ -82,7 +83,7 @@ namespace helper
 			std::wstring wtext(text.begin(), text.end());
 
 			std::string currentFontID = FontManager::GetCurrentFontID();
-			int font = FontManager::GetFont(currentFontID);
+			int font		  = FontManager::GetFont(currentFontID);
 
 			interfaces::Surface->GetTextSize(font, wtext.c_str(), width, height);
 		}
@@ -97,5 +98,5 @@ namespace helper
 			w = interfaces::ClientDLL->GetScreenWidth();
 			h = interfaces::ClientDLL->GetScreenHeight();
 		}
-	}
-};
+	} // namespace draw
+}; // namespace helper

@@ -2,8 +2,8 @@
 
 #include <cstdlib>
 
-#include "../settings/settings.h"
 #include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
 
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
@@ -24,10 +24,10 @@ static void HookedHost_ShutdownFn(void)
 
 static void HookHost_Shutdown()
 {
-	detour_init(&shutdownctx, Sigs::Host_Shutdown.GetPointer(), (void*)&HookedHost_ShutdownFn);
+	detour_init(&shutdownctx, Sigs::Host_Shutdown.GetPointer(), (void *)&HookedHost_ShutdownFn);
 	detour_enable(&shutdownctx);
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	interfaces::Cvar->ConsolePrintf("Host_Shutdown hooked\n");
-	#endif
+#endif
 }

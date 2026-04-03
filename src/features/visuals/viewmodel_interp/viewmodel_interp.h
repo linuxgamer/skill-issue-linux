@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../sdk/interfaces/interfaces.h"
 #include "../../../sdk/helpers/helper.h"
+#include "../../../sdk/interfaces/interfaces.h"
 #include "../../../settings/settings.h"
 
 namespace ViewmodelInterp
@@ -9,5 +9,5 @@ namespace ViewmodelInterp
 	extern Vector m_vecOldAngle;
 
 	void Init();
-	void Run(Vector& angle);
-};
+	void Run(Vector &angle);
+}; // namespace ViewmodelInterp

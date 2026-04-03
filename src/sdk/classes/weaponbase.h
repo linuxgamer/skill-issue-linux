@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../definitions/weaponinfo.h"
-#include "basecombatweapon.h"
-#include "entity.h"
-#include "basecombatcharacter.h"
 #include "../defs.h"
 #include "../handle_utils.h"
+#include "basecombatcharacter.h"
+#include "basecombatweapon.h"
+#include "entity.h"
 #include "player.h"
 
 class CTFPlayer;
@@ -19,13 +19,13 @@ typedef unsigned short WEAPON_FILE_INFO_HANDLE;
 
 struct BobState_t
 {
-	BobState_t() 
-	{ 
-		m_flBobTime = 0; 
+	BobState_t()
+	{
+		m_flBobTime	= 0;
 		m_flLastBobTime = 0;
-		m_flLastSpeed = 0;
+		m_flLastSpeed	= 0;
 		m_flVerticalBob = 0;
-		m_flLateralBob = 0;
+		m_flLateralBob	= 0;
 	}
 
 	float m_flBobTime;
@@ -41,16 +41,16 @@ struct BobState_t
 // go inside GetTFWpnData
 // it will call GetFileWeaponInfoFromHandle
 // whatever it passes (this + 0xsomething), the 0x123 is the offset to the handle
-inline FileWeaponInfo_t* original_GetFileWeaponInfoFromHandle(void* handle)
+inline FileWeaponInfo_t *original_GetFileWeaponInfoFromHandle(void *handle)
 {
-	using GetFileWeaponInfoFromHandleFn = FileWeaponInfo_t*(*)(void*);
+	using GetFileWeaponInfoFromHandleFn = FileWeaponInfo_t *(*)(void *);
 	static auto orig = (GetFileWeaponInfoFromHandleFn)sigscan_module("client.so", "66 3B 3D ? ? ? ? 48 8D 05");
 	return orig(handle);
 }
 
 class CTFWeaponBase : public CBaseCombatWeapon
 {
-public:
+      public:
 	NETVAR(m_bLowered, "CTFWeaponBase->m_bLowered", bool)
 	NETVAR(m_iReloadMode, "CTFWeaponBase->m_iReloadMode", int)
 	NETVAR(m_bResetParity, "CTFWeaponBase->m_bResetParity", bool)
@@ -82,15 +82,16 @@ public:
 	NETVAR_OFFSET(m_flLastRapidFireCritCheckTime, "CTFWeaponBase->m_flLastCritCheckTime", float, 12);
 
 	// dentro de CTFWeaponBase!
-	const FileWeaponInfo_t* GetWeaponInfo()
+	const FileWeaponInfo_t *GetWeaponInfo()
 	{
 		// offset from EDI,word ptr [RDI + 0xF12] in CCombatWeapon(?)->GetTFWpnData()
 		uintptr_t handleAddress = reinterpret_cast<uintptr_t>(this) + 0xf12;
-		void* handleValue = *(void**)handleAddress;
+		void *handleValue	= *(void **)handleAddress;
 		return original_GetFileWeaponInfoFromHandle(handleValue);
 	}
 
-	int GetWeaponID() {
+	int GetWeaponID()
+	{
 		// xref: -use_action_slot_item_server
 		// func: EndUseActionSlotItem
 		/*
@@ -100,14 +101,20 @@ public:
   			uVar5 = FUN_01fdca00(0x40);
   			FUN_01fda880(uVar5,"-use_action_slot_item_server");
 		*/
-		using Fn = int(*)(void*);
-		auto vtable = *reinterpret_cast<void***>(this);
-		auto fn = reinterpret_cast<Fn>(vtable[0xE18 / sizeof(void*)]);
+		using Fn    = int (*)(void *);
+		auto vtable = *reinterpret_cast<void ***>(this);
+		auto fn	    = reinterpret_cast<Fn>(vtable[0xE18 / sizeof(void *)]);
 		return fn(this);
 	}
 
-	bool IsInReload() { return m_bInReload() || m_iReloadMode() != 0; }
-	int GetSlot() { return GetWeaponInfo()->iSlot; }
+	bool IsInReload()
+	{
+		return m_bInReload() || m_iReloadMode() != 0;
+	}
+	int GetSlot()
+	{
+		return GetWeaponInfo()->iSlot;
+	}
 
 	EWeaponType GetWeaponType()
 	{
@@ -116,60 +123,63 @@ public:
 
 		switch (m_iItemDefinitionIndex())
 		{
-			case Soldier_s_TheBuffBanner:
-			case Soldier_s_FestiveBuffBanner:
-			case Soldier_s_TheBattalionsBackup:
-			case Soldier_s_TheConcheror:
-			case Scout_s_BonkAtomicPunch:
-			case Scout_s_CritaCola:
-				return EWeaponType::UNKNOWN;
+		case Soldier_s_TheBuffBanner:
+		case Soldier_s_FestiveBuffBanner:
+		case Soldier_s_TheBattalionsBackup:
+		case Soldier_s_TheConcheror:
+		case Scout_s_BonkAtomicPunch:
+		case Scout_s_CritaCola:
+			return EWeaponType::UNKNOWN;
 		}
 
 		switch (GetWeaponID())
 		{
-			case TF_WEAPON_PDA:
-			case TF_WEAPON_PDA_ENGINEER_BUILD:
-			case TF_WEAPON_PDA_ENGINEER_DESTROY:
-			case TF_WEAPON_PDA_SPY:
-			case TF_WEAPON_PDA_SPY_BUILD:
-			case TF_WEAPON_INVIS:
-			case TF_WEAPON_BUFF_ITEM:
-			case TF_WEAPON_GRAPPLINGHOOK:
-			case TF_WEAPON_ROCKETPACK:
-				return EWeaponType::UNKNOWN;
+		case TF_WEAPON_PDA:
+		case TF_WEAPON_PDA_ENGINEER_BUILD:
+		case TF_WEAPON_PDA_ENGINEER_DESTROY:
+		case TF_WEAPON_PDA_SPY:
+		case TF_WEAPON_PDA_SPY_BUILD:
+		case TF_WEAPON_INVIS:
+		case TF_WEAPON_BUFF_ITEM:
+		case TF_WEAPON_GRAPPLINGHOOK:
+		case TF_WEAPON_ROCKETPACK:
+			return EWeaponType::UNKNOWN;
 
-			case TF_WEAPON_CLEAVER:
-			case TF_WEAPON_ROCKETLAUNCHER:
-			case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
-			case TF_WEAPON_PARTICLE_CANNON:
-			case TF_WEAPON_RAYGUN:
-			case TF_WEAPON_FLAMETHROWER:
-			case TF_WEAPON_FLAME_BALL:
-			case TF_WEAPON_FLAREGUN:
-			case TF_WEAPON_FLAREGUN_REVENGE:
-			case TF_WEAPON_GRENADELAUNCHER:
-			case TF_WEAPON_CANNON:
-			case TF_WEAPON_PIPEBOMBLAUNCHER:
-			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
-			case TF_WEAPON_DRG_POMSON:
-			case TF_WEAPON_CROSSBOW:
-			case TF_WEAPON_SYRINGEGUN_MEDIC:
-			case TF_WEAPON_COMPOUND_BOW:
-			case TF_WEAPON_JAR:
-			case TF_WEAPON_JAR_MILK:
-			case TF_WEAPON_JAR_GAS:
-			case TF_WEAPON_LUNCHBOX:
-				return EWeaponType::PROJECTILE;
+		case TF_WEAPON_CLEAVER:
+		case TF_WEAPON_ROCKETLAUNCHER:
+		case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
+		case TF_WEAPON_PARTICLE_CANNON:
+		case TF_WEAPON_RAYGUN:
+		case TF_WEAPON_FLAMETHROWER:
+		case TF_WEAPON_FLAME_BALL:
+		case TF_WEAPON_FLAREGUN:
+		case TF_WEAPON_FLAREGUN_REVENGE:
+		case TF_WEAPON_GRENADELAUNCHER:
+		case TF_WEAPON_CANNON:
+		case TF_WEAPON_PIPEBOMBLAUNCHER:
+		case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
+		case TF_WEAPON_DRG_POMSON:
+		case TF_WEAPON_CROSSBOW:
+		case TF_WEAPON_SYRINGEGUN_MEDIC:
+		case TF_WEAPON_COMPOUND_BOW:
+		case TF_WEAPON_JAR:
+		case TF_WEAPON_JAR_MILK:
+		case TF_WEAPON_JAR_GAS:
+		case TF_WEAPON_LUNCHBOX:
+			return EWeaponType::PROJECTILE;
 		}
 
 		return EWeaponType::HITSCAN;
 	}
 
-	bool IsHitscan() { return GetWeaponType() == EWeaponType::HITSCAN; }
+	bool IsHitscan()
+	{
+		return GetWeaponType() == EWeaponType::HITSCAN;
+	}
 
 	bool CanPrimaryAttack()
 	{
-		CTFPlayer* owner = HandleAs<CTFPlayer*>(m_hOwnerEntity());
+		CTFPlayer *owner = HandleAs<CTFPlayer *>(m_hOwnerEntity());
 		if (!owner)
 			return false;
 
@@ -179,7 +189,7 @@ public:
 
 	bool CanSecondaryAttack()
 	{
-		CTFPlayer* owner = HandleAs<CTFPlayer*>(m_hOwnerEntity());
+		CTFPlayer *owner = HandleAs<CTFPlayer *>(m_hOwnerEntity());
 		if (!owner)
 			return false;
 
@@ -192,11 +202,15 @@ public:
 		return m_iClip1() > 0 || m_iClip1() == -1;
 	}
 
-	bool IsMelee() { return GetSlot() == SLOT_MELEE; }
+	bool IsMelee()
+	{
+		return GetSlot() == SLOT_MELEE;
+	}
 
 	bool CanAmbassadorHeadshot()
 	{
-		if (GetWeaponID() == TF_WEAPON_REVOLVER && AttributeHookValue(0, "set_weapon_mode", this, nullptr, true))
+		if (GetWeaponID() == TF_WEAPON_REVOLVER &&
+		    AttributeHookValue(0, "set_weapon_mode", this, nullptr, true))
 			return (interfaces::GlobalVars->curtime - m_flLastFireTime()) > 1.0f;
 		return false;
 	}
@@ -205,12 +219,13 @@ public:
 	{
 		switch (GetClassID())
 		{
-			case ETFClassID::CTFSniperRifleClassic:
-			case ETFClassID::CTFSniperRifle:
-			case ETFClassID::CTFSniperRifleDecap:
+		case ETFClassID::CTFSniperRifleClassic:
+		case ETFClassID::CTFSniperRifle:
+		case ETFClassID::CTFSniperRifleDecap:
 			return true;
 
-			default: break;
+		default:
+			break;
 		}
 
 		return false;
@@ -218,35 +233,38 @@ public:
 
 	bool IsAmbassador()
 	{
-		return GetClassID() == ETFClassID::CTFRevolver
-		&& (m_iItemDefinitionIndex() == Spy_m_FestiveAmbassador || m_iItemDefinitionIndex() == Spy_m_TheAmbassador);
+		return GetClassID() == ETFClassID::CTFRevolver &&
+		       (m_iItemDefinitionIndex() == Spy_m_FestiveAmbassador ||
+			m_iItemDefinitionIndex() == Spy_m_TheAmbassador);
 	}
 
 	bool CanHitTeammates()
 	{
-		switch(GetWeaponID())
+		switch (GetWeaponID())
 		{
-			case TF_WEAPON_CROSSBOW:
-			case TF_WEAPON_LUNCHBOX:
-			case TF_WEAPON_JAR_MILK:
-			case TF_WEAPON_JAR:
-			case TF_WEAPON_MEDIGUN:
-			case TF_WEAPON_WRENCH:
+		case TF_WEAPON_CROSSBOW:
+		case TF_WEAPON_LUNCHBOX:
+		case TF_WEAPON_JAR_MILK:
+		case TF_WEAPON_JAR:
+		case TF_WEAPON_MEDIGUN:
+		case TF_WEAPON_WRENCH:
 			return true;
 
-			default: break;
+		default:
+			break;
 		}
 
 		switch (m_iItemDefinitionIndex())
 		{
-			case Soldier_t_TheDisciplinaryAction:
-			case Sniper_m_TheSydneySleeper:
+		case Soldier_t_TheDisciplinaryAction:
+		case Sniper_m_TheSydneySleeper:
 			return true;
 
-			default: break;
+		default:
+			break;
 		}
 
-		static ConVar* mp_friendlyfire = interfaces::Cvar->FindVar("mp_friendlyfire");
+		static ConVar *mp_friendlyfire = interfaces::Cvar->FindVar("mp_friendlyfire");
 		if (mp_friendlyfire && mp_friendlyfire->GetBool())
 			return true;
 
@@ -255,17 +273,21 @@ public:
 
 	bool CanAirblast()
 	{
-		int iAirblastDisabled = static_cast<int>(AttributeHookValue(0, "airblast_disabled", this, nullptr, true));
+		int iAirblastDisabled =
+		    static_cast<int>(AttributeHookValue(0, "airblast_disabled", this, nullptr, true));
 		bool bAllowed = iAirblastDisabled == 0;
 		return bAllowed;
 	}
 
-	Vector GetDeflectionSize() { return Vector( 128, 128, 64 ); }
+	Vector GetDeflectionSize()
+	{
+		return Vector(128, 128, 64);
+	}
 };
 
 class CTFKnife : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_bReadyToBackstab, "CTFKnife->m_bReadyToBackstab", bool);
 	NETVAR(m_bKnifeExists, "CTFKnife->m_bKnifeExists", bool);
 	NETVAR(m_flKnifeRegenerateDuration, "CTFKnife->m_flKnifeRegenerateDuration", float);
@@ -274,14 +296,14 @@ public:
 
 class CTFMinigun : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_iWeaponState, "CTFMinigun->m_iWeaponState", int);
 	NETVAR(m_bCritShot, "CTFMinigun->m_bCritShot", bool);
 };
 
 class CWeaponMedigun : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_hHealingTarget, "CWeaponMedigun->m_hHealingTarget", EHANDLE);
 	NETVAR(m_bHealing, "CWeaponMedigun->m_bHealing", bool);
 	NETVAR(m_bAttacking, "CWeaponMedigun->m_bAttacking", bool);
@@ -298,7 +320,7 @@ public:
 
 class CTFPipebombLauncher : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_iPipebombCount, "CTFPipebombLauncher->m_iPipebombCount", int);
 	NETVAR(m_flChargeBeginTime, "CTFPipebombLauncher->m_flChargeBeginTime", float);
 	//int GetDetonateType();
@@ -306,20 +328,20 @@ public:
 
 class CTFSniperRifle : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_flChargedDamage, "CTFSniperRifle->m_flChargedDamage", float);
 
 	float GetChargedDamage()
 	{
 		bool isMachina = m_iItemDefinitionIndex() == Sniper_m_TheMachina;
-		float mult = isMachina ? 1.15f : 1.0f;
+		float mult     = isMachina ? 1.15f : 1.0f;
 		return m_flChargedDamage() * 3 * mult;
 	}
 };
 
 class CTFGrenadeLauncher : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_flDetonateTime, "CTFGrenadeLauncher->m_flDetonateTime", float);
 	NETVAR(m_iCurrentTube, "CTFGrenadeLauncher->m_iCurrentTube", int);
 	NETVAR(m_iGoalTube, "CTFGrenadeLauncher->m_iGoalTube", int);
@@ -329,38 +351,38 @@ public:
 
 class CTFSniperRifleClassic : public CTFSniperRifle
 {
-public:
+      public:
 	NETVAR(m_bCharging, "CTFSniperRifleClassic->m_bCharging", bool);
 };
 
 class CTFParticleCannon : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_flChargeBeginTime, "CTFParticleCannon->m_flChargeBeginTime", float);
 	NETVAR(m_iChargeEffect, "CTFParticleCannon->m_iChargeEffect", int);
 };
 
 class CTFFlareGun : public CTFWeaponBase
 {
-public:
+      public:
 	//int GetFlareGunType();
 };
 
 class CTFThrowable : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_flChargeBeginTime, "CTFThrowable->m_flChargeBeginTime", float);
 };
 
 class CTFGrapplingHook : public CTFWeaponBase
 {
-public:
+      public:
 	NETVAR(m_hProjectile, "CTFGrapplingHook->m_hProjectile", EHANDLE);
 };
 
 class CTFSpellBook : public CTFThrowable
 {
-public:
+      public:
 	NETVAR(m_flTimeNextSpell, "CTFSpellBook->m_flTimeNextSpell", float);
 	NETVAR(m_iSelectedSpellIndex, "CTFSpellBook->m_iSelectedSpellIndex", int);
 	NETVAR(m_iSpellCharges, "CTFSpellBook->m_iSpellCharges", int);

@@ -5,19 +5,21 @@
 
 #define USERCMD_CLASSNAME "UserCmd"
 
-bool UserCmd_GetSendPacket(CUserCmd* self)
+bool UserCmd_GetSendPacket(CUserCmd *self)
 {
-	if (!self) return false;
+	if (!self)
+		return false;
 	return TickManager::m_bSendPacket;
 }
 
-void UserCmd_SetSendPacket(CUserCmd* self, bool state)
+void UserCmd_SetSendPacket(CUserCmd *self, bool state)
 {
-	if (!self) return;
+	if (!self)
+		return;
 	TickManager::m_bSendPacket = state;
 }
 
-void UserCmd_RegisterClass(asIScriptEngine* engine)
+void UserCmd_RegisterClass(asIScriptEngine *engine)
 {
 	engine->RegisterObjectType(USERCMD_CLASSNAME, 0, asOBJ_REF | asOBJ_NOCOUNT);
 
@@ -34,8 +36,11 @@ void UserCmd_RegisterClass(asIScriptEngine* engine)
 	engine->RegisterObjectProperty(USERCMD_CLASSNAME, "int random_seed", asOFFSET(CUserCmd, random_seed));
 	engine->RegisterObjectProperty(USERCMD_CLASSNAME, "int mousedx", asOFFSET(CUserCmd, mousedx));
 	engine->RegisterObjectProperty(USERCMD_CLASSNAME, "int mousedy", asOFFSET(CUserCmd, mousedy));
-	engine->RegisterObjectProperty(USERCMD_CLASSNAME, "bool hasbeenpredicted", asOFFSET(CUserCmd, hasbeenpredicted));
+	engine->RegisterObjectProperty(USERCMD_CLASSNAME, "bool hasbeenpredicted",
+				       asOFFSET(CUserCmd, hasbeenpredicted));
 
-	engine->RegisterObjectMethod(USERCMD_CLASSNAME, "bool GetSendPacket() const", asFUNCTION(UserCmd_GetSendPacket), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(USERCMD_CLASSNAME, "void SetSendPacket(bool state)", asFUNCTION(UserCmd_SetSendPacket), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(USERCMD_CLASSNAME, "bool GetSendPacket() const", asFUNCTION(UserCmd_GetSendPacket),
+				     asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(USERCMD_CLASSNAME, "void SetSendPacket(bool state)",
+				     asFUNCTION(UserCmd_SetSendPacket), asCALL_CDECL_OBJFIRST);
 }

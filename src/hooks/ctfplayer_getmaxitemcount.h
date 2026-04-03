@@ -1,20 +1,22 @@
 #pragma once
 
-#include <string>
-#include "../settings/settings.h"
-#include "../sdk/interfaces/interfaces.h"
+#include "../libdetour/libdetour.h"
 #include "../sdk/classes/entity.h"
 #include "../sdk/classes/player.h"
 #include "../sdk/helpers/helper.h"
+#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
-#include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
+#include <string>
 
-ADD_SIG(CTFPlayer_GetMaxItemCount, "client.so", "48 8B BF 98 00 00 00 48 85 FF 74 ? 55 BE 07 00 00 00 48 89 E5 E8 ? ? ? ? 48 85 C0 74 ? 83 78 28 01 75 ? 48 8B 40 08 48 8B 10")
+ADD_SIG(CTFPlayer_GetMaxItemCount, "client.so",
+	"48 8B BF 98 00 00 00 48 85 FF 74 ? 55 BE 07 00 00 00 48 89 E5 E8 ? "
+	"? ? ? 48 85 C0 74 ? 83 78 28 01 75 ? 48 8B 40 08 48 8B 10")
 
 inline detour_ctx_t GetMaxItemCount_ctx;
-DETOUR_DECL_TYPE(int, originalMaxItemCountFn, void* thisptr);
+DETOUR_DECL_TYPE(int, originalMaxItemCountFn, void *thisptr);
 
-inline int Hooked_GetMaxItemCount(void* thisptr)
+inline int Hooked_GetMaxItemCount(void *thisptr)
 {
 	if (Settings::Misc.backpack_expander)
 		return 4000;
@@ -27,11 +29,12 @@ inline int Hooked_GetMaxItemCount(void* thisptr)
 
 inline void HookCTFPlayerInventory_MaxItemCount()
 {
-	detour_init(&GetMaxItemCount_ctx, Sigs::CTFPlayer_GetMaxItemCount.GetPointer(), (void*)&Hooked_GetMaxItemCount);
+	detour_init(&GetMaxItemCount_ctx, Sigs::CTFPlayer_GetMaxItemCount.GetPointer(),
+		    (void *)&Hooked_GetMaxItemCount);
 	detour_enable(&GetMaxItemCount_ctx);
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	constexpr Color_t color{100, 255, 100, 255};
 	interfaces::Cvar->ConsoleColorPrintf(color, "CTFPlayerInventory::GetMaxItemCount hooked\n");
-	#endif
+#endif
 }

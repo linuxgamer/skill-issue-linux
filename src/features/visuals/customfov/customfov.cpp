@@ -1,11 +1,11 @@
 #include "customfov.h"
 
-float CustomFov::m_flFov = 90.0f;
+float CustomFov::m_flFov    = 90.0f;
 float CustomFov::m_flOldFov = 90.0f;
 
-void CustomFov::Run(CTFPlayer* pLocal, CViewSetup* pView)
+void CustomFov::Run(CTFPlayer *pLocal, CViewSetup *pView)
 {
-	static ConVar* fov_desired = interfaces::Cvar->FindVar("fov_desired");
+	static ConVar *fov_desired = interfaces::Cvar->FindVar("fov_desired");
 
 	if (Settings::Misc.customfov_enabled)
 		m_flFov = Settings::Misc.customfov;
@@ -16,7 +16,7 @@ void CustomFov::Run(CTFPlayer* pLocal, CViewSetup* pView)
 		m_flFov = TF_WEAPON_ZOOM_FOV;
 
 	float delta = m_flFov - m_flOldFov;
-	m_flFov = Math::Lerp(m_flOldFov, m_flFov, 0.2f);
+	m_flFov	    = Math::Lerp(m_flOldFov, m_flFov, 0.2f);
 
 	if (interfaces::Engine->IsTakingScreenshot())
 		pView->fov = fov_desired->GetFloat();
@@ -30,7 +30,7 @@ void CustomFov::Run(CTFPlayer* pLocal, CViewSetup* pView)
 	if (pLocal->IsAlive() && pView->fov >= fov_desired->GetFloat())
 	{
 		pLocal->m_iDefaultFOV() = m_flFov;
-		pLocal->m_iFOV() = m_flFov;
+		pLocal->m_iFOV()	= m_flFov;
 	}
 
 	// bro this is so convenient holy shit

@@ -1,26 +1,27 @@
 #pragma once
 
-#include "basecombatcharacter.h"
-#include "entity.h"
+#include "../definitions/bspflags.h"
+#include "../definitions/classdata.h"
 #include "../definitions/types.h"
 #include "../defs.h"
-#include "../definitions/bspflags.h"
+#include "basecombatcharacter.h"
+#include "entity.h"
 #include "playerresource.h"
-#include "../definitions/classdata.h"
 
-#define	FL_ONGROUND (1<<0)
-#define FL_DUCKING (1<<1)
-#define	FL_WATERJUMP (1<<2)
-#define FL_ONTRAIN (1<<3)
-#define FL_INRAIN (1<<4)
-#define FL_FROZEN (1<<5)
-#define FL_ATCONTROLS (1<<6)
-#define	FL_CLIENT (1<<7)
-#define FL_FAKECLIENT (1<<8)
-#define	FL_INWATER (1<<9)
+#define FL_ONGROUND (1 << 0)
+#define FL_DUCKING (1 << 1)
+#define FL_WATERJUMP (1 << 2)
+#define FL_ONTRAIN (1 << 3)
+#define FL_INRAIN (1 << 4)
+#define FL_FROZEN (1 << 5)
+#define FL_ATCONTROLS (1 << 6)
+#define FL_CLIENT (1 << 7)
+#define FL_FAKECLIENT (1 << 8)
+#define FL_INWATER (1 << 9)
 #define PLAYER_FLAG_BITS 32
 
-enum {
+enum
+{
 	CLASS_UNDEFINED = 0,
 	CLASS_SCOUT,
 	CLASS_SNIPER,
@@ -33,7 +34,8 @@ enum {
 	CLASS_ENGINEER
 };
 
-struct PlayerInfo {
+struct PlayerInfo
+{
 	char name[32];
 	int UserID;
 	char GUID[33];
@@ -45,15 +47,15 @@ struct PlayerInfo {
 	unsigned char files_downloaded;
 };
 
-#define	LIFE_ALIVE 0
-#define	LIFE_DYING 1
-#define	LIFE_DEAD 2
+#define LIFE_ALIVE 0
+#define LIFE_DYING 1
+#define LIFE_DEAD 2
 #define LIFE_RESPAWNABLE 3
 #define LIFE_DISCARDBODY 4
 
 enum
 {
-	WL_NotInWater=0,
+	WL_NotInWater = 0,
 	WL_Feet,
 	WL_Waist,
 	WL_Eyes
@@ -61,7 +63,7 @@ enum
 
 class CTFPlayer : public CBaseCombatCharacter
 {
-public:
+      public:
 	NETVAR(GetActiveWeapon, "CBaseCombatCharacter->m_hActiveWeapon", EHANDLE)
 	NETVAR(GetTickBase, "CBasePlayer->m_nTickBase", int)
 	NETVAR(GetVelocity, "CBasePlayer->m_vecVelocity[0]", Vector)
@@ -111,5 +113,5 @@ public:
 	float GetEffectiveInvisibilityLevel();
 	uint8_t GetMoveType();
 	void ThirdPersonSwitch(bool state);
-	CBaseEntity* GetEntityFromLoadoutSlot(int slot);
+	CBaseEntity *GetEntityFromLoadoutSlot(int slot);
 };

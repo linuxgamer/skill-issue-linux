@@ -27,14 +27,20 @@ bool CTFPlayer::IsAlive()
 
 bool CTFPlayer::InCond(ETFCond cond)
 {
-	switch ((int)(cond/32))
+	switch ((int)(cond / 32))
 	{
-		case 0: return m_nPlayerCond() & (1 << cond) || m_condition_bits() & (1 << cond);
-		case 1: return m_nPlayerCondEx() & (1 << (cond - 32));
-		case 2: return m_nPlayerCondEx2() & (1 << (cond - 64));
-		case 3: return m_nPlayerCondEx3() & (1 << (cond - 96));
-		case 4: return m_nPlayerCondEx4() & (1 << (cond - 128));
-		default: return false;
+	case 0:
+		return m_nPlayerCond() & (1 << cond) || m_condition_bits() & (1 << cond);
+	case 1:
+		return m_nPlayerCondEx() & (1 << (cond - 32));
+	case 2:
+		return m_nPlayerCondEx2() & (1 << (cond - 64));
+	case 3:
+		return m_nPlayerCondEx3() & (1 << (cond - 96));
+	case 4:
+		return m_nPlayerCondEx4() & (1 << (cond - 128));
+	default:
+		return false;
 	}
 
 	return false;
@@ -76,8 +82,9 @@ std::string CTFPlayer::GetName()
 
 void CTFPlayer::UpdateClientSideAnimation()
 {
-	using C_BaseAnimating_UpdateClientSideAnimationFn = void(*)(void*);
-	static auto orig = (C_BaseAnimating_UpdateClientSideAnimationFn)sigscan_module("client.so", "80 BF D0 0A 00 00 00 75");
+	using C_BaseAnimating_UpdateClientSideAnimationFn = void (*)(void *);
+	static auto orig =
+	    (C_BaseAnimating_UpdateClientSideAnimationFn)sigscan_module("client.so", "80 BF D0 0A 00 00 00 75");
 	if (!orig)
 		return;
 
@@ -86,31 +93,31 @@ void CTFPlayer::UpdateClientSideAnimation()
 
 int CTFPlayer::GetWaterLevel()
 {
-	int level = WL_NotInWater;
-	Vector point = {};
-	int cont = 0;
+	int level     = WL_NotInWater;
+	Vector point  = {};
+	int cont      = 0;
 
-	Vector mins = m_vecMins();
-	Vector maxs = m_vecMaxs();
+	Vector mins   = m_vecMins();
+	Vector maxs   = m_vecMaxs();
 	Vector origin = GetAbsOrigin();
 
-	point.x = origin.x + (mins.x + maxs.x) * 0.5f;
-	point.y = origin.y + (mins.y + maxs.y) * 0.5f;
-	point.z = origin.z + mins.z + 1;
+	point.x	      = origin.x + (mins.x + maxs.x) * 0.5f;
+	point.y	      = origin.y + (mins.y + maxs.y) * 0.5f;
+	point.z	      = origin.z + mins.z + 1;
 
-	cont = interfaces::EngineTrace->GetPointContents(point);
+	cont	      = interfaces::EngineTrace->GetPointContents(point);
 	if (cont & MASK_WATER)
 	{
-		level = WL_Feet;
+		level	= WL_Feet;
 
-		point.z = origin.z + (mins.z + maxs.z)*0.5f;
-		cont = interfaces::EngineTrace->GetPointContents(point);
+		point.z = origin.z + (mins.z + maxs.z) * 0.5f;
+		cont	= interfaces::EngineTrace->GetPointContents(point);
 		if (cont & MASK_WATER)
 		{
-			level = WL_Waist;
+			level	= WL_Waist;
 
 			point.z = origin.z + m_vecViewOffset().z;
-			cont = interfaces::EngineTrace->GetPointContents(point);
+			cont	= interfaces::EngineTrace->GetPointContents(point);
 			if (cont & MASK_WATER)
 				level = WL_Eyes;
 		}
@@ -122,8 +129,10 @@ int CTFPlayer::GetWaterLevel()
 float CTFPlayer::GetEffectiveInvisibilityLevel()
 {
 	// xref: taunt_attr_player_invis_percent
-	using GetEffectiveInvisibilityLevelFn = float(*)(void* thisptr);
-	static auto orig = reinterpret_cast<GetEffectiveInvisibilityLevelFn>(sigscan_module("client.so", "55 48 89 E5 41 56 41 55 4C 8D AF 78 1E 00 00 41 54 49 89 FC 4C 89 EF 53 E8"));
+	using GetEffectiveInvisibilityLevelFn = float (*)(void *thisptr);
+	static auto orig		      = reinterpret_cast<GetEffectiveInvisibilityLevelFn>(
+		 sigscan_module("client.so", "55 48 89 E5 41 56 41 55 4C 8D AF 78 1E 00 00 41 "
+										  "54 49 89 FC 4C 89 EF 53 E8"));
 
 	if (orig == nullptr)
 		return -1;
@@ -151,12 +160,12 @@ uint8_t CTFPlayer::GetMoveType()
 		DevMsg(1,"Bogus pmove player movetype %i on (%i) 0=cl 1=sv\n",cVar5,0);
 		break;
 	*/
-	return *reinterpret_cast<int*>(uintptr_t(this) + 0x214);
+	return *reinterpret_cast<int *>(uintptr_t(this) + 0x214);
 }
 
 void CTFPlayer::ThirdPersonSwitch(bool state)
 {
-	using ThirdPersonSwitchFn = void(*)(CTFPlayer* self, bool state);
+	using ThirdPersonSwitchFn = void (*)(CTFPlayer *self, bool state);
 
 	// The offset I got from
 	// CInput::CAM_ToFirstPerson
@@ -183,7 +192,7 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 	if (vt == nullptr)
 		return;
 
-	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(void*)]);
+	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(void *)]);
 	func(this, state);
 }
 
@@ -193,9 +202,10 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 	return static_cast<CTFWeaponBase*>(m_hMyWeapons()[index].Get());
 }*/
 
-using GetEntityFromLoadoutSlotFn = CBaseEntity*(*)(CTFPlayer* pPlayer, int slot);
-CBaseEntity* CTFPlayer::GetEntityFromLoadoutSlot(int slot)
+using GetEntityFromLoadoutSlotFn = CBaseEntity *(*)(CTFPlayer * pPlayer, int slot);
+CBaseEntity *CTFPlayer::GetEntityFromLoadoutSlot(int slot)
 {
-	static GetEntityFromLoadoutSlotFn orig = reinterpret_cast<GetEntityFromLoadoutSlotFn>(Sigs::GetEntityForLoadoutSlot.GetPointer());
+	static GetEntityFromLoadoutSlotFn orig =
+	    reinterpret_cast<GetEntityFromLoadoutSlotFn>(Sigs::GetEntityForLoadoutSlot.GetPointer());
 	return orig(this, slot);
 }

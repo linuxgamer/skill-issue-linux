@@ -27,16 +27,15 @@ LAB_01736f98:
 */
 
 inline detour_ctx_t validate_ctx;
-DETOUR_DECL_TYPE(void, ValidateUserCmd, void*, CUserCmd*, int);
+DETOUR_DECL_TYPE(void, ValidateUserCmd, void *, CUserCmd *, int);
 
-inline void Hooked_ValidateUserCmd(void* input, CUserCmd* pCmd, int sequence_number)
+inline void Hooked_ValidateUserCmd(void *input, CUserCmd *pCmd, int sequence_number)
 {
-
 }
 
 inline void Hook_ValidateUserCmd(void)
 {
-	detour_init(&validate_ctx, Sigs::CInput_ValidateUserCmd.GetPointer(), (void*)&Hooked_ValidateUserCmd);
+	detour_init(&validate_ctx, Sigs::CInput_ValidateUserCmd.GetPointer(), (void *)&Hooked_ValidateUserCmd);
 
 	if (!detour_enable(&validate_ctx))
 	{
@@ -44,7 +43,7 @@ inline void Hook_ValidateUserCmd(void)
 		return;
 	}
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	interfaces::Cvar->ConsolePrintf("CInput::ValidateUserCmd hooked\n");
-	#endif
+#endif
 }

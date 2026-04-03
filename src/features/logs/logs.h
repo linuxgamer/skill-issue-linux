@@ -20,9 +20,9 @@ namespace Logs
 {
 	extern std::vector<LogEntry> m_logs;
 
-	void Info(const std::string& text);
-	void Warn(const std::string& text);
-	void Error(const std::string& text);
+	void Info(const std::string &text);
+	void Warn(const std::string &text);
+	void Error(const std::string &text);
 
-	const std::vector<LogEntry>& GetLogs();
-}
+	const std::vector<LogEntry> &GetLogs();
+} // namespace Logs

@@ -4,12 +4,12 @@
 
 class CTeamplayRules
 {
-public:
+      public:
 };
 
 class CTeamplayRoundBasedRules : public CTeamplayRules
 {
-public:
+      public:
 	NETVAR(m_iRoundState, "CTeamplayRoundBasedRulesProxy->m_iRoundState", int);
 	NETVAR(m_bInOvertime, "CTeamplayRoundBasedRulesProxy->m_bInOvertime", bool);
 	NETVAR(m_bInSetup, "CTeamplayRoundBasedRulesProxy->m_bInSetup", bool);
@@ -20,25 +20,25 @@ public:
 	NETVAR(m_bAwaitingReadyRestart, "CTeamplayRoundBasedRulesProxy->m_bAwaitingReadyRestart", bool);
 	NETVAR(m_flRestartRoundTime, "CTeamplayRoundBasedRulesProxy->m_flRestartRoundTime", float);
 	NETVAR(m_flMapResetTime, "CTeamplayRoundBasedRulesProxy->m_flMapResetTime", float);
-	NETVAR(m_flNextRespawnWave, "CTeamplayRoundBasedRulesProxy->m_flNextRespawnWave", void*);
-	NETVAR(m_bTeamReady, "CTeamplayRoundBasedRulesProxy->m_bTeamReady", void*);
+	NETVAR(m_flNextRespawnWave, "CTeamplayRoundBasedRulesProxy->m_flNextRespawnWave", void *);
+	NETVAR(m_bTeamReady, "CTeamplayRoundBasedRulesProxy->m_bTeamReady", void *);
 	NETVAR(m_bStopWatch, "CTeamplayRoundBasedRulesProxy->m_bStopWatch", bool);
 	NETVAR(m_bMultipleTrains, "CTeamplayRoundBasedRulesProxy->m_bMultipleTrains", bool);
-	NETVAR(m_bPlayerReady, "CTeamplayRoundBasedRulesProxy->m_bPlayerReady", void*);
+	NETVAR(m_bPlayerReady, "CTeamplayRoundBasedRulesProxy->m_bPlayerReady", void *);
 	NETVAR(m_bCheatsEnabledDuringLevel, "CTeamplayRoundBasedRulesProxy->m_bCheatsEnabledDuringLevel", bool);
 	NETVAR(m_nRoundsPlayed, "CTeamplayRoundBasedRulesProxy->m_nRoundsPlayed", int);
 	NETVAR(m_flCountdownTime, "CTeamplayRoundBasedRulesProxy->m_flCountdownTime", float);
 	NETVAR(m_flStateTransitionTime, "CTeamplayRoundBasedRulesProxy->m_flStateTransitionTime", float);
-	NETVAR(m_TeamRespawnWaveTimes, "CTeamplayRoundBasedRulesProxy->m_TeamRespawnWaveTimes", void*);
+	NETVAR(m_TeamRespawnWaveTimes, "CTeamplayRoundBasedRulesProxy->m_TeamRespawnWaveTimes", void *);
 };
 
 class CTFGameRules : public CTeamplayRoundBasedRules
 {
-public:
+      public:
 	NETVAR(m_nGameType, "CTFGameRulesProxy->m_nGameType", int);
 	NETVAR(m_nStopWatchState, "CTFGameRulesProxy->m_nStopWatchState", int);
-	NETVAR(m_pszTeamGoalStringRed, "CTFGameRulesProxy->m_pszTeamGoalStringRed", const char*);
-	NETVAR(m_pszTeamGoalStringBlue, "CTFGameRulesProxy->m_pszTeamGoalStringBlue", const char*);
+	NETVAR(m_pszTeamGoalStringRed, "CTFGameRulesProxy->m_pszTeamGoalStringRed", const char *);
+	NETVAR(m_pszTeamGoalStringBlue, "CTFGameRulesProxy->m_pszTeamGoalStringBlue", const char *);
 	NETVAR(m_flCapturePointEnableTime, "CTFGameRulesProxy->m_flCapturePointEnableTime", float);
 	NETVAR(m_iGlobalAttributeCacheVersion, "CTFGameRulesProxy->m_iGlobalAttributeCacheVersion", int);
 	NETVAR(m_nHudType, "CTFGameRulesProxy->m_nHudType", int);
@@ -68,14 +68,14 @@ public:
 	NETVAR(m_hRedKothTimer, "CTFGameRulesProxy->m_hRedKothTimer", EHANDLE);
 	NETVAR(m_hBlueKothTimer, "CTFGameRulesProxy->m_hBlueKothTimer", EHANDLE);
 	NETVAR(m_nMapHolidayType, "CTFGameRulesProxy->m_nMapHolidayType", int);
-	NETVAR(m_pszCustomUpgradesFile, "CTFGameRulesProxy->m_pszCustomUpgradesFile", const char*);
+	NETVAR(m_pszCustomUpgradesFile, "CTFGameRulesProxy->m_pszCustomUpgradesFile", const char *);
 	NETVAR(m_bShowMatchSummary, "CTFGameRulesProxy->m_bShowMatchSummary", bool);
 	NETVAR(m_bMapHasMatchSummaryStage, "CTFGameRulesProxy->m_bMapHasMatchSummaryStage", bool);
 	NETVAR(m_bPlayersAreOnMatchSummaryStage, "CTFGameRulesProxy->m_bPlayersAreOnMatchSummaryStage", bool);
 	NETVAR(m_bStopWatchWinner, "CTFGameRulesProxy->m_bStopWatchWinner", bool);
-	NETVAR(m_ePlayerWantsRematch, "CTFGameRulesProxy->m_ePlayerWantsRematch", void*);
+	NETVAR(m_ePlayerWantsRematch, "CTFGameRulesProxy->m_ePlayerWantsRematch", void *);
 	NETVAR(m_eRematchState, "CTFGameRulesProxy->m_eRematchState", int);
-	NETVAR(m_nNextMapVoteOptions, "CTFGameRulesProxy->m_nNextMapVoteOptions", void*);
+	NETVAR(m_nNextMapVoteOptions, "CTFGameRulesProxy->m_nNextMapVoteOptions", void *);
 	NETVAR(m_nBossHealth, "CTFGameRulesProxy->m_nBossHealth", int);
 	NETVAR(m_nMaxBossHealth, "CTFGameRulesProxy->m_nMaxBossHealth", int);
 	NETVAR(m_fBossNormalizedTravelDistance, "CTFGameRulesProxy->m_fBossNormalizedTravelDistance", int);
@@ -90,10 +90,11 @@ public:
 	NETVAR(m_bRopesHolidayLightsAllowed, "CTFGameRulesProxy->m_bRopesHolidayLightsAllowed", bool);
 };
 
-static CTFGameRules* TFGameRules()
+static CTFGameRules *TFGameRules()
 {
-	static uintptr_t leaInstr = reinterpret_cast<uintptr_t>(sigscan_module("client.so", "48 8D 05 ? ? ? ? 48 8B 38 48 85 FF 74 ? 31 C0"));
+	static uintptr_t leaInstr =
+	    reinterpret_cast<uintptr_t>(sigscan_module("client.so", "48 8D 05 ? ? ? ? 48 8B 38 48 85 FF 74 ? 31 C0"));
 	static uintptr_t g_pGameRules_addr = vtable::ResolveRIP(leaInstr, 3, 7);
-	static CTFGameRules* g_pGameRules = *reinterpret_cast<CTFGameRules**>(g_pGameRules_addr);
+	static CTFGameRules *g_pGameRules  = *reinterpret_cast<CTFGameRules **>(g_pGameRules_addr);
 	return g_pGameRules;
 }

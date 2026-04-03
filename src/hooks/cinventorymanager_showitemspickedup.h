@@ -2,13 +2,13 @@
 
 #include <string>
 
-#include "../settings/settings.h"
 #include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
 
-#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/classes/entity.h"
 #include "../sdk/classes/player.h"
 #include "../sdk/helpers/helper.h"
+#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
 
 #include "../features/aimbot/aimbot.h"
@@ -16,9 +16,9 @@
 ADD_SIG(CInventoryManager_ShowItemsPickedUp, "client.so", "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 48 48 8B 07")
 
 inline detour_ctx_t showitemsctx;
-DETOUR_DECL_TYPE(bool, original_ShowItemsPickedUpFn, void* thisptr, bool bForce, bool bReturnToGame, bool bNoPanel);
+DETOUR_DECL_TYPE(bool, original_ShowItemsPickedUpFn, void *thisptr, bool bForce, bool bReturnToGame, bool bNoPanel);
 
-static bool HookedShowItemsPickedUpFn(void* thisptr, bool bForce, bool bReturnToGame, bool bNoPanel)
+static bool HookedShowItemsPickedUpFn(void *thisptr, bool bForce, bool bReturnToGame, bool bNoPanel)
 {
 	if (Settings::Misc.accept_item_drop)
 	{
@@ -34,10 +34,11 @@ static bool HookedShowItemsPickedUpFn(void* thisptr, bool bForce, bool bReturnTo
 
 static void HookShowItemsPickedUp()
 {
-	detour_init(&showitemsctx, Sigs::CInventoryManager_ShowItemsPickedUp.GetPointer(), (void*)&HookedShowItemsPickedUpFn);
+	detour_init(&showitemsctx, Sigs::CInventoryManager_ShowItemsPickedUp.GetPointer(),
+		    (void *)&HookedShowItemsPickedUpFn);
 	detour_enable(&showitemsctx);
 
-	#ifdef DEBUG
+#ifdef DEBUG
 	interfaces::Cvar->ConsolePrintf("CInventoryManager::ShowItemsPickedUp hooked\n");
-	#endif
+#endif
 }

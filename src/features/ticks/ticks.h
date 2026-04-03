@@ -15,4 +15,4 @@ namespace TickManager
 
 	// call in CL_Move
 	void Run(float accumulated_extra_samples, bool bFinalTick);
-}
+} // namespace TickManager

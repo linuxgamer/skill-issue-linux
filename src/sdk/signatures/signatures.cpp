@@ -5,7 +5,7 @@ bool Sigs_InitAll()
 {
 	bool result = true;
 
-	for (Sig* sig : Sig::GetRegistry())
+	for (Sig *sig : Sig::GetRegistry())
 	{
 		if (!sig || !sig->Init())
 		{

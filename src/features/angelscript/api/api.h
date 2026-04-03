@@ -5,8 +5,8 @@
 
 namespace API
 {
-	asIScriptEngine* GetScriptEngine();
-	asIScriptContext* GetScriptContext();
+	asIScriptEngine *GetScriptEngine();
+	asIScriptContext *GetScriptContext();
 	void Initialize();
 	void Unitialize();
 	bool IsInitialized();
