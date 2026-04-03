@@ -2,19 +2,17 @@
 
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_stdlib.h"
-#include "../settings/settings.h"
-#include "../sdk/helpers/helper.h"
-#include "../imgui/TextEditor.h"
 #include "../sdk/definitions/eteam.h"
+#include "../sdk/helpers/helper.h"
+#include "../settings/settings.h"
 
-#include "../features/antiaim/antiaim.h"
+#include "../features/aimbot/melee/aimbot_melee.h"
 #include "../features/aimbot/utils/utils.h"
+#include "../features/antiaim/antiaim.h"
 #include "../features/entitylist/entitylist.h"
 #include "../features/triggerbot/triggerbot.h"
-#include "../features/aimbot/melee/aimbot_melee.h"
 
-enum TabMenu
-{
+enum TabMenu {
 	TAB_AIMBOT = 0,
 	TAB_ESP,
 	TAB_MISC,
@@ -27,10 +25,8 @@ enum TabMenu
 	TAB_LOGS,
 };
 
-namespace GUI
-{
+namespace GUI {
 	extern int tab;
-	extern TextEditor editor;
 
 	extern int selectedIndex;
 	extern std::vector<std::string> configs;
@@ -42,4 +38,4 @@ namespace GUI
 	void RunPlayerList();
 	void RunSpectatorList();
 	void Init();
-}
+} // namespace GUI

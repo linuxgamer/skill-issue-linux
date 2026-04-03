@@ -30,6 +30,7 @@ protected:
 	std::vector<PotentialTarget> GetBestTargets(CTFPlayer* pLocal, CTFWeaponBase* pWeapon);
 	float GetAimDrop(float flGravity, float flTimeSeconds);
 	void DrawPath(const std::vector<Vector>& vPath);
+	bool IsRightAttack(CTFWeaponBase *pWeapon);
 
 private:
 	std::vector<Vector> m_vecPath;

@@ -2,24 +2,27 @@
 
 #include <filesystem>
 
-#include "../features/logs/logs.h"
-#include "../features/binds/binds.h"
-#include "../features/spectators/spectators.h"
-
 #include "../features/angelscript/api/globals.h"
-#include "../features/angelscript/api/api.h"
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
-
+#include "../features/binds/binds.h"
+#include "../features/logs/logs.h"
+#include "../features/scriptmanager/scriptmanager.h"
+#include "../features/spectators/spectators.h"
 #include "../imgui/imgui_stdlib.h"
 
-TextEditor GUI::editor;
-int GUI::tab = 0;
+#define BASE_DIR "./skill-issue/"
+#define SCRIPT_DIR "./skill-issue/scripts/"
+#define CONFIG_DIR "./skill-issue/configs/"
+
+int GUI::tab		  = 0;
 bool GUI::openDeletePopup = false;
 
-int GUI::selectedIndex = -1;
+int GUI::selectedIndex	  = -1;
 std::vector<std::string> GUI::configs;
-char GUI::newConfigName[64] = "\0";
+char GUI::newConfigName[64]  = "\0";
 bool GUI::firstOpenConfigTab = true;
+
+std::vector<std::string> s_vScriptFiles;
 
 void DrawTabButtons(int &tab)
 {
@@ -37,8 +40,8 @@ void DrawTabButtons(int &tab)
 	if (ImGui::Button("MISC", ImVec2(-1, 0)))
 		tab = TAB_MISC;
 
-	//if (ImGui::Button("ANTIAIM", ImVec2(-1, 0)))
-		//tab = TAB_ANTIAIM;
+	// if (ImGui::Button("ANTIAIM", ImVec2(-1, 0)))
+	// tab = TAB_ANTIAIM;
 
 	if (ImGui::Button("RADAR", ImVec2(-1, 0)))
 		tab = TAB_RADAR;
@@ -61,9 +64,10 @@ void DrawTabButtons(int &tab)
 void DrawAimbotTab()
 {
 	gBinds.RenderHotkey("Aimbot", Settings::Aimbot.key);
-	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Aimbot.key->IsEnabled() ? 1.0f : 0.5f); 
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Aimbot.key->IsEnabled() ? 1.0f : 0.5f);
 	{
-		//ImGui::InputText("Key", Settings::Aimbot.key, sizeof(Settings::Aimbot.key));
+		// ImGui::InputText("Key", Settings::Aimbot.key,
+		// sizeof(Settings::Aimbot.key));
 
 		ImGui::Checkbox("Autoshoot", &Settings::Aimbot.autoshoot);
 		ImGui::Checkbox("Viewmodel Aim", &Settings::Aimbot.viewmodelaim);
@@ -75,37 +79,35 @@ void DrawAimbotTab()
 		ImGui::SliderFloat("Smoothness", &Settings::Aimbot.smoothness, 0.0f, 100.0f);
 
 		{
-			constexpr const char* items[]{
-				"None",
-				"Circle",
-				"Square",
-				"Triangle",
+			constexpr const char *items[]{
+			    "None",
+			    "Circle",
+			    "Square",
+			    "Triangle",
 			};
 			ImGui::Combo("Indicator Style", &Settings::Aimbot.indicator, items, 4);
 		}
 
 		{
-			constexpr const char* items[]{"None", "Legit", "Rage"};
+			constexpr const char *items[]{"None", "Legit", "Rage"};
 			ImGui::Combo("Melee Aimbot", &Settings::Aimbot.melee, items, 3);
 		}
 
 		{
-			constexpr const char* items[]
-			{
-				"Plain",
-				"Smooth",
-				"Assistance",
-				"Silent",
+			constexpr const char *items[]{
+			    "Plain",
+			    "Smooth",
+			    "Assistance",
+			    "Silent",
 			};
 			ImGui::Combo("Method", &Settings::Aimbot.mode, items, 4);
 		}
-		
+
 		{
-			constexpr const char* items[]
-			{
-				"Only Enemies",
-				"Only Teammates",
-				"Both",
+			constexpr const char *items[]{
+			    "Only Enemies",
+			    "Only Teammates",
+			    "Both",
 			};
 
 			ImGui::Combo("Team Selection", &Settings::Aimbot.teamMode, items, 3);
@@ -135,9 +137,9 @@ void DrawESPTab()
 	{
 		ImGui::TableSetupColumn("LeftSide");
 		ImGui::TableSetupColumn("RightSide");
-		
+
 		ImGui::TableNextRow();
-		
+
 		ImGui::TableNextColumn();
 		ImGui::Checkbox("ESP Enabled", &Settings::ESP.enabled);
 		ImGui::BeginDisabled(!Settings::ESP.enabled);
@@ -149,18 +151,18 @@ void DrawESPTab()
 			ImGui::Checkbox("Weapon", &Settings::ESP.weapon);
 
 			{
-				constexpr const char* items[]{"None", "Text", "Bar", "Both"};
+				constexpr const char *items[]{"None", "Text", "Bar", "Both"};
 				ImGui::Combo("Health", &Settings::ESP.health, items, 4);
 			}
 
 			{
-				constexpr const char* items[]{"Only Enemies", "Only Teammates", "Both"};
+				constexpr const char *items[]{"Only Enemies", "Only Teammates", "Both"};
 				ImGui::Combo("Team Selection", &Settings::ESP.team_selection, items, 3);
 			}
 		}
 		ImGui::EndDisabled();
 		{
-			constexpr const char* items[]{"TF2", "Arial"};
+			constexpr const char *items[]{"TF2", "Arial"};
 			ImGui::Combo("Font", &Settings::ESP.font, items, 2);
 		}
 
@@ -169,8 +171,10 @@ void DrawESPTab()
 		ImGui::TextUnformatted("Conditions");
 
 		ImGui::CheckboxFlags("Zoom", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Zoomed));
-		ImGui::CheckboxFlags("Ubercharge", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Ubered));
-		ImGui::CheckboxFlags("Jarate", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Jarated));
+		ImGui::CheckboxFlags("Ubercharge", &Settings::ESP.fconditions,
+				     static_cast<int>(ESPConditionFlags::Ubered));
+		ImGui::CheckboxFlags("Jarate", &Settings::ESP.fconditions,
+				     static_cast<int>(ESPConditionFlags::Jarated));
 		ImGui::CheckboxFlags("Bonk", &Settings::ESP.fconditions, static_cast<int>(ESPConditionFlags::Bonked));
 
 		ImGui::EndTable();
@@ -189,24 +193,24 @@ void DrawESPTab()
 
 	ImGui::Separator();
 
-	float red[3] = {Settings::Colors.red_team.r()/255.0f, Settings::Colors.red_team.g()/255.0f, Settings::Colors.red_team.b()/255.0f};
-	float blu[3] = {Settings::Colors.blu_team.r()/255.0f, Settings::Colors.blu_team.g()/255.0f, Settings::Colors.blu_team.b()/255.0f};
-	float target[3] = {Settings::Colors.aimbot_target.r()/255.0f, Settings::Colors.aimbot_target.g()/255.0f, Settings::Colors.aimbot_target.b()/255.0f};
-	float weapon[3] = {Settings::Colors.weapon.r()/255.0f, Settings::Colors.weapon.g()/255.0f, Settings::Colors.weapon.b()/255.0f};
+	float red[3] = {Settings::Colors.red_team.r() / 255.0f, Settings::Colors.red_team.g() / 255.0f, Settings::Colors.red_team.b() / 255.0f};
+	float blu[3] = {Settings::Colors.blu_team.r() / 255.0f, Settings::Colors.blu_team.g() / 255.0f, Settings::Colors.blu_team.b() / 255.0f};
+	float target[3] = {Settings::Colors.aimbot_target.r() / 255.0f, Settings::Colors.aimbot_target.g() / 255.0f, Settings::Colors.aimbot_target.b() / 255.0f};
+	float weapon[3] = {Settings::Colors.weapon.r() / 255.0f, Settings::Colors.weapon.g() / 255.0f, Settings::Colors.weapon.b() / 255.0f};
 
 	ImGui::TextUnformatted("Colors");
 
 	if (ImGui::ColorEdit3("RED Team", red))
-		Settings::Colors.red_team.SetColor(red[0]*255.0f, red[1]*255.0f, red[2]*255.0f, 255.0f);
+		Settings::Colors.red_team.SetColor(red[0] * 255.0f, red[1] * 255.0f, red[2] * 255.0f, 255.0f);
 
 	if (ImGui::ColorEdit3("BLU Team", blu))
-		Settings::Colors.blu_team.SetColor(blu[0]*255.0f, blu[1]*255.0f, blu[2]*255.0f, 255.0f);
+		Settings::Colors.blu_team.SetColor(blu[0] * 255.0f, blu[1] * 255.0f, blu[2] * 255.0f, 255.0f);
 
 	if (ImGui::ColorEdit3("Aimbot Target", target))
-		Settings::Colors.aimbot_target.SetColor(target[0]*255.0f, target[1]*255.0f, target[2]*255.0f, 255.0f);
+		Settings::Colors.aimbot_target.SetColor(target[0] * 255.0f, target[1] * 255.0f, target[2] * 255.0f, 255.0f);
 
 	if (ImGui::ColorEdit3("Weapon", weapon))
-		Settings::Colors.weapon.SetColor(weapon[0]*255.0f, weapon[1]*255.0f, weapon[2]*255.0f, 255.0f);
+		Settings::Colors.weapon.SetColor(weapon[0] * 255.0f, weapon[1] * 255.0f, weapon[2] * 255.0f, 255.0f);
 }
 
 void DrawMiscTab()
@@ -233,7 +237,7 @@ void DrawMiscTab()
 	ImGui::Checkbox("No Scope Overlay", &Settings::Misc.no_scope_overlay);
 	ImGui::Checkbox("No Zoom", &Settings::Misc.no_zoom);
 
-	//ImGui::Checkbox("No Survey", &Settings::Misc.no_survey);
+	// ImGui::Checkbox("No Survey", &Settings::Misc.no_survey);
 
 	ImGui::Separator();
 
@@ -248,19 +252,19 @@ void DrawMiscTab()
 	ImGui::Separator();
 
 	ImGui::Checkbox("No Viewmodel Bob", &Settings::Misc.no_viewmodel_bob);
-	ImGui::SliderFloat3("Viewmodel Offset", Settings::Misc.viewmodel_offset, -20, 20.0f );
+	ImGui::SliderFloat3("Viewmodel Offset", Settings::Misc.viewmodel_offset, -20, 20.0f);
 	ImGui::SliderFloat("Viewmodel Interp", &Settings::Misc.viewmodel_interp, 0.0f, 50.0f);
 
 	ImGui::Separator();
 
 	{
-		constexpr const char* items[]{"None", "Last Record Only", "All Records"};
+		constexpr const char *items[]{"None", "Last Record Only", "All Records"};
 		ImGui::Combo("Backtrack", &Settings::Misc.backtrack, items, 3);
 	}
 
 	ImGui::Separator();
 
-	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::AntiAim.warp_key->IsEnabled() ? 1.0f : 0.5f); 
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::AntiAim.warp_key->IsEnabled() ? 1.0f : 0.5f);
 	{
 		gBinds.RenderHotkey("Warp Key", Settings::AntiAim.warp_key);
 		gBinds.RenderHotkey("Warp Recharge Key", Settings::AntiAim.warp_recharge_key);
@@ -273,15 +277,13 @@ void DrawMiscTab()
 
 void DrawTriggerTab()
 {
-	//ImGui::Checkbox("Trigger Enabled", &Settings::Trigger.enabled);
 	gBinds.RenderHotkey("TriggerBot", Settings::Trigger.key);
-	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Trigger.key->IsEnabled() ? 1.0f : 0.5f); 
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, Settings::Trigger.key->IsEnabled() ? 1.0f : 0.5f);
 	{
 		ImGui::Checkbox("Hitscan", &Settings::Trigger.hitscan);
-		//ImGui::InputText("Trigger Key", Settings::Trigger.key, sizeof(Settings::Trigger.key));
-	
+
 		{
-			constexpr const char* items[]{"None", "Legit", "Rage"};
+			constexpr const char *items[]{"None", "Legit", "Rage"};
 			ImGui::Combo("Auto Backstab", &Settings::Trigger.autobackstab, items, 3);
 			ImGui::Combo("Auto Airblast", &Settings::Trigger.autoairblast, items, 3);
 		}
@@ -296,23 +298,18 @@ void DrawAntiaimTab()
 	ImGui::BeginDisabled(!Settings::AntiAim.enabled);
 	{
 		{
-			constexpr const char* items[]{"None", "Up", "Down", "Fake Up", "Fake Down", "Random"};
+			constexpr const char *items[]{"None", "Up", "Down", "Fake Up", "Fake Down", "Random"};
 			ImGui::Combo("Pitch Mode", &Settings::AntiAim.pitch_mode, items, 6);
 		}
 
 		{
-			constexpr const char* items[]{
-				"None",
-				"Left", "Right",
-				"Back", "Forward",
-				"Spin Left", "Spin Right",
-				"Jitter"
-			};
+			constexpr const char *items[]{"None",	 "Left",      "Right",	    "Back",
+						      "Forward", "Spin Left", "Spin Right", "Jitter"};
 
 			ImGui::Combo("Real Yaw", &Settings::AntiAim.real_yaw_mode, items, 8);
 			ImGui::Combo("Fake Yaw", &Settings::AntiAim.fake_yaw_mode, items, 8);
 		}
-	
+
 		ImGui::SliderInt("Spin Speed", &Settings::AntiAim.spin_speed, 0, 10);
 	}
 	ImGui::EndDisabled();
@@ -330,98 +327,140 @@ void DrawAntiaimTab()
 
 struct AccessOption
 {
-	const char* label;
+	const char *label;
 	int flag;
 };
 
+void RefreshScriptList()
+{
+	s_vScriptFiles.clear();
+
+	const std::filesystem::path dir = SCRIPT_DIR;
+
+	if (!std::filesystem::exists(dir) || !std::filesystem::is_directory(dir))
+		return;
+
+	for (const auto &entry : std::filesystem::directory_iterator(dir))
+	{
+		if (!entry.is_regular_file())
+			continue;
+
+		const auto &path = entry.path();
+
+		if (path.extension() == ".as")
+			s_vScriptFiles.emplace_back(path.filename().string());
+	}
+
+	std::sort(s_vScriptFiles.begin(), s_vScriptFiles.end());
+}
+
+std::string ToLower(std::string str)
+{
+	// wtf is this syntax
+	// why the fuck do we need to specify the begin, end and then the
+	// fucking begin again?? fuck you C++
+	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::tolower(c); });
+	return str;
+}
+
+bool ContainsInsensitive(const std::string &text, const std::string &search)
+{
+	// bro why can't it just be a fucking bool and return on a parameter???
+	// fuck you c++
+	return ToLower(text).find(ToLower(search)) != std::string::npos;
+}
+
 void DrawLuaTab()
 {
-	static bool init = false;
-	if (!init)
-	{
-		constexpr const char* keywords[]
-		{
-			"null", "UserCmd",
-			"Entity", "Vector3",
-			"ViewSetup", "GameEvent",
-			"DrawModelContext", "Material",
-			"Texture", "ConVar",
-			"Vector2"
-		};
-
-		constexpr const char* myIdentifiers[]
-		{
-			"print", "warn",
-			"EntityList", "Engine",
-			"Hooks", "Materials",
-			"Draw", "Render",
-			"Client", "ClientState",
-			"Input", "ImGui"
-		};
-
-		auto def = TextEditor::LanguageDefinition::CPlusPlus();
-
-		for (auto& k: keywords)
-			def.mKeywords.insert(k);
-
-		TextEditor::Identifier id;
-		id.mDeclaration = "Library";
-
-		for (auto& k : myIdentifiers)
-			def.mIdentifiers.insert(std::make_pair(std::string(k), id));
-
-		GUI::editor.SetLanguageDefinition(def);
-		GUI::editor.SetPalette(TextEditor::GetDarkPalette());
-		GUI::editor.SetShowWhitespaces(false);
-		GUI::editor.SetText("void main()\n{\n\t// Code goes here\n}");
-		init = true;
-	}
+	static std::string s_SearchString = "";
 
 	ImGui::BeginGroup();
 
 	if (ImGui::BeginTabBar("LuaTab"))
 	{
-		if (ImGui::BeginTabItem("Editor Tab"))
+		if (ImGui::BeginTabItem("Scripts"))
 		{
-			GUI::editor.Render("Editor", ImVec2(0, -25));
-
-			ImGui::Spacing();
-
-			if (ImGui::Button("Run Code"))
-				API::RunCode(GUI::editor.GetText());
+			if (ImGui::Button("Refresh"))
+				RefreshScriptList();
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Clear"))
-				GUI::editor.SetText("");
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+			ImGui::InputText("##Search Files", &s_SearchString);
+
+			bool bIsSearchEmpty = s_SearchString.empty();
+
+			if (!s_vScriptFiles.empty())
+			{
+				if (ImGui::BeginChild("##ScriptList"))
+				{
+					int columns = std::max(1, (int)(ImGui::GetContentRegionAvail().x / 250.0f));
+
+					if (ImGui::BeginTable("##ScriptTable", columns))
+					{
+						for (int i = 0; i < s_vScriptFiles.size(); i++)
+						{
+							const std::string &file = s_vScriptFiles[i];
+
+							if (!bIsSearchEmpty &&
+							    !ContainsInsensitive(file, s_SearchString))
+								continue;
+
+							ImGui::TableNextColumn();
+
+							std::string fullPath = std::string(SCRIPT_DIR) + "/" + file;
+
+							Script &script	     = ScriptManager::GetOrCreate(fullPath);
+
+							bool wasLoaded	     = script.loaded;
+
+							if (ImGui::Checkbox(file.c_str(), &wasLoaded))
+							{
+								if (wasLoaded)
+									ScriptManager::Load(script);
+								else
+									ScriptManager::Unload(script);
+							}
+						}
+
+						ImGui::EndTable();
+					}
+					ImGui::EndChild();
+				}
+			}
+			else
+			{
+				std::string dir =
+				    std::string(interfaces::Engine->GetGameDirectory()) + "/skill-issue/scripts/";
+				ImGui::Text("Add scripts in %s", dir.c_str());
+			}
 
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem("Restrictions"))
 		{
-			static const AccessOption options[]
-			{
-				{ "Allow Engine Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_ENGINE },
-				{ "Allow Client Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENT },
-				{ "Allow ClientState Library",   ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENTSTATE },
-				{ "Allow Common Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_COMMON },
-				{ "Allow Draw Library",          ScriptAccessMask::SCRIPT_MASK_ALLOW_DRAW },
-				{ "Allow EntityList Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_ENTITYLIST },
-				{ "Allow Hooks Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_HOOKS },
-				{ "Allow ImGui Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_IMGUI },
-				{ "Allow Input Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_INPUT },
-				{ "Allow Materials Library",     ScriptAccessMask::SCRIPT_MASK_ALLOW_MATERIALS },
-				{ "Allow Render Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_RENDER },
-				{ "Allow FileSystem Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_FILESYSTEM },
-				{ "Allow Math Library",          ScriptAccessMask::SCRIPT_MASK_ALLOW_MATH },
-				{ "Allow Array Library",         ScriptAccessMask::SCRIPT_MASK_ALLOW_ARRAY },
-				{ "Allow Dictionary Library",    ScriptAccessMask::SCRIPT_MASK_ALLOW_DICT },
-				{ "Allow DateTime Library",      ScriptAccessMask::SCRIPT_MASK_ALLOW_DATETIME },
-				{ "Allow String Library",        ScriptAccessMask::SCRIPT_MASK_ALLOW_STRING },
+			static const AccessOption options[]{
+			    {"Allow Engine Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_ENGINE},
+			    {"Allow Client Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENT},
+			    {"Allow ClientState Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENTSTATE},
+			    {"Allow Common Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_COMMON},
+			    {"Allow Draw Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_DRAW},
+			    {"Allow EntityList Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_ENTITYLIST},
+			    {"Allow Hooks Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_HOOKS},
+			    {"Allow ImGui Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_IMGUI},
+			    {"Allow Input Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_INPUT},
+			    {"Allow Materials Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_MATERIALS},
+			    {"Allow Render Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_RENDER},
+			    {"Allow FileSystem Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_FILESYSTEM},
+			    {"Allow Math Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_MATH},
+			    {"Allow Array Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_ARRAY},
+			    {"Allow Dictionary Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_DICT},
+			    {"Allow DateTime Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_DATETIME},
+			    {"Allow String Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_STRING},
 			};
 
-			int& mask = GetScriptAccessMask();
+			int &mask   = GetScriptAccessMask();
 
 			int columns = std::max(1, (int)(ImGui::GetContentRegionAvail().x / 250.0f));
 
@@ -445,35 +484,18 @@ void DrawLuaTab()
 	ImGui::EndGroup();
 }
 
-std::string& GetNetvarSearchString()
+std::string &GetNetvarSearchString()
 {
 	static std::string s_Search;
 	return s_Search;
 }
 
-std::string ToLower(std::string str)
+void DrawParsedNetvarData(const std::vector<NetvarClassEntry> &classes)
 {
-	// wtf is this syntax
-	// why the fuck do we need to specify the begin, end and then the fucking begin again??
-	// fuck you C++
-	std::transform(str.begin(), str.end(), str.begin(),
-		[](unsigned char c) { return std::tolower(c); });
-	return str;
-}
+	const std::string &strSearch = GetNetvarSearchString();
+	bool bIsSearchEmpty	     = strSearch.empty();
 
-bool ContainsInsensitive(const std::string& text, const std::string& search)
-{
-	// bro why can't it just be a fucking bool and return on a parameter???
-	// fuck you c++
-	return ToLower(text).find(ToLower(search)) != std::string::npos;
-}
-
-void DrawParsedNetvarData(const std::vector<NetvarClassEntry>& classes)
-{
-	const std::string& strSearch = GetNetvarSearchString();
-	bool bIsSearchEmpty = strSearch.empty();
-
-	for (const auto& cls : classes)
+	for (const auto &cls : classes)
 	{
 		if (!bIsSearchEmpty && !ContainsInsensitive(cls.className, strSearch))
 			continue;
@@ -483,7 +505,7 @@ void DrawParsedNetvarData(const std::vector<NetvarClassEntry>& classes)
 			if (cls.members.empty())
 				ImGui::TextDisabled("No members");
 			else
-				for (const auto& name : cls.members)
+				for (const auto &name : cls.members)
 					ImGui::BulletText("%s", name.c_str());
 
 			ImGui::TreePop();
@@ -511,18 +533,18 @@ void DrawRadarTab()
 	ImGui::Separator();
 	ImGui::Checkbox("Players", &Settings::Radar.players);
 	ImGui::Checkbox("Projectiles", &Settings::Radar.projectiles);
-	//ImGui::Checkbox("Objective", &Settings::Radar.objective);
+	// ImGui::Checkbox("Objective", &Settings::Radar.objective);
 	ImGui::Checkbox("Buildings", &Settings::Radar.buildings);
 }
 
-void RefreshConfigList(const std::string& folder)
+void RefreshConfigList(const std::string &folder)
 {
 	GUI::configs.clear();
 
 	if (!std::filesystem::exists(folder))
 		std::filesystem::create_directories(folder);
 
-	for (const auto& entry : std::filesystem::directory_iterator(folder))
+	for (const auto &entry : std::filesystem::directory_iterator(folder))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == ".ini")
 		{
@@ -533,12 +555,12 @@ void RefreshConfigList(const std::string& folder)
 
 void DrawConfigTab()
 {
-	const std::string configFolder = "./skill-issue-configs";
+	const std::string configFolder = CONFIG_DIR;
 
 	if (GUI::firstOpenConfigTab)
 	{
-	    RefreshConfigList(configFolder);
-	    GUI::firstOpenConfigTab = false;
+		RefreshConfigList(configFolder);
+		GUI::firstOpenConfigTab = false;
 	}
 
 	if (ImGui::Button("Refresh"))
@@ -570,7 +592,7 @@ void DrawConfigTab()
 	}
 
 	ImGui::Separator();
-    
+
 	if (ImGui::BeginChild("##Configs"))
 	{
 		// config list
@@ -587,49 +609,50 @@ void DrawConfigTab()
 
 				if (ImGui::Button("Load"))
 					Settings::Load(fullPath);
-			
+
 				ImGui::SameLine();
-			
+
 				if (ImGui::Button("Save"))
 					Settings::Save(fullPath);
-		
+
 				ImGui::SameLine();
 
 				if (ImGui::Button("Delete"))
 					GUI::openDeletePopup = true;
-		
-				// this doesn't look good to me, should I change it?
+
+				// this doesn't look good to me, should I
+				// change it?
 				if (GUI::openDeletePopup)
 					ImGui::OpenPopup("ConfirmDelete");
-		
+
 				if (ImGui::BeginPopupModal("ConfirmDelete", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 				{
 					ImGui::Text("Delete selected config?");
 					ImGui::Separator();
-		
+
 					if (ImGui::Button("Yes", ImVec2(120, 0)))
 					{
 						std::filesystem::remove(fullPath);
 						RefreshConfigList(configFolder);
-						GUI::selectedIndex = -1;
+						GUI::selectedIndex   = -1;
 						GUI::openDeletePopup = false;
 						ImGui::CloseCurrentPopup();
 					}
-		
+
 					ImGui::SameLine();
-		
+
 					if (ImGui::Button("No", ImVec2(120, 0)))
 					{
 						GUI::openDeletePopup = false;
 						ImGui::CloseCurrentPopup();
 					}
-		
+
 					ImGui::EndPopup();
 				}
 			}
 		}
 	}
-    
+
 	ImGui::EndChild();
 }
 
@@ -637,89 +660,31 @@ void DrawLogsTab()
 {
 	ImGui::BeginChild("##LogsContent");
 
-	for (const auto& entry : Logs::GetLogs())
+	for (const auto &entry : Logs::GetLogs())
 	{
 		ImVec4 color;
-		switch(entry.level)
+		switch (entry.level)
 		{
-                case LogLevel::INFO:
+		case LogLevel::INFO:
 			color = ImVec4(1, 1, 1, 1);
 			ImGui::TextColored(color, "%s - %s", "Info", entry.text.c_str());
 			break;
-                case LogLevel::WARN:
+		case LogLevel::WARN:
 			color = ImVec4(1, 1, 0, 1);
 			ImGui::TextColored(color, "%s - %s", "Warn", entry.text.c_str());
 			break;
-                case LogLevel::ERROR:
-                	color = ImVec4(1, 0, 0, 1);
+		case LogLevel::ERROR:
+			color = ImVec4(1, 0, 0, 1);
 			ImGui::TextColored(color, "%s - %s", "Error", entry.text.c_str());
 			break;
-                }
-        }
+		}
+	}
 
 	ImGui::EndChild();
 }
 
 void GUI::RunSpectatorList()
 {
-	/*
-	if (helper::engine::IsTakingScreenshot())
-		return;
-
-	ImGui::SetNextWindowSizeConstraints(
-        	ImVec2(150.0f, 0.0f),
-        	ImVec2(FLT_MAX, FLT_MAX)
-    	);
-
-	int flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
-	if (!Settings::menu_open)
-		flags |= ImGuiWindowFlags_NoMove;
-
-	ImGui::Begin("Spectator List", nullptr, flags);
-
-	int maxclients = helper::engine::GetMaxClients();
-	if (!helper::engine::IsInMatch() || maxclients <= 1)
-		return ImGui::End();
-
-	CTFPlayer* pLocal = helper::engine::GetLocalPlayer();
-	if (pLocal == nullptr || !pLocal->IsAlive())
-		return ImGui::End();
-
-	int localTeam = pLocal->m_iTeamNum();
-	int localIndex = pLocal->GetIndex();
-
-	for (const auto& entry : EntityList::GetEntities())
-	{
-		if (!(entry.flags & EntityFlags::IsPlayer))
-			continue;
-
-		CTFPlayer* player = static_cast<CTFPlayer*>(entry.ptr);
-		if (player == nullptr)
-			continue;
-
-		if (player->IsAlive() || player == pLocal)
-			continue;
-
-		if (player->m_iTeamNum() != localTeam)
-			continue;
-
-		CTFPlayer* m_hObserverTarget = HandleAs<CTFPlayer*>(player->m_hObserverTarget());
-		if (!m_hObserverTarget || m_hObserverTarget->GetIndex() != localIndex)
-			continue;
-
-		player_info_t info;
-		if (!interfaces::Engine->GetPlayerInfo(player->GetIndex(), &info))
-			continue;
-
-		int m_iObserverMode = player->m_iObserverMode();
-		bool isfirstperson = m_iObserverMode == OBS_MODE_IN_EYE;
-
-		ImGui::TextColored(isfirstperson ? ImVec4(1.0, 0.5, 0.5, 1.0) : ImVec4(1.0, 1.0, 1.0, 1.0), "%s", player->GetName().c_str());
-	}
-
-	ImGui::End();
-	*/
-
 	Spectators::DrawList();
 }
 
@@ -728,10 +693,7 @@ void GUI::RunPlayerList()
 	if (interfaces::Engine->IsTakingScreenshot())
 		return;
 
-	ImGui::SetNextWindowSizeConstraints(
-        	ImVec2(150.0f, 0.0f),
-        	ImVec2(FLT_MAX, FLT_MAX)
-    	);
+	ImGui::SetNextWindowSizeConstraints(ImVec2(150.0f, 0.0f), ImVec2(FLT_MAX, FLT_MAX));
 
 	int flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
 	if (!Settings::menu_open)
@@ -739,12 +701,12 @@ void GUI::RunPlayerList()
 
 	if (ImGui::Begin("Player List", nullptr, flags))
 	{
-		for (const auto& entry : EntityList::GetEntities())
+		for (const auto &entry : EntityList::GetEntities())
 		{
 			if (!(entry.flags & EntityFlags::IsPlayer))
 				continue;
 
-			auto* entity = static_cast<CTFPlayer*>(entry.ptr);
+			auto *entity = static_cast<CTFPlayer *>(entry.ptr);
 			if (entity == nullptr)
 				continue;
 
@@ -752,23 +714,24 @@ void GUI::RunPlayerList()
 
 			switch (entity->m_iTeamNum())
 			{
-				case TEAM_BLU:
-				{
-					Color color = Settings::Colors.blu_team;
-					ImVec4 textColor(color.r()/255.0f, color.g()/255.0f, color.b()/255.0f, 255);
-					ImGui::TextColored(textColor, "%s", name.c_str());
-					break;
-				}
+			case TEAM_BLU:
+			{
+				Color color = Settings::Colors.blu_team;
+				ImVec4 textColor(color.r() / 255.0f, color.g() / 255.0f, color.b() / 255.0f, 255);
+				ImGui::TextColored(textColor, "%s", name.c_str());
+				break;
+			}
 
-				case TEAM_RED:
-				{
-					Color color = Settings::Colors.red_team;
-					ImVec4 textColor(color.r()/255.0f, color.g()/255.0f, color.b()/255.0f, 255);
-					ImGui::TextColored(textColor, "%s", name.c_str());
-					break;
-				}
+			case TEAM_RED:
+			{
+				Color color = Settings::Colors.red_team;
+				ImVec4 textColor(color.r() / 255.0f, color.g() / 255.0f, color.b() / 255.0f, 255);
+				ImGui::TextColored(textColor, "%s", name.c_str());
+				break;
+			}
 
-				default: break;
+			default:
+				break;
 			}
 		}
 	}
@@ -791,35 +754,55 @@ void GUI::RunMainWindow()
 		{
 			ImGui::TableSetupColumn("Buttons", ImGuiTableColumnFlags_WidthFixed, 70);
 			ImGui::TableSetupColumn("Content", ImGuiTableColumnFlags_WidthStretch);
-			
+
 			ImGui::TableNextRow();
-			
+
 			ImGui::TableSetColumnIndex(0);
 			DrawTabButtons(tab);
 
 			ImGui::TableSetColumnIndex(1);
 			if (ImGui::BeginChild("##Cheese"))
 			{
-				switch(tab)
+				switch (tab)
 				{
-					case TAB_AIMBOT: DrawAimbotTab(); break;
-					case TAB_ESP: DrawESPTab(); break;
-					case TAB_MISC: DrawMiscTab(); break;
-					case TAB_TRIGGER: DrawTriggerTab(); break;
-					//case TAB_ANTIAIM: DrawAntiaimTab(); break;
-					case TAB_LUA: DrawLuaTab(); break;
-					case TAB_NETVARS: DrawNetVarsTab(); break;
-					case TAB_RADAR: DrawRadarTab(); break;
-					case TAB_CONFIG: DrawConfigTab(); break;
-					case TAB_LOGS: DrawLogsTab(); break;
-					default: break;
+				case TAB_AIMBOT:
+					DrawAimbotTab();
+					break;
+				case TAB_ESP:
+					DrawESPTab();
+					break;
+				case TAB_MISC:
+					DrawMiscTab();
+					break;
+				case TAB_TRIGGER:
+					DrawTriggerTab();
+					break;
+				// case TAB_ANTIAIM: DrawAntiaimTab(); break;
+				case TAB_LUA:
+					DrawLuaTab();
+					break;
+				case TAB_NETVARS:
+					DrawNetVarsTab();
+					break;
+				case TAB_RADAR:
+					DrawRadarTab();
+					break;
+				case TAB_CONFIG:
+					DrawConfigTab();
+					break;
+				case TAB_LOGS:
+					DrawLogsTab();
+					break;
+				default:
+					break;
 				}
 			}
 			ImGui::EndChild();
-			
+
 			ImGui::EndTable();
 		}
 	}
+
 	ImGui::End();
 }
 

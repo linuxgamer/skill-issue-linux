@@ -497,7 +497,12 @@ void CAimbotProjectile::RunAim(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserC
 		return;
 
 	if (Settings::Aimbot.autoshoot)
-		pCmd->buttons |= IN_ATTACK;
+	{
+		if (IsRightAttack(pWeapon))
+			pCmd->buttons |= IN_ATTACK2;
+		else
+			pCmd->buttons |= IN_ATTACK;
+	}
 
 	if (helper::localplayer::CanShoot(pLocal, pWeapon, pCmd))
 	{
@@ -532,7 +537,7 @@ void CAimbotProjectile::RunAim(CTFPlayer* pLocal, CTFWeaponBase* pWeapon, CUserC
 
 		AimbotMode mode = static_cast<AimbotMode>(Settings::Aimbot.mode);
 
-		if (mode == AimbotMode::SILENT)
+		if (mode == AimbotMode::SILENT && !IsRightAttack(pWeapon))
 			pState.shouldSilent = true;
 
 		if (mode == AimbotMode::PLAIN)
@@ -653,6 +658,22 @@ void CAimbotProjectile::DrawPath(const std::vector<Vector>& vPath)
 		if (bIsPreviousVisible && bIsCurrentVisible)
 			interfaces::Surface->DrawLine(vecPrevScreen.x, vecPrevScreen.y, vecCurrScreen.x, vecCurrScreen.y);
 	}
+}
+
+bool CAimbotProjectile::IsRightAttack(CTFWeaponBase *pWeapon)
+{
+	switch (pWeapon->GetWeaponID())
+	{
+	case TF_WEAPON_LUNCHBOX:
+	case TF_WEAPON_BAT_WOOD:
+	case TF_WEAPON_BAT_GIFTWRAP:
+		return true;
+
+	default:
+		return false;
+	}
+
+	return false;
 }
 
 CAimbotProjectile gAimProjectile{};
