@@ -66,7 +66,10 @@ void TickManager::Post_CreateMove(int sequence_number)
 
 	FakeLag::Run();
 
+	#if 0
+	Backtrack::CleanRecords(pCmd);
 	Backtrack::Run(pLocal, pWeapon, pCmd);
+	#endif
 
 	Bhop::Run(pLocal, pCmd);
 	Autostrafe::Run(pLocal, pCmd);

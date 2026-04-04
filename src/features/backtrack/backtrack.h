@@ -31,7 +31,7 @@ struct LagCompRecord
 		m_vecVelocity	= vecVelocity;
 	}
 
-	bool IsValid();
+	bool IsValid(CUserCmd* pCmd);
 
 	float m_flSimTime;
 	Vector m_vecAbsCenter;
@@ -56,7 +56,7 @@ namespace Backtrack
 	float GetInterp();
 	float GetLatency();
 
-	void CleanRecords();
+	void CleanRecords(CUserCmd* pCmd);
 	bool GetRecords(CTFPlayer *pEntity, std::vector<LagCompRecord> &out);
 	bool GetReal(CTFPlayer *pEntity, LagCompRecord &out);
 

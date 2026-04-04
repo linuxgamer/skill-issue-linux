@@ -257,10 +257,12 @@ void DrawMiscTab()
 
 	ImGui::Separator();
 
+	#if 0
 	{
 		constexpr const char *items[]{"None", "Last Record Only", "All Records"};
 		ImGui::Combo("Backtrack", &Settings::Misc.backtrack, items, 3);
 	}
+	#endif
 
 	ImGui::Separator();
 

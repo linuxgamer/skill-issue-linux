@@ -16,7 +16,7 @@ bool Backtrack::m_drawing						= false;
 LagCompRecord *Backtrack::m_current_drawing_record			= nullptr;
 
 // https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/server/player_lagcompensation.cpp#L381-L412
-bool LagCompRecord::IsValid()
+bool LagCompRecord::IsValid(CUserCmd* pCmd)
 {
 	float correct		 = 0.0f;
 
@@ -32,7 +32,7 @@ bool LagCompRecord::IsValid()
 	static ConVar *sv_maxunlag = interfaces::Cvar->FindVar("sv_maxunlag");
 	correct			   = std::clamp(correct, 0.0f, sv_maxunlag->GetFloat());
 
-	float delta		   = correct - (interfaces::GlobalVars->curtime - m_flSimTime);
+	float delta		   = correct - (TICKS_TO_TIME(pCmd->tick_count) - m_flSimTime);
 
 	return std::fabs(delta) < 0.2f;
 }
@@ -96,7 +96,7 @@ void Backtrack::Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd)
 
 		for (auto &record : records)
 		{
-			if (!record.IsValid())
+			if (!record.IsValid(pCmd))
 				continue;
 
 			Vector aimPos;
@@ -138,7 +138,7 @@ float Backtrack::GetInterp()
 	return lerp;
 }
 
-void Backtrack::CleanRecords()
+void Backtrack::CleanRecords(CUserCmd* pCmd)
 {
 	// i wrote this code at 2 am
 	// i will probably not remember
@@ -156,7 +156,7 @@ void Backtrack::CleanRecords()
 		}
 
 		records.erase(std::remove_if(records.begin(), records.end(),
-					     [](LagCompRecord &record) { return !record.IsValid(); }),
+					     [&](LagCompRecord &record) { return !record.IsValid(pCmd); }),
 			      records.end());
 
 		// remove the entry from m_records
@@ -170,7 +170,7 @@ void Backtrack::CleanRecords()
 
 void Backtrack::Store(CTFPlayer *pLocal, const EntityListEntry &entry)
 {
-	CleanRecords();
+	//CleanRecords();
 
 	if (!IsValidPlayer(entry))
 		return;
@@ -287,9 +287,6 @@ void Backtrack::DoPostScreenSpaceEffects()
 
 			for (auto &record : records)
 			{
-				if (!record.IsValid())
-					continue;
-
 				m_current_drawing_record = &record;
 				entity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
 			}
@@ -368,8 +365,8 @@ bool Backtrack::GetReal(CTFPlayer *pEntity, LagCompRecord &out)
 		return false;
 
 	LagCompRecord &front = records.front();
-	if (!front.IsValid())
-		return false;
+	//if (!front.IsValid())
+		//return false;
 
 	out = front;
 	return true;

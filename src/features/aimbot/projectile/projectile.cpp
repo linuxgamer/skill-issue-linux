@@ -407,7 +407,15 @@ void CAimbotProjectile::RunMain(CTFPlayer *pLocal, CTFWeaponBase *pWeapon)
 	if (vTargets.empty())
 		return;
 
-	Vector vecEyePos  = pLocal->GetEyePos();
+	Vec3 vecEyePos;// = pLocal->GetEyePos();
+	{
+		std::vector<Vec3> vPath;
+		gPrediction.BeginPrediction(pLocal, TICKS_TO_TIME(1));
+		gPrediction.Simulate(vPath);
+		gPrediction.EndPrediction();
+
+		vecEyePos = vPath.back() + pLocal->m_vecViewOffset();
+	}
 
 	float flPrimeTime = pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER ? 0.7f : 0;
 
@@ -421,6 +429,7 @@ void CAimbotProjectile::RunMain(CTFPlayer *pLocal, CTFWeaponBase *pWeapon)
 			continue;
 
 		flTime += flPrimeTime;
+		flTime += TICKS_TO_TIME(1); // we are always 1 tick behind on CreateMove
 
 		Vector vecAimPos{};
 		std::vector<Vector> vPath;

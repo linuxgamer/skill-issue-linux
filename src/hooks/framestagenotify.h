@@ -5,6 +5,7 @@
 
 #include "../features/entitylist/entitylist.h"
 #include "../features/spectators/spectators.h"
+#include "../features/backtrack/backtrack.h"
 #include "../features/visuals/customfov/customfov.h"
 #include "../features/visuals/thirdperson/thirdperson.h"
 
@@ -34,6 +35,17 @@ DECLARE_VTABLE_HOOK(FrameStageNotify, void, (CHLClient * thisptr, int stage))
 		CTFPlayer *pLocal = EntityList::GetLocal();
 		if (pLocal == nullptr)
 			break;
+
+		#if 0
+		// temporary
+		for (const auto& enemy : EntityList::GetEnemies())
+		{
+			if (enemy.ptr == nullptr)
+				continue;
+
+			Backtrack::Store(pLocal, enemy);
+		}
+		#endif
 
 		Spectators::RunMain(pLocal);
 		//Thirdperson::FrameStageNotify(pLocal);

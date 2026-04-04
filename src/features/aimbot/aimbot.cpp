@@ -5,6 +5,7 @@
 #include "utils/utils.h"
 
 #include "projectile/projectile.h"
+//#include "hitscan2/hitscan.h"
 
 namespace Aimbot
 {
@@ -43,6 +44,7 @@ namespace Aimbot
 		case EWeaponType::HITSCAN:
 		{
 			AimbotHitscan::Run(pLocal, pWeapon, pCmd, m_state);
+			//AimHitscan::RunMain(pLocal, pWeapon, pCmd);
 		}
 		break;
 
