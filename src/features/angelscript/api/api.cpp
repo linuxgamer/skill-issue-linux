@@ -3,6 +3,7 @@
 #include "../../../sdk/interfaces/interfaces.h"
 
 #define AS_USE_STLNAMES 1
+#include "libraries/globalvars/globalvars.h"
 #include "../add_on/datetime/datetime.h"
 #include "../add_on/scriptarray/scriptarray.h"
 #include "../add_on/scriptdictionary/scriptdictionary.h"
@@ -118,6 +119,7 @@ void API::Initialize()
 	Input_RegisterLibrary(engine);
 	Client_RegisterLibrary(engine);
 	ImGui_RegisterLibrary(engine);
+	Globalvars_RegisterLibrary(engine);
 
 	s_bInitialized = true;
 }

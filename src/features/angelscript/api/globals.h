@@ -21,6 +21,7 @@ enum ScriptAccessMask
 	SCRIPT_MASK_ALLOW_DICT	      = 1 << 14,
 	SCRIPT_MASK_ALLOW_DATETIME    = 1 << 15,
 	SCRIPT_MASK_ALLOW_STRING      = 1 << 16,
+	SCRIPT_MASK_ALLOW_GLOBALVARS  = 1 << 17,
 };
 
 asIScriptEngine *GetScriptEngine();

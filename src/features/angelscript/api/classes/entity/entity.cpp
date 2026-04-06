@@ -327,91 +327,38 @@ void Entity_RegisterClass(asIScriptEngine *engine)
 	engine->RegisterObjectBehaviour(ENTITY_CLASSNAME, asBEHAVE_RELEASE, "void f()", asFUNCTION(Entity_Release),
 					asCALL_CDECL_OBJLAST);
 
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetHealth() const", asFUNCTION(GetHealth),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetMaxHealth() const", asFUNCTION(GetMaxHealth),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsPlayer() const", asMETHOD(CBaseEntity, IsPlayer),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsWeapon() const", asMETHOD(CBaseEntity, IsWeapon),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetIndex() const", asMETHOD(CBaseEntity, GetIndex),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsPlayer()", asMETHOD(CBaseEntity, IsPlayer),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsBuilding()", asMETHOD(CBaseEntity, IsBuilding),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetClassID() const", asMETHOD(CBaseEntity, GetClassID),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsRobot()", asMETHOD(CBaseEntity, IsRobot),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 EstimateAbsVelocity() const",
-				     asMETHOD(CBaseEntity, EstimateAbsVelocity), asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsProjectile()", asMETHOD(CBaseEntity, IsProjectile),
-				     asCALL_THISCALL);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "int GetPropInt(const string &in "
-				     "className, const string &in propName)",
-				     asFUNCTION(GetPropInt), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "float GetPropFloat(const string &in "
-				     "className, const string &in propName)",
-				     asFUNCTION(GetPropFloat), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "bool GetPropBool(const string &in "
-				     "className, const string &in propName)",
-				     asFUNCTION(GetPropBool), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "Vector3 GetPropVector(const string &in "
-				     "className, const string &in propName)",
-				     asFUNCTION(GetPropVector), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "Entity@ GetPropEntity(const string &in "
-				     "className, const string &in propName)",
-				     asFUNCTION(GetPropEntity), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "void SetPropInt(const string &in className, const string &in "
-				     "propName, int value)",
-				     asFUNCTION(SetPropInt), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "void SetPropFloat(const string &in className, const string &in "
-				     "propName, float value)",
-				     asFUNCTION(SetPropFloat), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "void SetPropBool(const string &in className, const string &in "
-				     "propName, bool value)",
-				     asFUNCTION(SetPropBool), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "void SetPropVector(const string &in className, const string &in "
-				     "propName, Vector3 value)",
-				     asFUNCTION(SetPropVector), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME,
-				     "void SetPropEntity(const string &in className, const string &in "
-				     "propName, Entity@ value)",
-				     asFUNCTION(SetPropEntity), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 GetAbsOrigin()", asFUNCTION(GetAbsOrigin),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 GetAbsAngles()", asFUNCTION(GetAbsAngles),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool ShouldDraw()", asFUNCTION(ShouldDraw),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetFirstMoveChild()", asFUNCTION(GetFirstMoveChild),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetNextMovePeer()", asFUNCTION(GetNextMovePeer),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void DrawModel(int flags)", asFUNCTION(DrawModel),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetTeamNumber()", asFUNCTION(GetTeamNumber),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsAlive()", asFUNCTION(Ent_IsAlive),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetMoveType()", asFUNCTION(GetMoveType),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool InCond(int cond)", asFUNCTION(InCond),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "string GetClassName()", asFUNCTION(GetClassName),
-				     asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetHealth() const", asFUNCTION(GetHealth), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetMaxHealth() const", asFUNCTION(GetMaxHealth), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsPlayer() const", asMETHOD(CBaseEntity, IsPlayer), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsWeapon() const", asMETHOD(CBaseEntity, IsWeapon), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetIndex() const", asMETHOD(CBaseEntity, GetIndex), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsPlayer()", asMETHOD(CBaseEntity, IsPlayer), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsBuilding()", asMETHOD(CBaseEntity, IsBuilding), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetClassID() const", asMETHOD(CBaseEntity, GetClassID), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsRobot()", asMETHOD(CBaseEntity, IsRobot), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 EstimateAbsVelocity() const", asMETHOD(CBaseEntity, EstimateAbsVelocity), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsProjectile()", asMETHOD(CBaseEntity, IsProjectile), asCALL_THISCALL);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetPropInt(const string &in className, const string &in propName)", asFUNCTION(GetPropInt), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "float GetPropFloat(const string &in className, const string &in propName)", asFUNCTION(GetPropFloat), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool GetPropBool(const string &in className, const string &in propName)", asFUNCTION(GetPropBool), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 GetPropVector(const string &in className, const string &in propName)", asFUNCTION(GetPropVector), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetPropEntity(const string &in className, const string &in propName)", asFUNCTION(GetPropEntity), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void SetPropInt(const string &in className, const string &in propName, int value)", asFUNCTION(SetPropInt), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void SetPropFloat(const string &in className, const string &in propName, float value)", asFUNCTION(SetPropFloat), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void SetPropBool(const string &in className, const string &in propName, bool value)", asFUNCTION(SetPropBool), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void SetPropVector(const string &in className, const string &in propName, Vector3 value)", asFUNCTION(SetPropVector), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void SetPropEntity(const string &in className, const string &in propName, Entity@ value)", asFUNCTION(SetPropEntity), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 GetAbsOrigin()", asFUNCTION(GetAbsOrigin), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Vector3 GetAbsAngles()", asFUNCTION(GetAbsAngles), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool ShouldDraw()", asFUNCTION(ShouldDraw), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetFirstMoveChild()", asFUNCTION(GetFirstMoveChild), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetNextMovePeer()", asFUNCTION(GetNextMovePeer), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "void DrawModel(int flags)", asFUNCTION(DrawModel), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetTeamNumber()", asFUNCTION(GetTeamNumber), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool IsAlive()", asFUNCTION(Ent_IsAlive), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "int GetMoveType()", asFUNCTION(GetMoveType), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "bool InCond(int cond)", asFUNCTION(InCond), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "string GetClassName()", asFUNCTION(GetClassName), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "string GetName()", asFUNCTION(GetName), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetEntityFromLoadoutSlot(int index)",
-				     asFUNCTION(GetEntityFromLoadoutSlot), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(ENTITY_CLASSNAME, "Entity@ GetEntityFromLoadoutSlot(int index)", asFUNCTION(GetEntityFromLoadoutSlot), asCALL_CDECL_OBJFIRST);
 }

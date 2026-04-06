@@ -6,31 +6,6 @@
 #include "../../../../../sdk/interfaces/interfaces.h"
 #include "../../../../logs/logs.h"
 
-int GetChokedCommands()
-{
-	return static_cast<CClientState *>(interfaces::ClientState)->chokedcommands;
-}
-
-int GetLastOutgoingCommand()
-{
-	return static_cast<CClientState *>(interfaces::ClientState)->lastoutgoingcommand;
-}
-
-int GetLastCommandAck()
-{
-	return static_cast<CClientState *>(interfaces::ClientState)->last_command_ack;
-}
-
-int GetClientSignonState()
-{
-	return static_cast<CClientState *>(interfaces::ClientState)->m_nSignonState;
-}
-
-int GetDeltaTick()
-{
-	return static_cast<CClientState *>(interfaces::ClientState)->m_nDeltaTick;
-}
-
 void ForceFullUpdate()
 {
 	// xref: Requesting full game update
@@ -56,14 +31,42 @@ void ClientState_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("ClientState");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENTSTATE);
-		engine->RegisterGlobalFunction("int GetChokedCommands()", asFUNCTION(GetChokedCommands), asCALL_CDECL);
-		engine->RegisterGlobalFunction("int GetLastOutgoingCommand()", asFUNCTION(GetLastOutgoingCommand),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("int GetLastCommandAck()", asFUNCTION(GetLastCommandAck), asCALL_CDECL);
-		engine->RegisterGlobalFunction("int GetClientSignonState()", asFUNCTION(GetClientSignonState),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("int GetDeltaTick()", asFUNCTION(GetDeltaTick), asCALL_CDECL);
+
+		auto clientstate = static_cast<CClientState *>(interfaces::ClientState);
+
 		engine->RegisterGlobalFunction("void ForceFullUpdate()", asFUNCTION(ForceFullUpdate), asCALL_CDECL);
+
+		engine->RegisterGlobalProperty("int m_Socket", &clientstate->m_Socket);
+		engine->RegisterGlobalProperty("uint m_nChallengeNr", &clientstate->m_nChallengeNr);
+		engine->RegisterGlobalProperty("double m_flConnectTime", &clientstate->m_flConnectTime);
+		engine->RegisterGlobalProperty("int m_nRetryNumber", &clientstate->m_nRetryNumber);
+		engine->RegisterGlobalProperty("int m_retryChallenge", &clientstate->m_retryChallenge);
+		engine->RegisterGlobalProperty("int m_nSignonState", &clientstate->m_nSignonState);
+		engine->RegisterGlobalProperty("double m_flNextCmdTime", &clientstate->m_flNextCmdTime);
+		engine->RegisterGlobalProperty("int m_nServerCount", &clientstate->m_nServerCount);
+		engine->RegisterGlobalProperty("uint64 m_ulGameServerSteamID", &clientstate->m_ulGameServerSteamID);
+		engine->RegisterGlobalProperty("int m_nCurrentSequence", &clientstate->m_nCurrentSequence);
+		engine->RegisterGlobalProperty("int m_nDeltaTick", &clientstate->m_nDeltaTick);
+		engine->RegisterGlobalProperty("bool m_bPaused", &clientstate->m_bPaused);
+		engine->RegisterGlobalProperty("float m_flPausedExpireTime", &clientstate->m_flPausedExpireTime);
+		engine->RegisterGlobalProperty("int m_nViewEntity", &clientstate->m_nViewEntity);
+		engine->RegisterGlobalProperty("int m_nPlayerSlot", &clientstate->m_nPlayerSlot);
+		engine->RegisterGlobalProperty("int m_nMaxClients", &clientstate->m_nMaxClients);
+		engine->RegisterGlobalProperty("bool m_bRestrictServerCommands", &clientstate->m_bRestrictServerCommands);
+		engine->RegisterGlobalProperty("bool m_bRestrictClientCommands", &clientstate->m_bRestrictClientCommands);
+		engine->RegisterGlobalProperty("bool insimulation", &clientstate->insimulation);
+		engine->RegisterGlobalProperty("int oldtickcount", &clientstate->oldtickcount);
+		engine->RegisterGlobalProperty("float m_tickRemainder", &clientstate->m_tickRemainder);
+		engine->RegisterGlobalProperty("float m_frameTime", &clientstate->m_frameTime);
+		engine->RegisterGlobalProperty("int lastoutgoingcommand", &clientstate->lastoutgoingcommand);
+		engine->RegisterGlobalProperty("int chokedcommands", &clientstate->chokedcommands);
+		engine->RegisterGlobalProperty("int last_command_ack", &clientstate->last_command_ack);
+		engine->RegisterGlobalProperty("int command_ack", &clientstate->command_ack);
+		engine->RegisterGlobalProperty("int m_nSoundSequence", &clientstate->m_nSoundSequence);
+		engine->RegisterGlobalProperty("bool ishltv", &clientstate->ishltv);
+		engine->RegisterGlobalProperty("bool isreplay", &clientstate->isreplay);
+		engine->RegisterGlobalProperty("int demonum", &clientstate->demonum);
+		engine->RegisterGlobalProperty("bool m_bMarkedCRCsUnverified", &clientstate->m_bMarkedCRCsUnverified);
 	}
 
 	engine->SetDefaultNamespace(defNamespace);

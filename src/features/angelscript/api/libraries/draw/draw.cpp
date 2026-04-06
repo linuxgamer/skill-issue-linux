@@ -88,31 +88,18 @@ void Draw_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("Draw");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_DRAW);
-		engine->RegisterGlobalFunction("void Line(int x0, int y0, int x1, int y1)", asFUNCTION(Line),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetColor(int r, int g, int b, int a)", asFUNCTION(SetColor),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void GetTextSize(const string &in text, int &out w, int "
-					       "&out h)",
-					       asFUNCTION(GetTextSize), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void GetCursorPos(int &out x, int &out y)", asFUNCTION(GetCursorPos),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorPos(int x, int y)", asFUNCTION(SetCursorPos),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void Circle(int x, int y, int radius, int segments)",
-					       asFUNCTION(Circle), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void Line(int x0, int y0, int x1, int y1)", asFUNCTION(Line), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetColor(int r, int g, int b, int a)", asFUNCTION(SetColor), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetTextSize(const string &in text, int &out w, int &out h)", asFUNCTION(GetTextSize), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetCursorPos(int &out x, int &out y)", asFUNCTION(GetCursorPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorPos(int x, int y)", asFUNCTION(SetCursorPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void Circle(int x, int y, int radius, int segments)", asFUNCTION(Circle), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool HasFocus()", asFUNCTION(HasFocus), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void GetScreenSize(int &out w, int &out h)", asFUNCTION(GetScreenSize),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool CreateFont(const string &in name, const string &in "
-					       "family, int height, int weight, int flags)",
-					       asFUNCTION(CreateFont), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool SetFont(const string &in name)", asFUNCTION(SetFont),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetScreenSize(int &out w, int &out h)", asFUNCTION(GetScreenSize), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool CreateFont(const string &in name, const string &in family, int height, int weight, int flags)", asFUNCTION(CreateFont), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool SetFont(const string &in name)", asFUNCTION(SetFont), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Rect(int x, int y, int w, int h)", asFUNCTION(Rect), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void RectFade(int x0, int y0, int x1, int y1, int "
-					       "alpha0, int alpha1, bool bHorizontal)",
-					       asFUNCTION(RectFade), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void RectFade(int x0, int y0, int x1, int y1, int alpha0, int alpha1, bool bHorizontal)", asFUNCTION(RectFade), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool IsCursorVisible()", asFUNCTION(IsCursorVisible), asCALL_CDECL);
 	}
 

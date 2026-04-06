@@ -67,14 +67,9 @@ void ConVar_RegisterClass(asIScriptEngine *engine)
 	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "int GetInt()", asFUNCTION(GetInt), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "float GetFloat()", asFUNCTION(GetFloat), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "bool GetBool()", asFUNCTION(GetBool), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "string GetString()", asFUNCTION(GetString),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(const string &in value)", asFUNCTION(SetString),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(float value)", asFUNCTION(SetFloat),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(int value)", asFUNCTION(SetInt),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(bool value)", asFUNCTION(SetBool),
-				     asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "string GetString()", asFUNCTION(GetString), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(const string &in value)", asFUNCTION(SetString), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(float value)", asFUNCTION(SetFloat), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(int value)", asFUNCTION(SetInt), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(CONVAR_CLASSNAME, "void SetValue(bool value)", asFUNCTION(SetBool), asCALL_CDECL_OBJFIRST);
 }

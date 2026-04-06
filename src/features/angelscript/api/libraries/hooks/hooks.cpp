@@ -105,29 +105,14 @@ void Hooks_RegisterLibrary(asIScriptEngine *engine)
 	{
 		// small amount of overloading
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_HOOKS);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "CreateMoveHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "GenericHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "CalcViewModelHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "OverrideViewHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "LevelInitPreEntHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "DrawModelHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, "
-					       "FireGameEventHook @cb)",
-					       asFUNCTION(Add), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Remove(const string &in event, const string &in id)",
-					       asFUNCTION(Remove), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, CreateMoveHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, GenericHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, CalcViewModelHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, OverrideViewHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, LevelInitPreEntHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, DrawModelHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Add(const string &in event, const string &in id, FireGameEventHook @cb)", asFUNCTION(Add), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Remove(const string &in event, const string &in id)", asFUNCTION(Remove), asCALL_CDECL);
 	}
 
 	engine->SetDefaultNamespace(strDefaultNamespace);

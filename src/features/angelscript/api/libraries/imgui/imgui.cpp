@@ -431,69 +431,38 @@ void ImGui_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("ImGui");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_IMGUI);
-		engine->RegisterGlobalFunction("bool Begin(const string &in name, bool &out p_open, int "
-					       "flags = 0)",
-					       asFUNCTION(Begin), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Begin(const string &in name, int flags = 0)",
-					       asFUNCTION(BeginNoOpen), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Begin(const string &in name, bool &out p_open, int flags = 0)", asFUNCTION(Begin), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Begin(const string &in name, int flags = 0)", asFUNCTION(BeginNoOpen), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void End()", asFUNCTION(End), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("bool BeginChild(const string &in str_id, const Vector2 "
-					       "&in size = Vector2(0, 0), int child_flags = 0, int "
-					       "window_flags = 0)",
-					       asFUNCTION(BeginChildA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool BeginChild(uint id, const Vector2 &in size = "
-					       "Vector2(0, 0), int child_flags = 0, int window_flags = "
-					       "0)",
-					       asFUNCTION(BeginChildB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool BeginChild(const string &in str_id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0)", asFUNCTION(BeginChildA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool BeginChild(uint id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0)", asFUNCTION(BeginChildB), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void EndChild()", asFUNCTION(EndChild), asCALL_CDECL);
 
 		engine->RegisterGlobalFunction("bool IsWindowAppearing()", asFUNCTION(IsWindowAppearing), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool IsWindowCollapsed()", asFUNCTION(IsWindowCollapsed), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool IsWindowFocused(int flags = 0)", asFUNCTION(IsWindowFocused),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool IsWindowHovered(int flags = 0)", asFUNCTION(IsWindowHovered),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsWindowFocused(int flags = 0)", asFUNCTION(IsWindowFocused), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsWindowHovered(int flags = 0)", asFUNCTION(IsWindowHovered), asCALL_CDECL);
 		engine->RegisterGlobalFunction("Vector2 GetWindowPos()", asFUNCTION(GetWindowPos), asCALL_CDECL);
 		engine->RegisterGlobalFunction("Vector2 GetWindowSize()", asFUNCTION(GetWindowSize), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetWindowWidth()", asFUNCTION(GetWindowWidth), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetWindowHeight()", asFUNCTION(GetWindowHeight), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("void SetNextWindowPos(const Vector2 &in pos, int cond = "
-					       "0, const Vector2 &in pivot = Vector2(0, 0))",
-					       asFUNCTION(SetNextWindowPos), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowSize(const Vector2 &in size, int cond "
-					       "= 0)",
-					       asFUNCTION(SetNextWindowSize), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowContentSize(const Vector2 &in size)",
-					       asFUNCTION(SetNextWindowContentSize), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowCollapsed(bool collapsed, int cond = "
-					       "0)",
-					       asFUNCTION(SetNextWindowCollapsed), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowFocus()", asFUNCTION(SetNextWindowFocus),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowScroll(const Vector2 &in scroll)",
-					       asFUNCTION(SetNextWindowScroll), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetNextWindowBgAlpha(float alpha)",
-					       asFUNCTION(SetNextWindowBgAlpha), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowPos(const Vector2 &in pos, int cond = 0)",
-					       asFUNCTION(SetWindowPosA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowSize(const Vector2 &in size, int cond = 0)",
-					       asFUNCTION(SetWindowSizeA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowCollapsed(bool collapsed, int cond = 0)",
-					       asFUNCTION(SetWindowCollapsedA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowPos(const Vector2 &in pos, int cond = 0, const Vector2 &in pivot = Vector2(0, 0))", asFUNCTION(SetNextWindowPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowSize(const Vector2 &in size, int cond = 0)", asFUNCTION(SetNextWindowSize), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowContentSize(const Vector2 &in size)", asFUNCTION(SetNextWindowContentSize), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowCollapsed(bool collapsed, int cond = 0)", asFUNCTION(SetNextWindowCollapsed), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowFocus()", asFUNCTION(SetNextWindowFocus), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowScroll(const Vector2 &in scroll)", asFUNCTION(SetNextWindowScroll), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetNextWindowBgAlpha(float alpha)", asFUNCTION(SetNextWindowBgAlpha), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowPos(const Vector2 &in pos, int cond = 0)", asFUNCTION(SetWindowPosA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowSize(const Vector2 &in size, int cond = 0)", asFUNCTION(SetWindowSizeA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowCollapsed(bool collapsed, int cond = 0)", asFUNCTION(SetWindowCollapsedA), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void SetWindowFocus()", asFUNCTION(SetWindowFocusA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowPos(const string &in name, const Vector2 "
-					       "&in pos, int cond = 0)",
-					       asFUNCTION(SetWindowPosB), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowSize(const string &in name, const Vector2 "
-					       "&in size, int cond = 0)",
-					       asFUNCTION(SetWindowSizeB), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowCollapsed(const string &in name, bool "
-					       "collapsed, int cond = 0)",
-					       asFUNCTION(SetWindowCollapsedB), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetWindowFocus(const string &in name)",
-					       asFUNCTION(SetWindowFocusB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowPos(const string &in name, const Vector2 &in pos, int cond = 0)", asFUNCTION(SetWindowPosB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowSize(const string &in name, const Vector2 &in size, int cond = 0)", asFUNCTION(SetWindowSizeB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowCollapsed(const string &in name, bool collapsed, int cond = 0)", asFUNCTION(SetWindowCollapsedB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetWindowFocus(const string &in name)", asFUNCTION(SetWindowFocusB), asCALL_CDECL);
 
 		engine->RegisterGlobalFunction("float GetScrollX()", asFUNCTION(GetScrollX), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetScrollY()", asFUNCTION(GetScrollY), asCALL_CDECL);
@@ -501,132 +470,70 @@ void ImGui_RegisterLibrary(asIScriptEngine *engine)
 		engine->RegisterGlobalFunction("void SetScrollY(float scroll_y)", asFUNCTION(SetScrollY), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetScrollMaxX()", asFUNCTION(GetScrollMaxX), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetScrollMaxY()", asFUNCTION(GetScrollMaxY), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetScrollHereX(float center_x_ratio = 0.5f)",
-					       asFUNCTION(SetScrollHereX), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetScrollHereY(float center_y_ratio = 0.5f)",
-					       asFUNCTION(SetScrollHereY), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetScrollFromPosX(float local_x, float "
-					       "center_x_ratio = 0.5f)",
-					       asFUNCTION(SetScrollFromPosX), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetScrollFromPosY(float local_y, float "
-					       "center_y_ratio = 0.5f)",
-					       asFUNCTION(SetScrollFromPosY), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetScrollHereX(float center_x_ratio = 0.5f)", asFUNCTION(SetScrollHereX), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetScrollHereY(float center_y_ratio = 0.5f)", asFUNCTION(SetScrollHereY), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetScrollFromPosX(float local_x, float center_x_ratio = 0.5f)", asFUNCTION(SetScrollFromPosX), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetScrollFromPosY(float local_y, float center_y_ratio = 0.5f)", asFUNCTION(SetScrollFromPosY), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("Vector2 GetFontTexUvWhitePixel()", asFUNCTION(GetFontTexUvWhitePixel),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("uint GetColorU32(int idx, float alpha_mul = 1.0f)",
-					       asFUNCTION(GetColorU32A), asCALL_CDECL);
-		engine->RegisterGlobalFunction("uint GetColorU32(float r, float g, float b, float a)",
-					       asFUNCTION(GetColorU32B), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void GetStyleColorVec4(int idx, float &out r, float &out "
-					       "g, float &out b, float &out a)",
-					       asFUNCTION(GetStyleColorVec4), asCALL_CDECL);
+		engine->RegisterGlobalFunction("Vector2 GetFontTexUvWhitePixel()", asFUNCTION(GetFontTexUvWhitePixel), asCALL_CDECL);
+		engine->RegisterGlobalFunction("uint GetColorU32(int idx, float alpha_mul = 1.0f)", asFUNCTION(GetColorU32A), asCALL_CDECL);
+		engine->RegisterGlobalFunction("uint GetColorU32(float r, float g, float b, float a)", asFUNCTION(GetColorU32B), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetStyleColorVec4(int idx, float &out r, float &out g, float &out b, float &out a)", asFUNCTION(GetStyleColorVec4), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("Vector2 GetCursorScreenPos()", asFUNCTION(GetCursorScreenPos),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorScreenPos(const Vector2 &in pos)",
-					       asFUNCTION(SetCursorScreenPos), asCALL_CDECL);
-		engine->RegisterGlobalFunction("Vector2 GetContentRegionAvail()", asFUNCTION(GetContentRegionAvail),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("Vector2 GetCursorScreenPos()", asFUNCTION(GetCursorScreenPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorScreenPos(const Vector2 &in pos)", asFUNCTION(SetCursorScreenPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("Vector2 GetContentRegionAvail()", asFUNCTION(GetContentRegionAvail), asCALL_CDECL);
 		engine->RegisterGlobalFunction("Vector2 GetCursorPos()", asFUNCTION(GetCursorPos), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetCursorPosX()", asFUNCTION(GetCursorPosX), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetCursorPosY()", asFUNCTION(GetCursorPosY), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorPos(const Vector2 &in local_pos)",
-					       asFUNCTION(SetCursorPos), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorPosX(float local_x)", asFUNCTION(SetCursorPosX),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorPosY(float local_y)", asFUNCTION(SetCursorPosY),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("Vector2 GetCursorStartPos()", asFUNCTION(GetCursorStartPos),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorPos(const Vector2 &in local_pos)", asFUNCTION(SetCursorPos), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorPosX(float local_x)", asFUNCTION(SetCursorPosX), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorPosY(float local_y)", asFUNCTION(SetCursorPosY), asCALL_CDECL);
+		engine->RegisterGlobalFunction("Vector2 GetCursorStartPos()", asFUNCTION(GetCursorStartPos), asCALL_CDECL);
 
 		engine->RegisterGlobalFunction("void Separator()", asFUNCTION(Separator), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SameLine(float offset_from_start_x = 0.0f, float "
-					       "spacing = -1.0f)",
-					       asFUNCTION(SameLine), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SameLine(float offset_from_start_x = 0.0f, float spacing = -1.0f)", asFUNCTION(SameLine), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void NewLine()", asFUNCTION(NewLine), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Spacing()", asFUNCTION(Spacing), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Dummy(const Vector2 &in size)", asFUNCTION(Dummy), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Indent(float indent_w = 0.0f)", asFUNCTION(Indent), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void Unindent(float indent_w = 0.0f)", asFUNCTION(Unindent),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("void Unindent(float indent_w = 0.0f)", asFUNCTION(Unindent), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void BeginGroup()", asFUNCTION(BeginGroup), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void EndGroup()", asFUNCTION(EndGroup), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void AlignTextToFramePadding()", asFUNCTION(AlignTextToFramePadding),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("float GetTextLineHeight()", asFUNCTION(GetTextLineHeight),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("float GetTextLineHeightWithSpacing()",
-					       asFUNCTION(GetTextLineHeightWithSpacing), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void AlignTextToFramePadding()", asFUNCTION(AlignTextToFramePadding), asCALL_CDECL);
+		engine->RegisterGlobalFunction("float GetTextLineHeight()", asFUNCTION(GetTextLineHeight), asCALL_CDECL);
+		engine->RegisterGlobalFunction("float GetTextLineHeightWithSpacing()", asFUNCTION(GetTextLineHeightWithSpacing), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetFrameHeight()", asFUNCTION(GetFrameHeight), asCALL_CDECL);
-		engine->RegisterGlobalFunction("float GetFrameHeightWithSpacing()",
-					       asFUNCTION(GetFrameHeightWithSpacing), asCALL_CDECL);
+		engine->RegisterGlobalFunction("float GetFrameHeightWithSpacing()", asFUNCTION(GetFrameHeightWithSpacing), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("void TextUnformatted(const string &in text)",
-					       asFUNCTION(TextUnformatted), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void TextColored(int r, int g, int b, int a, const "
-					       "string &in fmt)",
-					       asFUNCTION(TextColored), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void TextDisabled(const string &in fmt)", asFUNCTION(TextDisabled),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void TextWrapped(const string &in fmt)", asFUNCTION(TextWrapped),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void LabelText(const string &in label, const string &in "
-					       "fmt)",
-					       asFUNCTION(LabelText), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void BulletText(const string &in fmt)", asFUNCTION(BulletText),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SeparatorText(const string &in label)", asFUNCTION(SeparatorText),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("void TextUnformatted(const string &in text)", asFUNCTION(TextUnformatted), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void TextColored(int r, int g, int b, int a, const string &in fmt)", asFUNCTION(TextColored), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void TextDisabled(const string &in fmt)", asFUNCTION(TextDisabled), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void TextWrapped(const string &in fmt)", asFUNCTION(TextWrapped), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void LabelText(const string &in label, const string &in fmt)", asFUNCTION(LabelText), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void BulletText(const string &in fmt)", asFUNCTION(BulletText), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SeparatorText(const string &in label)", asFUNCTION(SeparatorText), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("bool Button(const string &in label, const Vector2 &in "
-					       "size = Vector2(0, 0))",
-					       asFUNCTION(Button), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool SmallButton(const string &in label)", asFUNCTION(SmallButton),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool InvisibleButton(const string &in str_id, const "
-					       "Vector2 &in size, int flags = 0)",
-					       asFUNCTION(InvisibleButton), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool ArrowButton(const string &in str_id, int dir)",
-					       asFUNCTION(ArrowButton), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Checkbox(const string &in label, bool &out v)",
-					       asFUNCTION(Checkbox), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool CheckboxFlags(const string &in label, int &out "
-					       "flags, int flags_value)",
-					       asFUNCTION(CheckboxFlagsA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool CheckboxFlags(const string &in label, uint &out "
-					       "flags, uint flags_value)",
-					       asFUNCTION(CheckboxFlagsB), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool RadioButton(const string &in label, bool active)",
-					       asFUNCTION(RadioButtonA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool RadioButton(const string &in label, int &out v, int "
-					       "v_button)",
-					       asFUNCTION(RadioButtonB), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ProgressBar(float fraction, const Vector2 &in "
-					       "size_arg = Vector2(-FLT_MIN, 0))",
-					       asFUNCTION(ProgressBarA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ProgressBar(float fraction, const Vector2 &in "
-					       "size_arg = Vector2(-FLT_MIN, 0), const string &in "
-					       "overlay = "
-					       ")",
-					       asFUNCTION(ProgressBarB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Button(const string &in label, const Vector2 &in size = Vector2(0, 0))", asFUNCTION(Button), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool SmallButton(const string &in label)", asFUNCTION(SmallButton), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool InvisibleButton(const string &in str_id, const Vector2 &in size, int flags = 0)", asFUNCTION(InvisibleButton), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool ArrowButton(const string &in str_id, int dir)", asFUNCTION(ArrowButton), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Checkbox(const string &in label, bool &out v)", asFUNCTION(Checkbox), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool CheckboxFlags(const string &in label, int &out flags, int flags_value)", asFUNCTION(CheckboxFlagsA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool CheckboxFlags(const string &in label, uint &out flags, uint flags_value)", asFUNCTION(CheckboxFlagsB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool RadioButton(const string &in label, bool active)", asFUNCTION(RadioButtonA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool RadioButton(const string &in label, int &out v, int v_button)", asFUNCTION(RadioButtonB), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0))", asFUNCTION(ProgressBarA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0), const string &in overlay = \"\")", asFUNCTION(ProgressBarB), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Bullet()", asFUNCTION(Bullet), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool TextLink(const string &in label)", asFUNCTION(TextLink),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool TextLinkOpenURL(const string &in label)",
-					       asFUNCTION(TextLinkOpenURLA), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool TextLinkOpenURL(const string &in label, const "
-					       "string &in url)",
-					       asFUNCTION(TextLinkOpenURLB), asCALL_CDECL);
 
-		engine->RegisterGlobalFunction("bool BeginCombo(const string &in label, const string &in "
-					       "preview_value, int flags = 0)",
-					       asFUNCTION(BeginCombo), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool TextLink(const string &in label)", asFUNCTION(TextLink), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool TextLinkOpenURL(const string &in label)", asFUNCTION(TextLinkOpenURLA), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool TextLinkOpenURL(const string &in label, const string &in url)", asFUNCTION(TextLinkOpenURLB), asCALL_CDECL);
+
+		engine->RegisterGlobalFunction("bool BeginCombo(const string &in label, const string &in preview_value, int flags = 0)", asFUNCTION(BeginCombo), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void EndCombo()", asFUNCTION(EndCombo), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool Combo(const string &in label, int &out "
-					       "current_item, array<string>@ items, int "
-					       "popup_max_height_in_items = -1)",
-					       asFUNCTION(Combo), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool Combo(const string &in label, int &out current_item, array<string>@ items, int popup_max_height_in_items = -1)", asFUNCTION(Combo), asCALL_CDECL);
 	}
 
 	engine->SetDefaultNamespace(defNamespace);

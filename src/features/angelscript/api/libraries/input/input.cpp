@@ -10,16 +10,11 @@ void Input_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("Input");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_INPUT);
-		engine->RegisterGlobalFunction("bool IsButtonDown(int button)", asFUNCTION(Input_IsButtonDown),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool IsButtonPressed(int button)", asFUNCTION(Input_IsButtonPressed),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool IsButtonReleased(int button)", asFUNCTION(Input_IsButtonReleased),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetCursorAlwaysVisible(bool state)",
-					       asFUNCTION(Input_SetCursorAlwaysVisible), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool IsCursorVisible()", asFUNCTION(Input_IsCursorVisible),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsButtonDown(int button)", asFUNCTION(Input_IsButtonDown), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsButtonPressed(int button)", asFUNCTION(Input_IsButtonPressed), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsButtonReleased(int button)", asFUNCTION(Input_IsButtonReleased), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetCursorAlwaysVisible(bool state)", asFUNCTION(Input_SetCursorAlwaysVisible), asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool IsCursorVisible()", asFUNCTION(Input_IsCursorVisible), asCALL_CDECL);
 		engine->RegisterGlobalFunction("int GetPollTick()", asFUNCTION(Input_GetPollTick), asCALL_CDECL);
 		engine->RegisterGlobalFunction("bool IsButtonValid()", asFUNCTION(Input_IsButtonValid), asCALL_CDECL);
 	}

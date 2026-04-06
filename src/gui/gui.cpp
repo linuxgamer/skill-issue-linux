@@ -462,6 +462,7 @@ void DrawLuaTab()
 			    {"Allow Dictionary Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_DICT},
 			    {"Allow DateTime Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_DATETIME},
 			    {"Allow String Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_STRING},
+			    {"Allow GlobalVars Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_GLOBALVARS},
 			};
 
 			int &mask   = GetScriptAccessMask();

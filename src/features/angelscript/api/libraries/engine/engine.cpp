@@ -76,17 +76,13 @@ void Engine_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("Engine");
 	engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_ENGINE);
 	engine->RegisterGlobalFunction("void PlaySound(const string &in sound)", asFUNCTION(PlaySound), asCALL_CDECL);
-	engine->RegisterGlobalFunction("void ClientCmd(const string &in cmd, bool unrestricted)", asFUNCTION(ClientCmd),
-				       asCALL_CDECL);
+	engine->RegisterGlobalFunction("void ClientCmd(const string &in cmd, bool unrestricted)", asFUNCTION(ClientCmd), asCALL_CDECL);
 	engine->RegisterGlobalFunction("int GetMaxClients()", asFUNCTION(GetMaxClients), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsInGame()", asFUNCTION(IsInGame), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsConnected()", asFUNCTION(IsConnected), asCALL_CDECL);
 	engine->RegisterGlobalFunction("Vector3 GetViewAngles()", asFUNCTION(GetViewAngles), asCALL_CDECL);
-	engine->RegisterGlobalFunction("void SetViewAngles(Vector3 &in angle)", asFUNCTION(SetViewAngles),
-				       asCALL_CDECL);
-	engine->RegisterGlobalFunction("bool WorldToScreen(const Vector3 &in "
-				       "worldPos, Vector2 &out outPos)",
-				       asFUNCTION(WorldToScreen), asCALL_CDECL);
+	engine->RegisterGlobalFunction("void SetViewAngles(Vector3 &in angle)", asFUNCTION(SetViewAngles), asCALL_CDECL);
+	engine->RegisterGlobalFunction("bool WorldToScreen(const Vector3 &in worldPos, Vector2 &out outPos)", asFUNCTION(WorldToScreen), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsGameUIVisible()", asFUNCTION(IsGameUIVisible), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsConsoleVisible()", asFUNCTION(IsConsoleVisible), asCALL_CDECL);
 	engine->RegisterGlobalFunction("bool IsTakingScreenshot()", asFUNCTION(IsTakingScreenshot), asCALL_CDECL);

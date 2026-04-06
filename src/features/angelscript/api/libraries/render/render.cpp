@@ -292,66 +292,37 @@ void Render_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("Render");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_RENDER);
-		engine->RegisterGlobalFunction("void GetColorModulation(float &out r, float &out g, "
-					       "float &out b)",
-					       asFUNCTION(GetColorMod), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetColorModulation(float r, float g, float b)",
-					       asFUNCTION(SetColorMod), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetColorModulation(float &out r, float &out g, float &out b)", asFUNCTION(GetColorMod), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetColorModulation(float r, float g, float b)", asFUNCTION(SetColorMod), asCALL_CDECL);
 		engine->RegisterGlobalFunction("float GetBlend()", asFUNCTION(GetBlend), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void SetBlend(float blend)", asFUNCTION(SetBlend), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ForcedMaterialOverride(Material@ mat)",
-					       asFUNCTION(ForcedMaterialOverride), asCALL_CDECL);
-		engine->RegisterGlobalFunction("Material@ GetMaterialOverride()", asFUNCTION(GetMaterialOverride),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void DrawScreenSpaceRectangle(Material@, int, int, int, "
-					       "int, float, float, float, float, int, int)",
-					       asFUNCTION(DrawScreenSpaceRectangle), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void DrawScreenSpaceQuad(Material@)", asFUNCTION(DrawScreenSpaceQuad),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void GetViewport(int &out, int &out, int &out, int &out)",
-					       asFUNCTION(GetViewport), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ForcedMaterialOverride(Material@ mat)", asFUNCTION(ForcedMaterialOverride), asCALL_CDECL);
+		engine->RegisterGlobalFunction("Material@ GetMaterialOverride()", asFUNCTION(GetMaterialOverride), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void DrawScreenSpaceRectangle(Material@, int, int, int, int, float, float, float, float, int, int)", asFUNCTION(DrawScreenSpaceRectangle), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void DrawScreenSpaceQuad(Material@)", asFUNCTION(DrawScreenSpaceQuad), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void GetViewport(int &out, int &out, int &out, int &out)", asFUNCTION(GetViewport), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void Viewport(int, int, int, int)", asFUNCTION(Viewport), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void DepthRange(float, float)", asFUNCTION(DepthRange), asCALL_CDECL);
-		engine->RegisterGlobalFunction("bool GetDepthRange(float &out, float &out)", asFUNCTION(GetDepthRange),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetRenderTarget(Texture@)", asFUNCTION(SetRenderTarget),
-					       asCALL_CDECL);
+		engine->RegisterGlobalFunction("bool GetDepthRange(float &out, float &out)", asFUNCTION(GetDepthRange), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetRenderTarget(Texture@)", asFUNCTION(SetRenderTarget), asCALL_CDECL);
 		engine->RegisterGlobalFunction("Texture@ GetRenderTarget()", asFUNCTION(GetRenderTarget), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void PushRenderTargetAndViewport()",
-					       asFUNCTION(PushRenderTargetAndViewport), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void PopRenderTargetAndViewport()",
-					       asFUNCTION(PopRenderTargetAndViewport), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ClearBuffers(bool, bool, bool = false)", asFUNCTION(ClearBuffers),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ClearColor3ub(uint, uint, uint)", asFUNCTION(ClearColor3ub),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ClearColor4ub(uint, uint, uint, uint)", asFUNCTION(ClearColor4ub),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void OverrideDepthEnable(bool, bool)", asFUNCTION(OverrideDepthEnable),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void OverrideAlphaEnable(bool, bool)", asFUNCTION(OverrideAlphaEnable),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void OverrideColorEnable(bool, bool)", asFUNCTION(OverrideColorEnable),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilEnable(bool)", asFUNCTION(SetStencilEnable),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilFailOperation(int)", asFUNCTION(SetStencilFailOperation),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilZFailOperation(int)",
-					       asFUNCTION(SetStencilZFailOperation), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilPassOperation(int)", asFUNCTION(SetStencilPassOperation),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilCompareFunction(int)",
-					       asFUNCTION(SetStencilCompareFunction), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilReferenceValue(int)",
-					       asFUNCTION(SetStencilReferenceValue), asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilTestMask(uint)", asFUNCTION(SetStencilTestMask),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void SetStencilWriteMask(uint)", asFUNCTION(SetStencilWriteMask),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void ClearStencilBufferRectangle(int, int, int, int, "
-					       "int)",
-					       asFUNCTION(ClearStencilBufferRectangle), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void PushRenderTargetAndViewport()", asFUNCTION(PushRenderTargetAndViewport), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void PopRenderTargetAndViewport()", asFUNCTION(PopRenderTargetAndViewport), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ClearBuffers(bool, bool, bool = false)", asFUNCTION(ClearBuffers), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ClearColor3ub(uint, uint, uint)", asFUNCTION(ClearColor3ub), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ClearColor4ub(uint, uint, uint, uint)", asFUNCTION(ClearColor4ub), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void OverrideDepthEnable(bool, bool)", asFUNCTION(OverrideDepthEnable), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void OverrideAlphaEnable(bool, bool)", asFUNCTION(OverrideAlphaEnable), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void OverrideColorEnable(bool, bool)", asFUNCTION(OverrideColorEnable), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilEnable(bool)", asFUNCTION(SetStencilEnable), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilFailOperation(int)", asFUNCTION(SetStencilFailOperation), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilZFailOperation(int)", asFUNCTION(SetStencilZFailOperation), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilPassOperation(int)", asFUNCTION(SetStencilPassOperation), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilCompareFunction(int)", asFUNCTION(SetStencilCompareFunction), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilReferenceValue(int)", asFUNCTION(SetStencilReferenceValue), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilTestMask(uint)", asFUNCTION(SetStencilTestMask), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void SetStencilWriteMask(uint)", asFUNCTION(SetStencilWriteMask), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void ClearStencilBufferRectangle(int, int, int, int, int)", asFUNCTION(ClearStencilBufferRectangle), asCALL_CDECL);
 	}
 
 	engine->SetDefaultNamespace(strDefaultNamespace);

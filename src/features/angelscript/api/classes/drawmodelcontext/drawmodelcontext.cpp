@@ -49,11 +49,8 @@ void CallOriginal(DrawModelContext *ctx)
 void DrawModelContext_RegisterClass(asIScriptEngine *engine)
 {
 	engine->RegisterObjectType(DMC_CLASSNAME, 0, asOBJ_REF | asOBJ_NOCOUNT);
-	engine->RegisterObjectMethod(DMC_CLASSNAME, "int GetEntityIndex()", asFUNCTION(GetEntityIndex),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(DMC_CLASSNAME, "bool IsChams() const", asFUNCTION(IsChamsModel),
-				     asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(DMC_CLASSNAME, "bool IsGlow() const", asFUNCTION(IsGlowModel),
-				     asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(DMC_CLASSNAME, "int GetEntityIndex()", asFUNCTION(GetEntityIndex), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(DMC_CLASSNAME, "bool IsChams() const", asFUNCTION(IsChamsModel), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(DMC_CLASSNAME, "bool IsGlow() const", asFUNCTION(IsGlowModel), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(DMC_CLASSNAME, "void Execute()", asFUNCTION(CallOriginal), asCALL_CDECL_OBJFIRST);
 }

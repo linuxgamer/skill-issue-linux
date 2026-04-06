@@ -101,29 +101,15 @@ void GameEvent_RegisterClass(asIScriptEngine *engine)
 	engine->RegisterObjectBehaviour(GAMEEVENT_CLASSNAME, asBEHAVE_RELEASE, "void f()",
 					asFUNCTION(GameEvent_Release), asCALL_CDECL_OBJLAST);
 
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "string GetName()", asFUNCTION(GetName),
-				     asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "string GetName()", asFUNCTION(GetName), asCALL_CDECL_OBJFIRST);
 	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "bool IsLocal()", asFUNCTION(IsLocal), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "bool IsEmpty( const string &in keyName)",
-				     asFUNCTION(IsEmpty), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "bool GetBool(const string &in keyName, bool defaultValue)",
-				     asFUNCTION(GetBool), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "int GetInt(const string &in keyName, int defaultValue)",
-				     asFUNCTION(GetInt), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME,
-				     "float GetFloat(const string &in keyName, float defaultValue)",
-				     asFUNCTION(GetFloat), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME,
-				     "string GetString(const string &in keyName, const string &in "
-				     "defaultValue)",
-				     asFUNCTION(GetString), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetBool(const string &in keyName, bool value)",
-				     asFUNCTION(SetBool), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetInt(const string &in keyName, int value)",
-				     asFUNCTION(SetInt), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetFloat(const string &in keyName, float value)",
-				     asFUNCTION(SetFloat), asCALL_CDECL_OBJFIRST);
-	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME,
-				     "void SetString(const string &in keyName, const string &in value)",
-				     asFUNCTION(SetString), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "bool IsEmpty( const string &in keyName)", asFUNCTION(IsEmpty), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "bool GetBool(const string &in keyName, bool defaultValue)", asFUNCTION(GetBool), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "int GetInt(const string &in keyName, int defaultValue)", asFUNCTION(GetInt), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "float GetFloat(const string &in keyName, float defaultValue)", asFUNCTION(GetFloat), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "string GetString(const string &in keyName, const string &in defaultValue)", asFUNCTION(GetString), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetBool(const string &in keyName, bool value)", asFUNCTION(SetBool), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetInt(const string &in keyName, int value)", asFUNCTION(SetInt), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetFloat(const string &in keyName, float value)", asFUNCTION(SetFloat), asCALL_CDECL_OBJFIRST);
+	engine->RegisterObjectMethod(GAMEEVENT_CLASSNAME, "void SetString(const string &in keyName, const string &in value)", asFUNCTION(SetString), asCALL_CDECL_OBJFIRST);
 }

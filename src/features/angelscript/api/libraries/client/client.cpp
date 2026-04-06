@@ -31,11 +31,8 @@ void Client_RegisterLibrary(asIScriptEngine *engine)
 	engine->SetDefaultNamespace("Client");
 	{
 		engine->SetDefaultAccessMask(ScriptAccessMask::SCRIPT_MASK_ALLOW_CLIENT);
-		engine->RegisterGlobalFunction("ConVar@ GetConVar(const string &in name)", asFUNCTION(GetConVar),
-					       asCALL_CDECL);
-		engine->RegisterGlobalFunction("void Command(const string &in text, bool unrestricted = "
-					       "false)",
-					       asFUNCTION(RunCommand), asCALL_CDECL);
+		engine->RegisterGlobalFunction("ConVar@ GetConVar(const string &in name)", asFUNCTION(GetConVar), asCALL_CDECL);
+		engine->RegisterGlobalFunction("void Command(const string &in text, bool unrestricted = false)", asFUNCTION(RunCommand), asCALL_CDECL);
 		engine->RegisterGlobalFunction("void ClearConsole()", asFUNCTION(ClearConsole), asCALL_CDECL);
 	}
 
