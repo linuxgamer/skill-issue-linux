@@ -105,7 +105,7 @@ void Radar::DrawContents()
 	interfaces::Engine->GetViewAngles(viewAngles);
 	float viewYaw = viewAngles.y - 90.0f;
 
-	int iconSize  = Settings::Radar.icon_size;
+	int iconSize = Settings::Radar.icon_size;
 
 	for (const auto &entry : EntityList::GetEntities())
 	{
