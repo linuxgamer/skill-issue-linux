@@ -109,6 +109,9 @@ void Radar::DrawContents()
 
 	for (const auto &entry : EntityList::GetEntities())
 	{
+		if (entry.ptr == nullptr)
+			continue;
+
 		if (entry.ptr == EntityList::GetLocal())
 			continue;
 
