@@ -3,6 +3,8 @@
 #include "../../../sdk/interfaces/interfaces.h"
 
 #define AS_USE_STLNAMES 1
+#include "classes/bind/bind.h"
+#include "libraries/binds/binds.h"
 #include "libraries/globalvars/globalvars.h"
 #include "../add_on/datetime/datetime.h"
 #include "../add_on/scriptarray/scriptarray.h"
@@ -106,6 +108,7 @@ void API::Initialize()
 	DrawModelContext_RegisterClass(engine);
 	Texture_RegisterClass(engine);
 	ConVar_RegisterClass(engine);
+	Bind_RegisterClass(engine);
 
 	// libraries
 	Common_RegisterLibrary(engine);
@@ -120,6 +123,7 @@ void API::Initialize()
 	Client_RegisterLibrary(engine);
 	ImGui_RegisterLibrary(engine);
 	Globalvars_RegisterLibrary(engine);
+	Binds_RegisterLibrary(engine);
 
 	s_bInitialized = true;
 }

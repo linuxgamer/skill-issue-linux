@@ -56,7 +56,7 @@ class Binds
 
       public:
 	Hotkey *RegisterHotkey(const char *name);
-	const std::vector<std::unique_ptr<Hotkey>> &GetHotkeys() const;
+	std::vector<std::unique_ptr<Hotkey>> &GetHotkeys();
 	bool IsActive(const Hotkey *hk) const;
 	bool IsEnabled(const Hotkey *hk) const;
 	void Update();

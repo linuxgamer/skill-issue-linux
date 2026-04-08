@@ -4,22 +4,30 @@
 */
 
 // gotta do ts to make it not complain about it being undefined
+// https://angelcode.com/angelscript/sdk/docs/manual/doc_script_stdlib_string.html
+// https://angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_strings.html
 class string
 {
-	// https://angelcode.com/angelscript/sdk/docs/manual/doc_script_stdlib_string.html
-	// https://angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_strings.html
+	string();
+	string(const string &in);
+	uint length() const;
+	void resize(uint);
+	string &opAssign(const string &in);
 }
 
-class array
+class array<T>
 {
-
+	array();
+	uint length() const;
+	void resize(uint);
+	T &opIndex(uint);
 }
 
 float FLT_MIN = 1.175494e-38;
 
-void print(const string &in text) const;
-void warn(const string &in text) const;
-bool Execute(const string &in text) const;
+void print(const string &in text);
+void warn(const string &in text);
+bool Execute(const string &in text);
 
 class Vector2
 {
@@ -66,28 +74,28 @@ class Vector3
 	Vector3 ToAngle();
 	Vector3 FromAngle();
 
-	Vector3& opAssign(const Vector3 &in) const;
-	float& opIndex(int) const;
-	float opIndex(int) const;
-	bool opEquals(const Vector3 &in) const;
-	bool opCmp(const Vector3 &in) const;
-	bool opImplConv() const;
-	Vector3& opAddAssign(const Vector3 &in) const;
-	Vector3& opSubAssign(const Vector3 &in) const;
-	Vector3& opMulAssign(const Vector3 &in) const;
-	Vector3& opDivAssign(const Vector3 &in) const;
-	Vector3& opAddAssign(float) const;
-	Vector3& opSubAssign(float) const;
-	Vector3& opMulAssign(float) const;
-	Vector3& opDivAssign(float) const;
-	Vector3 opAdd(const Vector3 &in) const;
-	Vector3 opSub(const Vector3 &in) const;
-	Vector3 opMul(const Vector3 &in) const;
-	Vector3 opDiv(const Vector3 &in) const;
-	Vector3 opAdd(float) const;
-	Vector3 opSub(float) const;
-	Vector3 opMul(float) const;
-	Vector3 opDiv(float) const;
+	Vector3& opAssign(const Vector3 &in);
+	float& opIndex(int);
+	float opIndex(int);
+	bool opEquals(const Vector3 &in);
+	bool opCmp(const Vector3 &in);
+	bool opImplConv();
+	Vector3& opAddAssign(const Vector3 &in);
+	Vector3& opSubAssign(const Vector3 &in);
+	Vector3& opMulAssign(const Vector3 &in);
+	Vector3& opDivAssign(const Vector3 &in);
+	Vector3& opAddAssign(float);
+	Vector3& opSubAssign(float);
+	Vector3& opMulAssign(float);
+	Vector3& opDivAssign(float);
+	Vector3 opAdd(const Vector3 &in);
+	Vector3 opSub(const Vector3 &in);
+	Vector3 opMul(const Vector3 &in);
+	Vector3 opDiv(const Vector3 &in);
+	Vector3 opAdd(float);
+	Vector3 opSub(float);
+	Vector3 opMul(float);
+	Vector3 opDiv(float);
 }
 
 class ViewSetup
@@ -142,114 +150,114 @@ class UserCmd
 	int mousedy;
 	bool hasbeenpredicted;
 
-	bool GetSendPacket() const;
-	void SetSendPacket(bool state) const;
+	bool GetSendPacket();
+	void SetSendPacket(bool state);
 }
 
 class Texture
 {
-	bool Delete() const;
+	bool Delete();
 	string GetName();
-	uint GetFlags() const;
-	int GetActualWidth() const;
-	int GetActualHeight() const;
-	bool IsTranslucent() const;
-	bool IsRenderTarget() const;
+	uint GetFlags();
+	int GetActualWidth();
+	int GetActualHeight();
+	bool IsTranslucent();
+	bool IsRenderTarget();
 }
 
 class Material
 {
-	string GetName() const;
-	string GetTextureGroupName() const;
-	bool IsTranslucent() const;
-	void SetMaterialVarFlag(int flag, bool on) const;
-	bool GetMaterialVarFlag(int flag) const;
-	void SetColorModulation(float r, float g, float b) const;
-	void SetAlphaModulation(float a) const;
-	float GetAlphaModulation() const;
-	void GetColorModulation(float &out r, float &out g, float &out b) const;
-	bool IsErrorMaterial() const;
-	bool Delete() const;
+	string GetName();
+	string GetTextureGroupName();
+	bool IsTranslucent();
+	void SetMaterialVarFlag(int flag, bool on);
+	bool GetMaterialVarFlag(int flag);
+	void SetColorModulation(float r, float g, float b);
+	void SetAlphaModulation(float a);
+	float GetAlphaModulation();
+	void GetColorModulation(float &out r, float &out g, float &out b);
+	bool IsErrorMaterial();
+	bool Delete();
 }
 
 class GameEvent
 {
-	string GetName() const;
-	bool IsLocal() const;
-	bool IsEmpty( const string &in keyName) const;
-	bool GetBool(const string &in keyName, bool defaultValue) const;
-	int GetInt(const string &in keyName, int defaultValue) const;
-	float GetFloat(const string &in keyName, float defaultValue) const;
-	string GetString(const string &in keyName, const string &in defaultValue) const;
-	void SetBool(const string &in keyName, bool value) const;
-	void SetInt(const string &in keyName, int value) const;
-	void SetFloat(const string &in keyName, float value) const;
-	void SetString(const string &in keyName, const string &in value) const;
+	string GetName();
+	bool IsLocal();
+	bool IsEmpty( const string &in keyName);
+	bool GetBool(const string &in keyName, bool defaultValue);
+	int GetInt(const string &in keyName, int defaultValue);
+	float GetFloat(const string &in keyName, float defaultValue);
+	string GetString(const string &in keyName, const string &in defaultValue);
+	void SetBool(const string &in keyName, bool value);
+	void SetInt(const string &in keyName, int value);
+	void SetFloat(const string &in keyName, float value);
+	void SetString(const string &in keyName, const string &in value);
 }
 
 class Entity
 {
-	int GetHealth() const;
-	int GetMaxHealth() const;
-	bool IsPlayer() const;
-	bool IsWeapon() const;
-	int GetIndex() const;
-	bool IsPlayer() const;
-	bool IsBuilding() const;
-	int GetClassID() const;
-	bool IsRobot() const;
-	Vector3 EstimateAbsVelocity() const;
-	bool IsProjectile() const;
-	int GetPropInt(const string &in className, const string &in propName) const;
-	float GetPropFloat(const string &in className, const string &in propName) const;
-	bool GetPropBool(const string &in className, const string &in propName) const;
-	Vector3 GetPropVector(const string &in className, const string &in propName) const;
-	Entity@ GetPropEntity(const string &in className, const string &in propName) const;
-	void SetPropInt(const string &in className, const string &in propName, int value) const;
-	void SetPropFloat(const string &in className, const string &in propName, float value) const;
-	void SetPropBool(const string &in className, const string &in propName, bool value) const;
-	void SetPropVector(const string &in className, const string &in propName, Vector3 value) const;
-	void SetPropEntity(const string &in className, const string &in propName, Entity@ value) const;
-	Vector3 GetAbsOrigin() const;
-	Vector3 GetAbsAngles() const;
-	bool ShouldDraw() const;
-	Entity@ GetFirstMoveChild() const;
-	Entity@ GetNextMovePeer() const;
-	void DrawModel(int flags) const;
-	int GetTeamNumber() const;
-	bool IsAlive() const;
-	int GetMoveType() const;
-	bool InCond(int cond) const;
-	string GetClassName() const;
-	string GetName() const;
-	Entity@ GetEntityFromLoadoutSlot(int index) const;
+	int GetHealth();
+	int GetMaxHealth();
+	bool IsPlayer();
+	bool IsWeapon();
+	int GetIndex();
+	bool IsPlayer();
+	bool IsBuilding();
+	int GetClassID();
+	bool IsRobot();
+	Vector3 EstimateAbsVelocity();
+	bool IsProjectile();
+	int GetPropInt(const string &in className, const string &in propName);
+	float GetPropFloat(const string &in className, const string &in propName);
+	bool GetPropBool(const string &in className, const string &in propName);
+	Vector3 GetPropVector(const string &in className, const string &in propName);
+	Entity@ GetPropEntity(const string &in className, const string &in propName);
+	void SetPropInt(const string &in className, const string &in propName, int value);
+	void SetPropFloat(const string &in className, const string &in propName, float value);
+	void SetPropBool(const string &in className, const string &in propName, bool value);
+	void SetPropVector(const string &in className, const string &in propName, Vector3 value);
+	void SetPropEntity(const string &in className, const string &in propName, Entity@ value);
+	Vector3 GetAbsOrigin();
+	Vector3 GetAbsAngles();
+	bool ShouldDraw();
+	Entity@ GetFirstMoveChild();
+	Entity@ GetNextMovePeer();
+	void DrawModel(int flags);
+	int GetTeamNumber();
+	bool IsAlive();
+	int GetMoveType();
+	bool InCond(int cond);
+	string GetClassName();
+	string GetName();
+	Entity@ GetEntityFromLoadoutSlot(int index);
 }
 
 class DrawModelContext
 {
-	int GetEntityIndex() const;
-	bool IsChams() const;
-	bool IsGlow() const;
-	void Execute() const;
+	int GetEntityIndex();
+	bool IsChams();
+	bool IsGlow();
+	void Execute();
 }
 
 class ConVar
 {
-	int GetInt() const;
-	float GetFloat() const;
-	bool GetBool() const;
-	string GetString() const;
-	void SetValue(const string &in value) const;
-	void SetValue(float value) const;
-	void SetValue(int value) const;
-	void SetValue(bool value) const;
+	int GetInt();
+	float GetFloat();
+	bool GetBool();
+	string GetString();
+	void SetValue(const string &in value);
+	void SetValue(float value);
+	void SetValue(int value);
+	void SetValue(bool value);
 }
 
 namespace Client
 {
-	ConVar@ GetConVar(const string &in name) const;
-	void Command(const string &in text, bool unrestricted = false) const;
-	void ClearConsole() const;
+	ConVar@ GetConVar(const string &in name);
+	void Command(const string &in text, bool unrestricted = false);
+	void ClearConsole();
 }
 
 namespace ClientState
@@ -289,42 +297,42 @@ namespace ClientState
 
 namespace Draw
 {
-	void Line(int x0, int y0, int x1, int y1) const;
-	void SetColor(int r, int g, int b, int a) const;
-	void GetTextSize(const string &in text, int &out w, int &out h) const;
-	void GetCursorPos(int &out x, int &out y) const;
-	void SetCursorPos(int x, int y) const;
-	void Circle(int x, int y, int radius, int segments) const;
-	bool HasFocus() const;
-	void GetScreenSize(int &out w, int &out h) const;
-	bool CreateFont(const string &in name, const string &in family, int height, int weight, int flags) const;
-	bool SetFont(const string &in name) const;
-	void Rect(int x, int y, int w, int h) const;
-	void RectFade(int x0, int y0, int x1, int y1, int alpha0, int alpha1, bool bHorizontal) const;
-	bool IsCursorVisible() const;
+	void Line(int x0, int y0, int x1, int y1);
+	void SetColor(int r, int g, int b, int a);
+	void GetTextSize(const string &in text, int &out w, int &out h);
+	void GetCursorPos(int &out x, int &out y);
+	void SetCursorPos(int x, int y);
+	void Circle(int x, int y, int radius, int segments);
+	bool HasFocus();
+	void GetScreenSize(int &out w, int &out h);
+	bool CreateFont(const string &in name, const string &in family, int height, int weight, int flags);
+	bool SetFont(const string &in name);
+	void Rect(int x, int y, int w, int h);
+	void RectFade(int x0, int y0, int x1, int y1, int alpha0, int alpha1, bool bHorizontal);
+	bool IsCursorVisible();
 }
 
 namespace Engine
 {
-	void PlaySound(const string &in sound) const;
-	void ClientCmd(const string &in cmd, bool unrestricted) const;
-	int GetMaxClients() const;
-	bool IsInGame() const;
-	bool IsConnected() const;
-	Vector3 GetViewAngles() const;
-	void SetViewAngles(Vector3 &in angle) const;
-	bool WorldToScreen(const Vector3 &in worldPos, Vector2 &out outPos) const;
-	bool IsGameUIVisible() const;
-	bool IsConsoleVisible() const;
-	bool IsTakingScreenshot() const;
+	void PlaySound(const string &in sound);
+	void ClientCmd(const string &in cmd, bool unrestricted);
+	int GetMaxClients();
+	bool IsInGame();
+	bool IsConnected();
+	Vector3 GetViewAngles();
+	void SetViewAngles(Vector3 &in angle);
+	bool WorldToScreen(const Vector3 &in worldPos, Vector2 &out outPos);
+	bool IsGameUIVisible();
+	bool IsConsoleVisible();
+	bool IsTakingScreenshot();
 }
 
 namespace EnttyList
 {
-	Entity@ GetClientEntity(int entindex) const;
-	int GetMaxEntities() const;
-	Entity@ GetLocalPlayer() const;
-	array<Entity@>@ GetEntities() const;
+	Entity@ GetClientEntity(int entindex);
+	int GetMaxEntities();
+	Entity@ GetLocalPlayer();
+	array<Entity@>@ GetEntities();
 }
 
 namespace GlobalVars
@@ -355,163 +363,185 @@ funcdef void FireGameEventHook(GameEvent@ event);
 
 namespace Hooks
 {
-	bool Add(const string &in event, const string &in id, CreateMoveHook @cb) const;
-	bool Add(const string &in event, const string &in id, GenericHook @cb) const;
-	bool Add(const string &in event, const string &in id, CalcViewModelHook @cb) const;
-	bool Add(const string &in event, const string &in id, OverrideViewHook @cb) const;
-	bool Add(const string &in event, const string &in id, LevelInitPreEntHook @cb) const;
-	bool Add(const string &in event, const string &in id, DrawModelHook @cb) const;
-	bool Add(const string &in event, const string &in id, FireGameEventHook @cb) const;
-	bool Remove(const string &in event, const string &in id) const;
+	bool Add(const string &in event, const string &in id, CreateMoveHook @cb);
+	bool Add(const string &in event, const string &in id, GenericHook @cb);
+	bool Add(const string &in event, const string &in id, CalcViewModelHook @cb);
+	bool Add(const string &in event, const string &in id, OverrideViewHook @cb);
+	bool Add(const string &in event, const string &in id, LevelInitPreEntHook @cb);
+	bool Add(const string &in event, const string &in id, DrawModelHook @cb);
+	bool Add(const string &in event, const string &in id, FireGameEventHook @cb);
+	bool Remove(const string &in event, const string &in id);
 }
 
 namespace ImGui
 {
-	bool Begin(const string &in name, bool &out p_open, int flags = 0) const;
-	bool Begin(const string &in name, int flags = 0) const;
-	void End() const;
-	bool BeginChild(const string &in str_id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0) const;
-	bool BeginChild(uint id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0) const;
-	void EndChild() const;
-	bool IsWindowAppearing() const;
-	bool IsWindowCollapsed() const;
-	bool IsWindowFocused(int flags = 0) const;
-	bool IsWindowHovered(int flags = 0) const;
-	Vector2 GetWindowPos() const;
-	Vector2 GetWindowSize() const;
-	float GetWindowWidth() const;
-	float GetWindowHeight() const;
-	void SetNextWindowPos(const Vector2 &in pos, int cond = 0, const Vector2 &in pivot = Vector2(0, 0)) const;
-	void SetNextWindowSize(const Vector2 &in size, int cond = 0) const;
-	void SetNextWindowContentSize(const Vector2 &in size) const;
-	void SetNextWindowCollapsed(bool collapsed, int cond = 0) const;
-	void SetNextWindowFocus() const;
-	void SetNextWindowScroll(const Vector2 &in scroll) const;
-	void SetNextWindowBgAlpha(float alpha) const;
-	void SetWindowPos(const Vector2 &in pos, int cond = 0) const;
-	void SetWindowSize(const Vector2 &in size, int cond = 0) const;
-	void SetWindowCollapsed(bool collapsed, int cond = 0) const;
-	void SetWindowFocus() const;
-	void SetWindowPos(const string &in name, const Vector2 &in pos, int cond = 0) const;
-	void SetWindowSize(const string &in name, const Vector2 &in size, int cond = 0) const;
-	void SetWindowCollapsed(const string &in name, bool collapsed, int cond = 0) const;
-	void SetWindowFocus(const string &in name) const;
-	float GetScrollX() const;
-	float GetScrollY() const;
-	void SetScrollX(float scroll_x) const;
-	void SetScrollY(float scroll_y) const;
-	float GetScrollMaxX() const;
-	float GetScrollMaxY() const;
-	void SetScrollHereX(float center_x_ratio = 0.5f) const;
-	void SetScrollHereY(float center_y_ratio = 0.5f) const;
-	void SetScrollFromPosX(float local_x, float center_x_ratio = 0.5f) const;
-	void SetScrollFromPosY(float local_y, float center_y_ratio = 0.5f) const;
-	Vector2 GetFontTexUvWhitePixel() const;
-	uint GetColorU32(int idx, float alpha_mul = 1.0f) const;
-	uint GetColorU32(float r, float g, float b, float a) const;
-	void GetStyleColorVec4(int idx, float &out r, float &out g, float &out b, float &out a) const;
-	Vector2 GetCursorScreenPos() const;
-	void SetCursorScreenPos(const Vector2 &in pos) const;
-	Vector2 GetContentRegionAvail() const;
-	Vector2 GetCursorPos() const;
-	float GetCursorPosX() const;
-	float GetCursorPosY() const;
-	void SetCursorPos(const Vector2 &in local_pos) const;
-	void SetCursorPosX(float local_x) const;
-	void SetCursorPosY(float local_y) const;
-	Vector2 GetCursorStartPos() const;
-	void Separator() const;
-	void SameLine(float offset_from_start_x = 0.0f, float spacing = -1.0f) const;
-	void NewLine() const;
-	void Spacing() const;
-	void Dummy(const Vector2 &in size) const;
-	void Indent(float indent_w = 0.0f) const;
-	void Unindent(float indent_w = 0.0f) const;
-	void BeginGroup() const;
-	void EndGroup() const;
-	void AlignTextToFramePadding() const;
-	float GetTextLineHeight() const;
-	float GetTextLineHeightWithSpacing() const;
-	float GetFrameHeight() const;
-	float GetFrameHeightWithSpacing() const;
-	void TextUnformatted(const string &in text) const;
-	void TextColored(int r, int g, int b, int a, const string &in fmt) const;
-	void TextDisabled(const string &in fmt) const;
-	void TextWrapped(const string &in fmt) const;
-	void LabelText(const string &in label, const string &in fmt) const;
-	void BulletText(const string &in fmt) const;
-	void SeparatorText(const string &in label) const;
-	bool Button(const string &in label, const Vector2 &in size = Vector2(0, 0)) const;
-	bool SmallButton(const string &in label) const;
-	bool InvisibleButton(const string &in str_id, const Vector2 &in size, int flags = 0) const;
-	bool ArrowButton(const string &in str_id, int dir) const;
-	bool Checkbox(const string &in label, bool &out v) const;
-	bool CheckboxFlags(const string &in label, int &out flags, int flags_value) const;
-	bool CheckboxFlags(const string &in label, uint &out flags, uint flags_value) const;
-	bool RadioButton(const string &in label, bool active) const;
-	bool RadioButton(const string &in label, int &out v, int v_button) const;
-	void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0)) const;
-	void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0), const string &in overlay = "") const;
-	void Bullet() const;
-	bool TextLink(const string &in label) const;
-	bool TextLinkOpenURL(const string &in label) const;
-	bool TextLinkOpenURL(const string &in label, const string &in url) const;
-	bool BeginCombo(const string &in label, const string &in preview_value, int flags = 0) const;
-	void EndCombo() const;
-	bool Combo(const string &in label, int &out current_item, array<string>@ items, int popup_max_height_in_items = -1) const;
+	bool Begin(const string &in name, bool &out p_open, int flags = 0);
+	bool Begin(const string &in name, int flags = 0);
+	void End();
+	bool BeginChild(const string &in str_id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0);
+	bool BeginChild(uint id, const Vector2 &in size = Vector2(0, 0), int child_flags = 0, int window_flags = 0);
+	void EndChild();
+	bool IsWindowAppearing();
+	bool IsWindowCollapsed();
+	bool IsWindowFocused(int flags = 0);
+	bool IsWindowHovered(int flags = 0);
+	Vector2 GetWindowPos();
+	Vector2 GetWindowSize();
+	float GetWindowWidth();
+	float GetWindowHeight();
+	void SetNextWindowPos(const Vector2 &in pos, int cond = 0, const Vector2 &in pivot = Vector2(0, 0));
+	void SetNextWindowSize(const Vector2 &in size, int cond = 0);
+	void SetNextWindowContentSize(const Vector2 &in size);
+	void SetNextWindowCollapsed(bool collapsed, int cond = 0);
+	void SetNextWindowFocus();
+	void SetNextWindowScroll(const Vector2 &in scroll);
+	void SetNextWindowBgAlpha(float alpha);
+	void SetWindowPos(const Vector2 &in pos, int cond = 0);
+	void SetWindowSize(const Vector2 &in size, int cond = 0);
+	void SetWindowCollapsed(bool collapsed, int cond = 0);
+	void SetWindowFocus();
+	void SetWindowPos(const string &in name, const Vector2 &in pos, int cond = 0);
+	void SetWindowSize(const string &in name, const Vector2 &in size, int cond = 0);
+	void SetWindowCollapsed(const string &in name, bool collapsed, int cond = 0);
+	void SetWindowFocus(const string &in name);
+	float GetScrollX();
+	float GetScrollY();
+	void SetScrollX(float scroll_x);
+	void SetScrollY(float scroll_y);
+	float GetScrollMaxX();
+	float GetScrollMaxY();
+	void SetScrollHereX(float center_x_ratio = 0.5f);
+	void SetScrollHereY(float center_y_ratio = 0.5f);
+	void SetScrollFromPosX(float local_x, float center_x_ratio = 0.5f);
+	void SetScrollFromPosY(float local_y, float center_y_ratio = 0.5f);
+	Vector2 GetFontTexUvWhitePixel();
+	uint GetColorU32(int idx, float alpha_mul = 1.0f);
+	uint GetColorU32(float r, float g, float b, float a);
+	void GetStyleColorVec4(int idx, float &out r, float &out g, float &out b, float &out a);
+	Vector2 GetCursorScreenPos();
+	void SetCursorScreenPos(const Vector2 &in pos);
+	Vector2 GetContentRegionAvail();
+	Vector2 GetCursorPos();
+	float GetCursorPosX();
+	float GetCursorPosY();
+	void SetCursorPos(const Vector2 &in local_pos);
+	void SetCursorPosX(float local_x);
+	void SetCursorPosY(float local_y);
+	Vector2 GetCursorStartPos();
+	void Separator();
+	void SameLine(float offset_from_start_x = 0.0f, float spacing = -1.0f);
+	void NewLine();
+	void Spacing();
+	void Dummy(const Vector2 &in size);
+	void Indent(float indent_w = 0.0f);
+	void Unindent(float indent_w = 0.0f);
+	void BeginGroup();
+	void EndGroup();
+	void AlignTextToFramePadding();
+	float GetTextLineHeight();
+	float GetTextLineHeightWithSpacing();
+	float GetFrameHeight();
+	float GetFrameHeightWithSpacing();
+	void TextUnformatted(const string &in text);
+	void TextColored(int r, int g, int b, int a, const string &in fmt);
+	void TextDisabled(const string &in fmt);
+	void TextWrapped(const string &in fmt);
+	void LabelText(const string &in label, const string &in fmt);
+	void BulletText(const string &in fmt);
+	void SeparatorText(const string &in label);
+	bool Button(const string &in label, const Vector2 &in size = Vector2(0, 0));
+	bool SmallButton(const string &in label);
+	bool InvisibleButton(const string &in str_id, const Vector2 &in size, int flags = 0);
+	bool ArrowButton(const string &in str_id, int dir);
+	bool Checkbox(const string &in label, bool &out v);
+	bool CheckboxFlags(const string &in label, int &out flags, int flags_value);
+	bool CheckboxFlags(const string &in label, uint &out flags, uint flags_value);
+	bool RadioButton(const string &in label, bool active);
+	bool RadioButton(const string &in label, int &out v, int v_button);
+	void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0));
+	void ProgressBar(float fraction, const Vector2 &in size_arg = Vector2(-FLT_MIN, 0), const string &in overlay = "");
+	void Bullet();
+	bool TextLink(const string &in label);
+	bool TextLinkOpenURL(const string &in label);
+	bool TextLinkOpenURL(const string &in label, const string &in url);
+	bool BeginCombo(const string &in label, const string &in preview_value, int flags = 0);
+	void EndCombo();
+	bool Combo(const string &in label, int &out current_item, array<string>@ items, int popup_max_height_in_items = -1);
 }
 
 namespace Input
 {
-	bool IsButtonDown(int button) const;
-	bool IsButtonPressed(int button) const;
-	bool IsButtonReleased(int button) const;
-	void SetCursorAlwaysVisible(bool state) const;
-	bool IsCursorVisible() const;
-	int GetPollTick() const;
-	bool IsButtonValid() const;
+	bool IsButtonDown(int button);
+	bool IsButtonPressed(int button);
+	bool IsButtonReleased(int button);
+	void SetCursorAlwaysVisible(bool state);
+	bool IsCursorVisible();
+	int GetPollTick();
+	bool IsButtonValid();
 }
 
 namespace Materials
 {
-	Material@ CreateMaterial(const string &in name, const string &in vmt) const;
-	Material@ GetMaterial(const string &in name) const;
-	Texture@ CreateTextureNamedRenderTarget(const string &in name, int width, int height) const;
+	Material@ CreateMaterial(const string &in name, const string &in vmt);
+	Material@ GetMaterial(const string &in name);
+	Texture@ CreateTextureNamedRenderTarget(const string &in name, int width, int height);
 }
 
 namespace Render
 {
-	void GetColorModulation(float &out r, float &out g, float &out b) const;
-	void SetColorModulation(float r, float g, float b) const;
-	float GetBlend() const;
-	void SetBlend(float blend) const;
-	void ForcedMaterialOverride(Material@ mat) const;
-	Material@ GetMaterialOverride() const;
-	void DrawScreenSpaceRectangle(Material@, int, int, int, int, float, float, float, float, int, int) const;
-	void DrawScreenSpaceQuad(Material@) const;
-	void GetViewport(int &out, int &out, int &out, int &out) const;
-	void Viewport(int, int, int, int) const;
-	void DepthRange(float, float) const;
-	bool GetDepthRange(float &out, float &out) const;
-	void SetRenderTarget(Texture@) const;
-	Texture@ GetRenderTarget() const;
-	void PushRenderTargetAndViewport() const;
-	void PopRenderTargetAndViewport() const;
-	void ClearBuffers(bool, bool, bool = false) const;
-	void ClearColor3ub(uint, uint, uint) const;
-	void ClearColor4ub(uint, uint, uint, uint) const;
-	void OverrideDepthEnable(bool, bool) const;
-	void OverrideAlphaEnable(bool, bool) const;
-	void OverrideColorEnable(bool, bool) const;
-	void SetStencilEnable(bool) const;
-	void SetStencilFailOperation(int) const;
-	void SetStencilZFailOperation(int) const;
-	void SetStencilPassOperation(int) const;
-	void SetStencilCompareFunction(int) const;
-	void SetStencilReferenceValue(int) const;
-	void SetStencilTestMask(uint) const;
-	void SetStencilWriteMask(uint) const;
-	void ClearStencilBufferRectangle(int, int, int, int, int) const;
+	void GetColorModulation(float &out r, float &out g, float &out b);
+	void SetColorModulation(float r, float g, float b);
+	float GetBlend();
+	void SetBlend(float blend);
+	void ForcedMaterialOverride(Material@ mat);
+	Material@ GetMaterialOverride();
+	void DrawScreenSpaceRectangle(Material@, int, int, int, int, float, float, float, float, int, int);
+	void DrawScreenSpaceQuad(Material@);
+	void GetViewport(int &out, int &out, int &out, int &out);
+	void Viewport(int, int, int, int);
+	void DepthRange(float, float);
+	bool GetDepthRange(float &out, float &out);
+	void SetRenderTarget(Texture@);
+	Texture@ GetRenderTarget();
+	void PushRenderTargetAndViewport();
+	void PopRenderTargetAndViewport();
+	void ClearBuffers(bool, bool, bool = false);
+	void ClearColor3ub(uint, uint, uint);
+	void ClearColor4ub(uint, uint, uint, uint);
+	void OverrideDepthEnable(bool, bool);
+	void OverrideAlphaEnable(bool, bool);
+	void OverrideColorEnable(bool, bool);
+	void SetStencilEnable(bool);
+	void SetStencilFailOperation(int);
+	void SetStencilZFailOperation(int);
+	void SetStencilPassOperation(int);
+	void SetStencilCompareFunction(int);
+	void SetStencilReferenceValue(int);
+	void SetStencilTestMask(uint);
+	void SetStencilWriteMask(uint);
+	void ClearStencilBufferRectangle(int, int, int, int, int);
+}
+
+class Bind
+{
+	int m_iKey;
+	bool m_bState;
+	bool m_bIsPressed;
+	bool m_bCapturing;
+	int m_iMode;
+	int m_iType;
+
+	bool IsActive() const;
+	bool IsEnabled() const;
+
+	// only call in the ImGui hook
+	bool Draw(const string &in label);
+	bool Delete();
+}
+
+namespace Binds
+{
+	Bind@ CreateBind(const string &in name, int key, int type, int mode);
 }
 
 enum ETFClassID
@@ -1106,4 +1136,174 @@ enum EButtonCode
 	STEAMCONTROLLER_F10,
 	STEAMCONTROLLER_F11,
 	STEAMCONTROLLER_F12
+}
+
+enum BindMode
+{
+	Off = 0,
+	Hold,
+	Toggle,
+	HoldOff,
+	Always,
+}
+
+enum ImGuiKey
+{
+	NamedKey_BEGIN = 512,
+	Tab = 512,
+	LeftArrow,
+	RightArrow,
+	UpArrow,
+	DownArrow,
+	PageUp,
+	PageDown,
+	Home,
+	End,
+	Insert,
+	Delete,
+	Backspace,
+	Space,
+	Enter,
+	Escape,
+	LeftCtrl,
+	LeftShift,
+	LeftAlt,
+	LeftSuper,
+	RightCtrl,
+	RightShift,
+	RightAlt,
+	RightSuper,
+	Menu,
+	Num0,
+	Num1,
+	Num2,
+	Num3,
+	Num4,
+	Num5,
+	Num6,
+	Num7,
+	Num8,
+	Num9,
+	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G,
+	H,
+	I,
+	J,
+	K,
+	L,
+	M,
+	N,
+	O,
+	P,
+	Q,
+	R,
+	S,
+	T,
+	U,
+	V,
+	W,
+	X,
+	Y,
+	Z,
+	F1,
+	F2,
+	F3,
+	F4,
+	F5,
+	F6,
+	F7,
+	F8,
+	F9,
+	F10,
+	F11,
+	F12,
+	F13,
+	F14,
+	F15,
+	F16,
+	F17,
+	F18,
+	F19,
+	F20,
+	F21,
+	F22,
+	F23,
+	F24,
+	Apostrophe,
+	Comma,
+	Minus,
+	Period,
+	Slash,
+	Semicolon,
+	Equal,
+	LeftBracket,
+	Backslash,
+	RightBracket,
+	GraveAccent,
+	CapsLock,
+	ScrollLock,
+	NumLock,
+	PrintScreen,
+	Pause,
+	Keypad0,
+	Keypad1,
+	Keypad2,
+	Keypad3,
+	Keypad4,
+	Keypad5,
+	Keypad6,
+	Keypad7,
+	Keypad8,
+	Keypad9,
+	KeypadDecimal,
+	KeypadDivide,
+	KeypadMultiply,
+	KeypadSubtract,
+	KeypadAdd,
+	KeypadEnter,
+	KeypadEqual,
+	AppBack,
+	AppForward,
+	Oem102,
+	GamepadStart,
+	GamepadBack,
+	GamepadFaceLeft,
+	GamepadFaceRight,
+	GamepadFaceUp,
+	GamepadFaceDown,
+	GamepadDpadLeft,
+	GamepadDpadRight,
+	GamepadDpadUp,
+	GamepadDpadDown,
+	GamepadL1,
+	GamepadR1,
+	GamepadL2,
+	GamepadR2,
+	GamepadL3,
+	GamepadR3,
+	GamepadLStickLeft,
+	GamepadLStickRight,
+	GamepadLStickUp,
+	GamepadLStickDown,
+	GamepadRStickLeft,
+	GamepadRStickRight,
+	GamepadRStickUp,
+	GamepadRStickDown,
+	MouseLeft,
+	MouseRight,
+	MouseMiddle,
+	MouseX1,
+	MouseX2,
+	MouseWheelX,
+	MouseWheelY,
+	ReservedForModCtrl,
+	ReservedForModShift,
+	ReservedForModAlt,
+	ReservedForModSuper,
+	NamedKey_END
 }

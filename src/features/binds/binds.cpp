@@ -42,16 +42,15 @@ const char *Binds::GetKeyName(const Hotkey *hk)
 	return ImGui::GetKeyName((ImGuiKey)hk->m_iKey);
 }
 
-Hotkey *Binds::RegisterHotkey(const char *name)
+Hotkey* Binds::RegisterHotkey(const char *name)
 {
-	auto hk	      = std::make_unique<Hotkey>();
+	m_hotkeys.push_back(std::make_unique<Hotkey>());
+	auto* hk = m_hotkeys.back().get();
 	hk->m_strName = name;
-
-	m_hotkeys.push_back(std::move(hk));
-	return m_hotkeys.back().get();
+	return hk;
 }
 
-const std::vector<std::unique_ptr<Hotkey>> &Binds::GetHotkeys() const
+std::vector<std::unique_ptr<Hotkey>> &Binds::GetHotkeys()
 {
 	return m_hotkeys;
 }
