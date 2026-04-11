@@ -143,7 +143,9 @@ class CBaseEntity : public IClientEntity
 
 	int GetIndex()
 	{
-		return GetClientNetworkable()->entindex();
+		auto networkable = GetClientNetworkable();
+		if (networkable == nullptr) return -1;
+		return networkable->entindex();
 	}
 
 	bool IsSentry()

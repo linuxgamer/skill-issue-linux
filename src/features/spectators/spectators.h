@@ -9,7 +9,7 @@ namespace Spectators
 	void RunMain(CTFPlayer *pLocal);
 	// call from ImGui
 	void DrawList();
-	bool IsSpectated(CTFPlayer *pTarget, std::vector<CTFPlayer *> &out);
+	bool IsSpectated(CTFPlayer *pTarget, std::vector<CHandle<CTFPlayer>> &out);
 	void Reset();
 	void OnLevelInitPostEntity();
 	void OnLevelShutdown();

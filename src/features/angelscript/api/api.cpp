@@ -3,9 +3,7 @@
 #include "../../../sdk/interfaces/interfaces.h"
 
 #define AS_USE_STLNAMES 1
-#include "classes/bind/bind.h"
-#include "libraries/binds/binds.h"
-#include "libraries/globalvars/globalvars.h"
+
 #include "../add_on/datetime/datetime.h"
 #include "../add_on/scriptarray/scriptarray.h"
 #include "../add_on/scriptdictionary/scriptdictionary.h"
@@ -14,6 +12,8 @@
 #include "../add_on/scriptmath/scriptmath.h"
 #include "../add_on/scriptmath/scriptmathcomplex.h"
 #include "../add_on/scriptstdstring/scriptstdstring.h"
+
+#include "classes/bind/bind.h"
 #include "classes/convar/convar.h"
 #include "classes/drawmodelcontext/drawmodelcontext.h"
 #include "classes/entity/entity.h"
@@ -24,8 +24,13 @@
 #include "classes/vector/vector3.h"
 #include "classes/vector2/vec2.h"
 #include "classes/viewsetup/viewsetup.h"
+
 #include "enums/enums.h"
 #include "globals.h"
+
+#include "libraries/prediction/pred.h"
+#include "libraries/binds/binds.h"
+#include "libraries/globalvars/globalvars.h"
 #include "libraries/client/client.h"
 #include "libraries/clientstate/clientstate.h"
 #include "libraries/common/common.h"
@@ -124,6 +129,7 @@ void API::Initialize()
 	ImGui_RegisterLibrary(engine);
 	Globalvars_RegisterLibrary(engine);
 	Binds_RegisterLibrary(engine);
+	Prediction_RegisterLibrary(engine);
 
 	s_bInitialized = true;
 }

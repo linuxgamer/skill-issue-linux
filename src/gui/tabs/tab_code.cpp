@@ -115,6 +115,7 @@ void DrawCodeTab()
 			    {"Allow String Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_STRING},
 			    {"Allow GlobalVars Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_GLOBALVARS},
 			    {"Allow Binds Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_BINDS},
+			    {"Allow Prediction Library", ScriptAccessMask::SCRIPT_MASK_ALLOW_PREDICTION},
 			};
 
 			int &mask = GetScriptAccessMask();

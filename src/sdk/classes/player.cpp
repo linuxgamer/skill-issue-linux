@@ -73,9 +73,14 @@ bool CTFPlayer::IsUbercharged()
 
 std::string CTFPlayer::GetName()
 {
+	int index = GetIndex();
+
+	if (index == -1)
+		return "unknown";
+
 	player_info_t info{};
-	if (!interfaces::Engine->GetPlayerInfo(GetIndex(), &info))
-		return "";
+	if (!interfaces::Engine->GetPlayerInfo(index, &info))
+		return "unknown";
 
 	return info.name;
 }
@@ -130,9 +135,7 @@ float CTFPlayer::GetEffectiveInvisibilityLevel()
 {
 	// xref: taunt_attr_player_invis_percent
 	using GetEffectiveInvisibilityLevelFn = float (*)(void *thisptr);
-	static auto orig		      = reinterpret_cast<GetEffectiveInvisibilityLevelFn>(
-		 sigscan_module("client.so", "55 48 89 E5 41 56 41 55 4C 8D AF 78 1E 00 00 41 "
-										  "54 49 89 FC 4C 89 EF 53 E8"));
+	static auto orig = reinterpret_cast<GetEffectiveInvisibilityLevelFn>(sigscan_module("client.so", "55 48 89 E5 41 56 41 55 4C 8D AF 78 1E 00 00 41 54 49 89 FC 4C 89 EF 53 E8"));
 
 	if (orig == nullptr)
 		return -1;
@@ -180,7 +183,7 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 		plVar1 = (long *)CMultiPlayerAnimState::GetBasePlayer();
 		if (plVar1 != (long *)0x0) {
 		// the 0xa00 is what we want
-		(**(code **)(*plVar1 + 0xa00))(plVar1,0);
+======>		(**(code **)(*plVar1 + 0xa00))(plVar1,0);
 			return;
 		}
 		return;
@@ -192,7 +195,7 @@ void CTFPlayer::ThirdPersonSwitch(bool state)
 	if (vt == nullptr)
 		return;
 
-	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(void *)]);
+	ThirdPersonSwitchFn func = reinterpret_cast<ThirdPersonSwitchFn>(vt[0xa00 / sizeof(uintptr_t)]);
 	func(this, state);
 }
 

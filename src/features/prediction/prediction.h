@@ -69,6 +69,7 @@ class CPrediction
 	float m_flTargetSeconds;
 	float m_flMaxSpeed;
 	float m_flAirSpeedCap;
+	float m_flTickInterval;
 
 	bool m_bAllowAutoMovement;
 	bool m_bIsOnGround;

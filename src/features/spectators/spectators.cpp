@@ -4,7 +4,7 @@
 #include "../entitylist/entitylist.h"
 
 static bool s_bSpectated = false;
-static std::vector<CTFPlayer *> s_vSpectatorList;
+static std::vector<CHandle<CTFPlayer>> s_vSpectatorList;
 
 void Spectators::RunMain(CTFPlayer *pLocal)
 {
@@ -24,7 +24,7 @@ void Spectators::Reset()
 	s_vSpectatorList.clear();
 }
 
-bool Spectators::IsSpectated(CTFPlayer *pTarget, std::vector<CTFPlayer *> &out)
+bool Spectators::IsSpectated(CTFPlayer *pTarget, std::vector<CHandle<CTFPlayer>> &out)
 {
 	for (const auto &entry : EntityList::GetEntities())
 	{
@@ -77,17 +77,22 @@ void Spectators::DrawList()
 	{
 		if (s_bSpectated && !s_vSpectatorList.empty())
 		{
-			for (auto pPlayer : s_vSpectatorList)
+			for (auto hPlayer : s_vSpectatorList)
 			{
+				auto pPlayer = hPlayer.Get();
+
 				if (pPlayer == nullptr)
+					continue;
+
+				// invalid player
+				if (pPlayer->GetIndex() == -1)
 					continue;
 
 				int iObserverMode  = pPlayer->m_iObserverMode();
 				bool isfirstperson = iObserverMode == OBS_MODE_IN_EYE;
 
-				ImGui::TextColored(isfirstperson ? ImVec4(1.0, 0.5, 0.5, 1.0)
-								 : ImVec4(1.0, 1.0, 1.0, 1.0),
-						   "%s", pPlayer->GetName().c_str());
+				ImVec4 color = isfirstperson ? ImVec4(1.0, 0.5, 0.5, 1.0) : ImVec4(1.0, 1.0, 1.0, 1.0);
+				ImGui::TextColored(color, "%s", pPlayer->GetName().c_str());
 			}
 		}
 	}

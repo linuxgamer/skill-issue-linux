@@ -4,7 +4,10 @@
 #include "../../sdk/definitions/cgametrace.h"
 #include "../../sdk/definitions/ctracefilters.h"
 #include "../../sdk/helpers/engine/engine.h"
+
 #include "../logs/logs.h"
+
+#include "../entitylist/entitylist.h"
 
 #define COORD_INTEGER_BITS 14
 #define COORD_FRACTIONAL_BITS 5
@@ -32,6 +35,7 @@ CPrediction::CPrediction()
 	m_flBounce	     = 0.0f;
 	m_flTargetSeconds    = 0.0f;
 	m_flMaxSpeed	     = 0.0f;
+	m_flTickInterval     = 0.0f;
 
 	m_bAllowAutoMovement = false;
 	m_bIsOnGround	     = false;
@@ -40,7 +44,7 @@ CPrediction::CPrediction()
 
 float CPrediction::GetGravity()
 {
-	return 800.0f * interfaces::GlobalVars->interval_per_tick * 0.5f;
+	return 800.0f * m_flTickInterval * 0.5f;
 }
 
 void CPrediction::BeginPrediction(CTFPlayer *pEntity, float flTargetSeconds)
@@ -90,6 +94,7 @@ void CPrediction::BeginPrediction(CTFPlayer *pEntity, float flTargetSeconds)
 	m_flMaxSpeed		   = pEntity->m_flMaxspeed();
 	m_flTargetSeconds	   = flTargetSeconds;
 	m_flAirSpeedCap		   = GetAirSpeedCap();
+	m_flTickInterval	   = interfaces::GlobalVars->interval_per_tick;
 
 	m_vecWishDir		   = m_vecVelocity;
 	m_vecWishDir.z		   = 0;
@@ -132,7 +137,7 @@ void CPrediction::EndPrediction()
 void CPrediction::BeginGravity()
 {
 	m_vecVelocity.z -= m_flGravity;
-	m_vecVelocity.z += m_vecBaseVelocity.z * interfaces::GlobalVars->interval_per_tick;
+	m_vecVelocity.z += m_vecBaseVelocity.z * m_flTickInterval;
 }
 
 void CPrediction::EndGravity()
@@ -155,7 +160,7 @@ void CPrediction::Friction()
 	{
 		flFriction = m_flFriction /* * player->surfaceFriction*/;
 		flControl  = (flSpeed < m_flStopSpeed) ? m_flStopSpeed : flSpeed;
-		flDrop += flControl * flFriction * interfaces::GlobalVars->interval_per_tick;
+		flDrop += flControl * flFriction * m_flTickInterval;
 	}
 
 	float flNewSpeed = flSpeed - flDrop;
@@ -352,8 +357,7 @@ int CPrediction::TryPlayerMove(Vector *pFirstDest, CGameTrace *pFirstTrace, floa
 	primal_velocity	  = m_vecVelocity;
 
 	allFraction	  = 0;
-	time_left	  = interfaces::GlobalVars->interval_per_tick; // Total time for this
-								       // movement operation.
+	time_left	  = m_flTickInterval; // Total time for this movement operation.
 
 	new_velocity.Set();
 
@@ -704,7 +708,7 @@ void CPrediction::Accelerate(Vector &wishdir, float wishspeed, float accel)
 		return;
 
 	// Determine amount of accleration.
-	accelspeed = accel * interfaces::GlobalVars->interval_per_tick * wishspeed /* * player->m_surfaceFriction*/;
+	accelspeed = accel * m_flTickInterval * wishspeed /* * player->m_surfaceFriction*/;
 
 	// Cap at addspeed
 	if (accelspeed > addspeed)
@@ -746,8 +750,8 @@ void CPrediction::WalkMove(void)
 		return;
 	}
 
-	dest.x = GetAbsOrigin().x + m_vecVelocity.x * interfaces::GlobalVars->interval_per_tick;
-	dest.y = GetAbsOrigin().y + m_vecVelocity.y * interfaces::GlobalVars->interval_per_tick;
+	dest.x = GetAbsOrigin().x + m_vecVelocity.x * m_flTickInterval;
+	dest.y = GetAbsOrigin().y + m_vecVelocity.y * m_flTickInterval;
 	dest.z = GetAbsOrigin().z;
 
 	TracePlayerBBox(GetAbsOrigin(), dest, MASK_PLAYERSOLID, m_filter, pm);
@@ -794,7 +798,7 @@ void CPrediction::AirAccelerate(Vector &wishdir, float wishspeed, float accel)
 		return;
 
 	// Determine acceleration speed after acceleration
-	accelspeed = accel * wishspeed * interfaces::GlobalVars->interval_per_tick /* * player->m_surfaceFriction*/;
+	accelspeed = accel * wishspeed * m_flTickInterval /* * player->m_surfaceFriction*/;
 
 	// Cap it
 	if (accelspeed > addspeed)
@@ -833,6 +837,17 @@ bool CPrediction::Simulate(std::vector<Vector> &path)
 
 	float flClock = 0.0f;
 
+	if (auto pLocal = EntityList::GetLocal(); pLocal != nullptr && pLocal->IsAlive())
+	{
+		Vec3 vecCenter = m_pTarget->GetCenter();
+		Vec3 vecLocalCenter = pLocal->GetCenter();
+		
+		float flDistance = vecLocalCenter.DistTo(vecCenter);
+		float flMultiplier = std::clamp(flDistance / 1000.0f, 1.0f, 5.0f);
+
+		m_flTickInterval *= flMultiplier;
+	}
+
 	while (flClock < m_flTargetSeconds)
 	{
 		if (!CheckWater())
@@ -858,7 +873,7 @@ bool CPrediction::Simulate(std::vector<Vector> &path)
 			m_vecVelocity.z = 0.0f;
 
 		path.emplace_back(m_vecAbsOrigin);
-		flClock += interfaces::GlobalVars->interval_per_tick;
+		flClock += m_flTickInterval;
 	}
 
 	return true;

@@ -112,6 +112,10 @@ void Radar::DrawContents()
 		if (entry.ptr == nullptr)
 			continue;
 
+		// invalid entity
+		if (entry.ptr->GetIndex() == -1)
+			continue;
+
 		if (entry.ptr == EntityList::GetLocal())
 			continue;
 

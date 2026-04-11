@@ -544,6 +544,11 @@ namespace Binds
 	Bind@ CreateBind(const string &in name, int key, int type, int mode);
 }
 
+namespace Prediction
+{
+	bool Simulate(Entity@ player, float timeSeconds, array<Vector3> &inout path);
+}
+
 enum ETFClassID
 {
 	CTFWearableRazorback		      = 341,
