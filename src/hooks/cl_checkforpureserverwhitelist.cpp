@@ -1,5 +1,8 @@
 #include "cl_checkforpureserverwhitelist.h"
 
+#include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
+
 DETOUR_DECL_TYPE(void, originalCheckForPureServerWhitelistFn, void *&pFilesToReload);
 detour_ctx_t CL_CheckForPureServerWhitelist_ctx;
 

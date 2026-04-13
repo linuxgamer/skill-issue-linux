@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../features/logs/logs.h"
-#include "../libdetour/libdetour.h"
-#include "../libsigscan.h"
 #include "../sdk/signatures/signatures.h"
 
 ADD_SIG(CThirdPersonManager_Update, "client.so",

@@ -1,5 +1,13 @@
 #include "chlclient_levelpostentity.h"
 
+#include "../vtables.h"
+
+#include "../features/entitylist/entitylist.h"
+#include "../features/spectators/spectators.h"
+#include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
+
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
 DECLARE_VTABLE_HOOK(LevelInitPostEntity, void, (CHLClient * thisptr))
 {
 	EntityList::Reserve();

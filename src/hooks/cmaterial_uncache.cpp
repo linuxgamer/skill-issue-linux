@@ -1,5 +1,8 @@
 #include "cmaterial_uncache.h"
 
+#include "../libdetour/libdetour.h"
+#include "../sdk/MaterialManager/materialmanager.h"
+
 DETOUR_DECL_TYPE(void, original_Uncache, IMaterial *mat, bool bPreserveVars);
 detour_ctx_t uncache_ctx;
 

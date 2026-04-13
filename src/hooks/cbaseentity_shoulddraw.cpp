@@ -1,5 +1,9 @@
 #include "cbaseentity_shoulddraw.h"
 
+#include "../libdetour/libdetour.h"
+
+#include "../features/logs/logs.h"
+
 DETOUR_DECL_TYPE(bool, CBaseEntity_ShouldDraw, CBaseEntity *self);
 detour_ctx_t baseentity_shoulddraw;
 

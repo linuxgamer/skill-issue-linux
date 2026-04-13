@@ -1,5 +1,10 @@
 #include "cinventorymanager_showitemspickedup.h"
 
+#include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
+
+#include "../sdk/interfaces/interfaces.h"
+
 DETOUR_DECL_TYPE(bool, original_ShowItemsPickedUpFn, void *thisptr, bool bForce, bool bReturnToGame, bool bNoPanel);
 detour_ctx_t showitemsctx;
 

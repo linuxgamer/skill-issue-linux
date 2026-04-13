@@ -1,5 +1,11 @@
 #include "ctfmatchsummary_ontick.h"
 
+#include <cstdint>
+
+#include "../libdetour/libdetour.h"
+
+#include "../features/logs/logs.h"
+
 detour_ctx_t summary_ontick_ctx;
 DETOUR_DECL_TYPE(void, CTFMatchSummary_OnTick, void *self);
 

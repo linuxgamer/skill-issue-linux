@@ -1,5 +1,12 @@
 #include "calcviewmodelbobhelper.h"
 
+#include <cstring>
+
+#include "../libdetour/libdetour.h"
+
+#include "../features/logs/logs.h"
+#include "../settings/settings.h"
+
 DETOUR_DECL_TYPE(float, CalcViewModelBobHelper, CTFPlayer *pPlayer, BobState_t *pBobState);
 detour_ctx_t calcbobhelper;
 

@@ -1,5 +1,8 @@
 #include "ctfplayer_getmaxitemcount.h"
 
+#include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
+
 DETOUR_DECL_TYPE(int, originalMaxItemCountFn, void *thisptr);
 detour_ctx_t GetMaxItemCount_ctx;
 

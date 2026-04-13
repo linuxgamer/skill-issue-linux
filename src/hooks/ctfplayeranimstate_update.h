@@ -1,13 +1,6 @@
 #pragma once
 
 #include "../sdk/signatures/signatures.h"
-#include "../sdk/classes/player.h"
-
-#include "../libdetour/libdetour.h"
-#include "../libsigscan.h"
-
-#include "../features/entitylist/entitylist.h"
-#include "../features/ticks/ticks.h"
 
 // CMultiPlayerAnimState::Update
 // one of them is it

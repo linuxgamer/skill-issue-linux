@@ -1,11 +1,7 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
-#include "../libsigscan.h"
 #include "../sdk/definitions/igameevents.h"
 
-#include "../features/angelscript/api/api.h"
-#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 #include "../sdk/signatures/signatures.h"
 

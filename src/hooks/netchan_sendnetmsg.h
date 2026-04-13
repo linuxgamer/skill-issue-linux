@@ -1,16 +1,7 @@
 #pragma once
 
-#include "../settings/settings.h"
-
-#include "../libdetour/libdetour.h"
-#include "../sdk/classes/entity.h"
-#include "../sdk/classes/player.h"
 #include "../sdk/definitions/inetchannel.h"
-#include "../sdk/helpers/helper.h"
-#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
-
-#include "../features/warp/warp.h"
 
 // xref: NetMsg
 ADD_SIG(CNetChannel_SendNetMsg, "engine.so", "55 48 89 E5 41 56 41 89 D6 41 55 41 89 CD")

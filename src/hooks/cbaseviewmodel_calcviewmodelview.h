@@ -1,21 +1,6 @@
 #pragma once
 
 #include "../sdk/classes/entity.h"
-#include "../sdk/classes/player.h"
-#include "../sdk/helpers/helper.h"
-#include "../sdk/interfaces/interfaces.h"
-#include "../settings/settings.h"
-#include <string>
-
-#include "../features/aimbot/aimbot.h"
-#include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
-#include "../features/visuals/viewmodel_interp/viewmodel_interp.h"
-#include "../features/visuals/viewmodel_offset/viewmodel_offset.h"
-
-#include "../libdetour/libdetour.h"
-
-#include "../features/angelscript/api/api.h"
-#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 #include "../sdk/signatures/signatures.h"
 

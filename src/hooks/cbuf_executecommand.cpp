@@ -5,7 +5,6 @@
 #include "../libdetour/libdetour.h"
 
 #include "../features/logs/logs.h"
-//#include "../features/angelscript/api/libraries/hooks/hooks.h"
 
 DETOUR_DECL_TYPE(void, Cbuf_ExecuteCommand, const CCommand& args, cmd_source_t source);
 detour_ctx_t ctx;

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../features/warp/warp.h"
-#include "../libdetour/libdetour.h"
 #include "../sdk/signatures/signatures.h"
 
 /*

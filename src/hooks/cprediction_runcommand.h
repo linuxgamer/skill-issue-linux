@@ -1,12 +1,9 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
 #include "../sdk/classes/player.h"
 #include "../sdk/definitions/cusercmd.h"
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
-
-#include "../features/warp/warp.h"
 
 ADD_SIG(CPrediction_RunCommand, "client.so",
 	"55 48 89 E5 41 57 49 89 CF 41 56 41 55 49 89 D5 41 54 49 89 FC 53 "

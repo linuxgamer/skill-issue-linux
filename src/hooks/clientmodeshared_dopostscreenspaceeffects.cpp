@@ -1,6 +1,16 @@
 #include "clientmodeshared_dopostscreenspaceeffects.h"
 
-DECLARE_VTABLE_HOOK(DoPostScreenSpaceEffects, bool, (IClientMode * thisptr, CViewSetup *setup))
+#include "../sdk/classes/player.h"
+#include "../sdk/interfaces/interfaces.h"
+
+#include "../features/backtrack/backtrack.h"
+#include "../features/chams/chams.h"
+#include "../features/glow/glow.h"
+#include "../features/visuals/thirdperson/thirdperson.h"
+
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+DECLARE_VTABLE_HOOK(DoPostScreenSpaceEffects, bool, (IClientMode* thisptr, CViewSetup* setup))
 {
 	Backtrack::DoPostScreenSpaceEffects();
 	Chams::Run();

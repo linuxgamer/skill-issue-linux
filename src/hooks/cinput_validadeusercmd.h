@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
 #include "../libsigscan.h"
 #include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"

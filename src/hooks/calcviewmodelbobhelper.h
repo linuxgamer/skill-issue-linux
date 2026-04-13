@@ -51,18 +51,9 @@ void C_TFViewModel::AddViewModelBob
 }
 */
 
-#include <cstring>
-
-#include "../libdetour/libdetour.h"
-#include "../libsigscan.h"
-
 #include "../sdk/classes/player.h"
 #include "../sdk/classes/weaponbase.h"
 #include "../sdk/signatures/signatures.h"
-
-#include "../features/logs/logs.h"
-
-#include "../settings/settings.h"
 
 ADD_SIG(CalcViewModelBobHelper, "client.so", "48 85 F6 0F 84 ? ? ? ? 55 66 0F EF DB")
 

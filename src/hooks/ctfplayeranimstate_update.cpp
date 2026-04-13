@@ -1,5 +1,9 @@
 #include "ctfplayeranimstate_update.h"
 
+#include "../sdk/classes/player.h"
+#include "../libdetour/libdetour.h"
+
+#include "../features/entitylist/entitylist.h"
 #include "../features/logs/logs.h"
 
 DETOUR_DECL_TYPE(void, CTFPlayerAnimState_Update, void* thisptr, float eyeYaw, float eyePitch);

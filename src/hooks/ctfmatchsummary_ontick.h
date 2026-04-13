@@ -1,10 +1,6 @@
 #pragma once
 
-#include "../features/logs/logs.h"
-#include "../libdetour/libdetour.h"
 #include "../sdk/signatures/signatures.h"
-#include "../settings/settings.h"
-#include <cstdint>
 
 /*
 xref: Announcer.SummaryScreenWinners

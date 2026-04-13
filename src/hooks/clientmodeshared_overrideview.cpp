@@ -1,5 +1,17 @@
 #include "clientmodeshared_overrideview.h"
 
+#include <string>
+
+#include "../features/entitylist/entitylist.h"
+#include "../sdk/classes/player.h"
+#include "../sdk/interfaces/interfaces.h"
+
+#include "../features/visuals/customfov/customfov.h"
+#include "../features/visuals/norecoil/norecoil.h"
+#include "../features/visuals/thirdperson/thirdperson.h"
+
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
 DECLARE_VTABLE_HOOK(OverrideView, void, (IClientMode * thisptr, CViewSetup *pView))
 {
 	originalOverrideView(thisptr, pView);

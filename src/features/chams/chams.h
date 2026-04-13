@@ -19,4 +19,5 @@ namespace Chams
 	bool ShouldHide(int entindex);
 	void DrawPlayers();
 	void Run();
+	void Reset();
 } // namespace Chams

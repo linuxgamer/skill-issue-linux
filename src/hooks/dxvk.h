@@ -1,22 +1,8 @@
 #pragma once
 
-#include <dlfcn.h>
-
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_dx9.h"
-#include "../imgui/imgui_impl_sdl2.h"
-
-#include "../libdetour/libdetour.h"
-
-#include "../gui/gui.h"
 #include "sdl.h"
 
 #include "../sdk/definitions/d3d9.h"
-#include "../sdk/interfaces/interfaces.h"
-
-#include "../features/binds/binds.h"
-#include "../features/radar/radar.h"
-#include "../features/warp/warp.h"
 
 void InitImGui();
 void CleanupImGui();

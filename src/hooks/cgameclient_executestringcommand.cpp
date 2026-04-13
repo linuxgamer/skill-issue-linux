@@ -1,5 +1,9 @@
 #include "cgameclient_executestringcommand.h"
 
+#include "../libdetour/libdetour.h"
+
+#include "../sdk/interfaces/interfaces.h"
+
 DETOUR_DECL_TYPE(bool, ExecuteStringCommand, void *self, const char *pCommandString);
 detour_ctx_t execstringcmd_ctx;
 

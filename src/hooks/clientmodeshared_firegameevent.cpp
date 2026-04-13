@@ -1,5 +1,8 @@
 #include "clientmodeshared_firegameevent.h"
 
+#include "../libdetour/libdetour.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
 DETOUR_DECL_TYPE(void, original_FireGameEvent, void *self, IGameEvent *gameEvent);
 detour_ctx_t firegameevent_ctx;
 

@@ -1,5 +1,10 @@
 #include "cbaseplayer_shoulddrawlocalplayer.h"
 
+#include "../libdetour/libdetour.h"
+
+#include "../features/entitylist/entitylist.h"
+#include "../features/logs/logs.h"
+
 DETOUR_DECL_TYPE(bool, CBasePlayer_ShouldDrawLocalPlayer, void);
 detour_ctx_t entity_shoulddraw;
 

@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
-#include "../settings/settings.h"
-
-#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
 
 ADD_SIG(CL_CheckForPureServerWhitelist, "engine.so", "83 3D ? ? ? ? 01 7E ? 80 3D ? ? ? ? 00 75")

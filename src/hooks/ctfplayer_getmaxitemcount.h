@@ -1,13 +1,6 @@
 #pragma once
 
-#include "../libdetour/libdetour.h"
-#include "../sdk/classes/entity.h"
-#include "../sdk/classes/player.h"
-#include "../sdk/helpers/helper.h"
-#include "../sdk/interfaces/interfaces.h"
 #include "../sdk/signatures/signatures.h"
-#include "../settings/settings.h"
-#include <string>
 
 ADD_SIG(CTFPlayer_GetMaxItemCount, "client.so",
 	"48 8B BF 98 00 00 00 48 85 FF 74 ? 55 BE 07 00 00 00 48 89 E5 E8 ? "

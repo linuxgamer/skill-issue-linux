@@ -1,5 +1,7 @@
 #include "cbaseentity_baseinterpolatepart1.h"
 
+#include "../features/warp/warp.h"
+#include "../libdetour/libdetour.h"
 #include "../features/entitylist/entitylist.h"
 
 DETOUR_DECL_TYPE(int, BaseInterpolatePart1, CBaseEntity *self, float *currentTime, Vector *oldOrigin, QAngle *oldAngles, Vector *oldVel, int *bNoMoreChanges);

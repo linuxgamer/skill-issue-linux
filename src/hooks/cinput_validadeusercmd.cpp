@@ -1,5 +1,7 @@
 #include "cinput_validadeusercmd.h"
 
+#include "../libdetour/libdetour.h"
+
 //DETOUR_DECL_TYPE(void, ValidateUserCmd, void *, CUserCmd *, int);
 
 void Hooked_ValidateUserCmd(void *input, CUserCmd *pCmd, int sequence_number)

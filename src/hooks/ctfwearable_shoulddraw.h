@@ -7,12 +7,6 @@
 // There are 2 functions that have the xref
 // Get the one that only has 1 parameter
 
-#include "../libdetour/libdetour.h"
-#include "../libsigscan.h"
-#include "../settings/settings.h"
-
-#include "../features/logs/logs.h"
-
 #include "../sdk/signatures/signatures.h"
 
 ADD_SIG(CTFWearable_ShouldDraw, "client.so",

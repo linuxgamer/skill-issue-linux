@@ -11,6 +11,7 @@
 #include "../features/ticks/ticks.h"
 #include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
 #include "../features/visuals/viewmodel_interp/viewmodel_interp.h"
+#include "../features/backtrack/backtrack.h"
 
 #include "../gui/gui.h"
 

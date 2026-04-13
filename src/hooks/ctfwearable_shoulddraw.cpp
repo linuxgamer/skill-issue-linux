@@ -1,5 +1,10 @@
 #include "ctfwearable_shoulddraw.h"
 
+#include "../libdetour/libdetour.h"
+#include "../settings/settings.h"
+
+#include "../features/logs/logs.h"
+
 DETOUR_DECL_TYPE(bool, CTFWearable_ShouldDraw, void *self);
 detour_ctx_t ctfwearable_shoulddraw_ctx;
 

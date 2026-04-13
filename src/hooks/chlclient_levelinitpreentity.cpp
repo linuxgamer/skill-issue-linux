@@ -1,6 +1,12 @@
 #include "chlclient_levelinitpreentity.h"
 
-DECLARE_VTABLE_HOOK(LevelInitPreEntity, void, (CHLClient * thisptr, const char *mapName))
+#include "../sdk/interfaces/interfaces.h"
+
+#include "../vtables.h"
+
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
+DECLARE_VTABLE_HOOK(LevelInitPreEntity, void, (CHLClient* thisptr, const char *mapName))
 {
 	AS_LevelInitPreEntity_Callback(mapName);
 	originalLevelInitPreEntity(thisptr, mapName);
@@ -8,7 +14,7 @@ DECLARE_VTABLE_HOOK(LevelInitPreEntity, void, (CHLClient * thisptr, const char *
 
 void AS_LevelInitPreEntity_Callback(const char *mapName)
 {
-	Hooks_CallHooks("LevelInitPreEntity", [&](asIScriptContext *ctx) { ctx->SetArgObject(0, &mapName); });
+	Hooks_CallHooks("LevelInitPreEntity", [&](asIScriptContext* ctx) { ctx->SetArgObject(0, &mapName); });
 }
 
 void HookLevelInitPreEntity()

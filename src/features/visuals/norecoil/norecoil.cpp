@@ -1,5 +1,8 @@
 #include "norecoil.h"
 
+#include "../../entitylist/entitylist.h"
+#include "../../../settings/settings.h"
+
 void NoRecoil::RunOverrideView(CTFPlayer *pLocal, CViewSetup *pView)
 {
 	if (!Settings::Misc.norecoil)
@@ -28,4 +31,20 @@ void NoRecoil::RunCreateMove(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd
 		return;
 
 	pCmd->viewangles -= punchAngle;
+}
+
+void NoRecoil::RunCalcViewModelView(Vector &angle)
+{
+	if (!Settings::Misc.norecoil)
+		return;
+
+	CTFPlayer* pLocal = EntityList::GetLocal();
+	if (pLocal == nullptr)
+		return;
+
+	Vector punchAngle = pLocal->m_vecPunchAngle();
+	if (punchAngle.IsZero())
+		return;
+
+	angle -= punchAngle;
 }

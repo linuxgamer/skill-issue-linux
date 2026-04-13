@@ -1,5 +1,9 @@
 #include "host_shutdown.h"
 
+#include "../libdetour/libdetour.h"
+
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
 DETOUR_DECL_TYPE(void, originalHost_ShutdownFn, void);
 detour_ctx_t shutdownctx;
 

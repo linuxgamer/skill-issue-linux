@@ -1,6 +1,9 @@
 #include "cl_move.h"
 
-detour_ctx_t move_ctx;
+#include "../features/ticks/ticks.h"
+#include "../libdetour/libdetour.h"
+
+static detour_ctx_t move_ctx;
 
 void HookedCL_Move(float accumulated_extra_samples, bool bFinalTick)
 {

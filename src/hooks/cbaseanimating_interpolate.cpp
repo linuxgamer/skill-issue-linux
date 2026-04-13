@@ -1,5 +1,8 @@
 #include "cbaseanimating_interpolate.h"
 
+#include "../libdetour/libdetour.h"
+
+#include "../features/warp/warp.h"
 #include "../features/entitylist/entitylist.h"
 
 DETOUR_DECL_TYPE(bool, Interpolate, CBaseEntity *self, float currentTime);

@@ -1,5 +1,15 @@
 #include "cbaseviewmodel_calcviewmodelview.h"
 
+#include <string>
+
+#include "../libdetour/libdetour.h"
+
+#include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
+#include "../features/visuals/viewmodel_interp/viewmodel_interp.h"
+#include "../features/visuals/viewmodel_offset/viewmodel_offset.h"
+#include "../features/visuals/norecoil/norecoil.h"
+#include "../features/angelscript/api/libraries/hooks/hooks.h"
+
 DETOUR_DECL_TYPE(void, original_CalcViewModelView, void *thisptr, CBaseEntity *, const Vector &, const QAngle &);
 detour_ctx_t calcViewModel_ctx;
 
@@ -16,6 +26,7 @@ void HookedCalcViewModelView(void *thisptr, CBaseEntity *owner, const Vector &ey
 			ctx->SetArgObject(1, &angle);
 		});
 
+		NoRecoil::RunCalcViewModelView(angle);
 		ViewmodelInterp::Run(angle);
 		ViewmodelAim::Run(angle);
 		ViewmodelOffset::Run(position, angle);

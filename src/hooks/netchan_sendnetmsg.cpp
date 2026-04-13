@@ -1,5 +1,7 @@
 #include "netchan_sendnetmsg.h"
 
+#include "../libdetour/libdetour.h"
+
 DETOUR_DECL_TYPE(bool, originalSendNetMsg, void *ptr, INetMessage &msg, bool bForceReliable, bool bVoice);
 detour_ctx_t SendNetMsg_ctx;
 

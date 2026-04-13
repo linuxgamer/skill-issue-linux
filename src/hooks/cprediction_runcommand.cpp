@@ -1,5 +1,7 @@
 #include "cprediction_runcommand.h"
 
+#include "../features/warp/warp.h"
+
 DETOUR_DECL_TYPE(void, RunCommand, IPrediction *self, CTFPlayer *player, CUserCmd *ucmd, void *moveHelper);
 detour_ctx_t runcommand_ctx;
 
