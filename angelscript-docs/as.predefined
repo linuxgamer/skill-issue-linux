@@ -312,6 +312,43 @@ namespace Draw
 	bool IsCursorVisible();
 }
 
+class Plane
+{
+	Vector3 normal;
+	float dist;
+	uint8 type;
+	uint8 signbits;
+}
+
+class Surface
+{
+	string name;
+	int16 surfaceProps;
+	uint8 flags;
+}
+
+class Trace
+{
+	Vector3 startpos;
+	Vector3 endpos;
+	Plane plane;
+	float fraction;
+	int contents;
+	uint16 dispFlags;
+	bool allsolid;
+	bool startsolid;
+	float fractionleftsolid;
+	Surface surface;
+	int hitgroup;
+	int16 physicsbone;
+	Entity@ ent;
+	int hitbox;
+
+	bool DidHit();
+}
+
+funcdef bool TraceFilterFn(Entity@ ent, int contents);
+
 namespace Engine
 {
 	void PlaySound(const string &in sound);
@@ -325,6 +362,8 @@ namespace Engine
 	bool IsGameUIVisible();
 	bool IsConsoleVisible();
 	bool IsTakingScreenshot();
+	void TraceLine(Vector3 start, Vector3 end, uint mask, TraceFilterFn@ filter, Trace &out trace);
+	void TraceHull(Vector3 start, Vector3 end, Vector3 min, Vector3 max, uint mask, TraceFilterFn@ filter, Trace &out trace);
 }
 
 namespace EnttyList

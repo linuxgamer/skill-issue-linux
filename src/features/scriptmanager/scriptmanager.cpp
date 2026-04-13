@@ -51,10 +51,10 @@ bool ScriptManager::Load(Script &script)
 	script.loaded = true;
 
 	// execute main
-	auto *ctx = engine->CreateContext();
+	auto *ctx = engine->RequestContext();
 	ctx->Prepare(func);
 	ctx->Execute();
-	ctx->Release();
+	engine->ReturnContext(ctx);
 
 	return true;
 }
@@ -69,10 +69,10 @@ bool ScriptManager::Unload(Script &script)
 	// clean shit
 	if (auto *func = script.module->GetFunctionByDecl("void unload()"))
 	{
-		auto *ctx = engine->CreateContext();
+		auto *ctx = engine->RequestContext();
 		ctx->Prepare(func);
 		ctx->Execute();
-		ctx->Release();
+		engine->ReturnContext(ctx);
 	}
 
 	Hooks_RemoveModule(script.module);

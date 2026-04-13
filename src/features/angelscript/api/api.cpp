@@ -3,7 +3,6 @@
 #include "../../../sdk/interfaces/interfaces.h"
 
 #define AS_USE_STLNAMES 1
-
 #include "../add_on/datetime/datetime.h"
 #include "../add_on/scriptarray/scriptarray.h"
 #include "../add_on/scriptdictionary/scriptdictionary.h"
@@ -24,6 +23,9 @@
 #include "classes/vector/vector3.h"
 #include "classes/vector2/vec2.h"
 #include "classes/viewsetup/viewsetup.h"
+#include "classes/plane/plane.h"
+#include "classes/surface/surface.h"
+#include "classes/trace/trace.h"
 
 #include "enums/enums.h"
 #include "globals.h"
@@ -101,7 +103,7 @@ void API::Initialize()
 
 	// enums
 	Enums_Register(engine);
-
+	
 	// classes
 	Vector2_RegisterClass(engine);
 	Vector3_RegisterClass(engine);
@@ -114,6 +116,9 @@ void API::Initialize()
 	Texture_RegisterClass(engine);
 	ConVar_RegisterClass(engine);
 	Bind_RegisterClass(engine);
+	Plane_RegisterClass(engine);
+	Surface_RegisterClass(engine);
+	Trace_RegisterClass(engine);
 
 	// libraries
 	Common_RegisterLibrary(engine);
