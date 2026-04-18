@@ -31,7 +31,7 @@ class NameElement : public IBaseElement
 		return ESP_ALIGNMENT::TOP;
 	}
 
-	virtual Color GetColor(CBaseEntity *ent, const ESP_Data &data) const override
+	Color GetColor(CBaseEntity *ent, const ESP_Data &data) const override
 	{
 		return ESP_Utils::GetEntityColor(ent);
 	}

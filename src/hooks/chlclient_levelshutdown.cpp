@@ -21,7 +21,7 @@ DECLARE_VTABLE_HOOK(LevelShutdown, void, (CHLClient * thisptr))
 	gAimProjectile.ResetIndicator();
 	Bhop::Reset();
 	Spectators::OnLevelShutdown();
-	Chams::Reset();
+	Chams::OnLevelShutdown();
 
 	Hooks_CallHooks("LevelShutdown");
 	originalLevelShutdown(thisptr);

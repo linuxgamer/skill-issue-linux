@@ -312,24 +312,28 @@ bool Backtrack::GetRecords(CTFPlayer *pEntity, std::vector<LagCompRecord> &out)
 {
 	auto records = m_records[pEntity->GetIndex()];
 
-	if (records.empty())
-		return false;
+	//if (records.empty())
+		//return false;
 
 	// if backtrack is disabled
 	// return only the first real record
-	BacktrackMode mode = static_cast<BacktrackMode>(Settings::Misc.backtrack);
+	/*BacktrackMode mode = static_cast<BacktrackMode>(Settings::Misc.backtrack);
 	if (mode >= BacktrackMode::MAX || mode <= BacktrackMode::INVALID || mode == BacktrackMode::NONE)
-	{
-		LagCompRecord &front = records.front();
-		out.emplace_back(front.m_Bones, front.m_flSimTime, front.m_vecAbsCenter, front.m_vecViewAngles,
-				 front.m_vecVelocity);
-		return true;
-	}
+	{*/
+	//LagCompRecord &front = records.front();
+	//out.emplace_back(front.m_Bones, front.m_flSimTime, front.m_vecAbsCenter, front.m_vecViewAngles,
+			 //front.m_vecVelocity);
+
+	matrix3x4 bones[MAXSTUDIOBONES];
+	pEntity->SetupBones(bones, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, interfaces::GlobalVars->curtime);
+	out.emplace_back(bones, pEntity->m_flSimulationTime(), pEntity->GetCenter(), pEntity->m_angEyeAngles(), pEntity->EstimateAbsVelocity());
+	return true;
+	/*}
 
 	for (const auto &record : records)
 		out.emplace_back(record);
 
-	return true;
+	return true;*/
 }
 
 bool Backtrack::IsValidPlayer(const EntityListEntry &entry)

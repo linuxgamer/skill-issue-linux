@@ -1,23 +1,30 @@
 #pragma once
 
-#include "../../features/esp/esp.h"
-#include "../../sdk/MaterialManager/materialmanager.h"
-#include "../../sdk/definitions/keyvalues.h"
-#include "../../sdk/helpers/helper.h"
-#include "../entitylist/entitylist.h"
-#include <unordered_set>
 #include <vector>
+
+#include "chamsmaterial.h"
+
+#include "../../sdk/classes/entity.h"
+
+#include "../entitylist/entitylist.h"
 
 namespace Chams
 {
-	extern bool m_bMatLoaded;
-	extern IMaterial *m_mFlatMat;
-	extern bool m_bRunning;
-	extern std::unordered_set<int> m_Entities;
-
-	bool Init();
-	bool ShouldHide(int entindex);
-	void DrawPlayers();
-	void Run();
+	void Init();
 	void Reset();
-} // namespace Chams
+
+	void OnLevelPostEntity();
+	void OnLevelShutdown();
+	void OnDoPostScreenSpaceEffects(CTFPlayer* pLocal);
+
+	bool ShouldHide(int entindex);
+	bool IsDrawing();
+
+	std::vector<ChamsMaterial>& GetMaterials();
+	void ApplyMaterials(CBaseEntity* entity, int drawflags);
+	bool AddMaterial(const std::string& name, const std::string& vmt, ChamsMaterial& out);
+	bool RemoveMaterial(const std::string& name);
+
+	bool IsValidEntity(CTFPlayer* pLocal, const EntityListEntry& entity);
+
+} // end namespace

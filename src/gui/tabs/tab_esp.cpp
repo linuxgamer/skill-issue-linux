@@ -54,11 +54,6 @@ void DrawESPTab()
 
 	ImGui::Separator();
 
-	ImGui::Checkbox("Chams", &Settings::ESP.chams);
-	ImGui::SliderFloat("Chams Alpha", &Settings::ESP.chams_alpha, 0.0f, 1.0f);
-
-	ImGui::Separator();
-
 	ImGui::TextUnformatted("Glow");
 	ImGui::SliderInt("Stencil", &Settings::ESP.stencil, 0, 10);
 	ImGui::SliderInt("Blur", &Settings::ESP.blur, 0, 10);

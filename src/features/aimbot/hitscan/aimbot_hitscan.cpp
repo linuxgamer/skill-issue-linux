@@ -98,6 +98,9 @@ namespace AimbotHitscan
 
 	void Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd, AimbotState &state)
 	{
+		if (!Settings::Aimbot.key->IsActive())
+			return;
+
 		if (Settings::Aimbot.waitforcharge && pWeapon->IsAmbassador())
 			if (!pWeapon->CanAmbassadorHeadshot())
 				return;

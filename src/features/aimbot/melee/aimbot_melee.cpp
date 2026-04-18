@@ -4,6 +4,9 @@ namespace AimbotMelee
 {
 	void Run(CTFPlayer *pLocal, CTFWeaponBase *pWeapon, CUserCmd *pCmd, AimbotState &state)
 	{
+		if (!Settings::Aimbot.key->IsActive())
+			return;
+
 		if (Settings::Aimbot.melee == static_cast<int>(MeleeMode::NONE) ||
 		    pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 			return;

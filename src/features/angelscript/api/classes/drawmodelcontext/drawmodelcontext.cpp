@@ -25,7 +25,7 @@ bool IsChamsModel(DrawModelContext *ctx)
 	if (!ctx || !ctx->valid)
 		return false;
 
-	return Chams::m_bRunning;
+	return Chams::IsDrawing();
 }
 
 bool IsGlowModel(DrawModelContext *ctx)

@@ -5,6 +5,7 @@
 #include "../features/entitylist/entitylist.h"
 #include "../features/spectators/spectators.h"
 #include "../features/visuals/viewmodel_aim/viewmodel_aim.h"
+#include "../features/chams/chams.h"
 
 #include "../features/angelscript/api/libraries/hooks/hooks.h"
 
@@ -13,6 +14,7 @@ DECLARE_VTABLE_HOOK(LevelInitPostEntity, void, (CHLClient * thisptr))
 	EntityList::Reserve();
 	ViewmodelAim::ResetStopTime();
 	Spectators::OnLevelInitPostEntity();
+	Chams::OnLevelPostEntity();
 
 	Hooks_CallHooks("LevelInitPostEntity");
 	originalLevelInitPostEntity(thisptr);

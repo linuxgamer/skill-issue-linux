@@ -5,7 +5,6 @@
 #include "utils/utils.h"
 
 #include "projectile/projectile.h"
-//#include "hitscan2/hitscan.h"
 
 namespace Aimbot
 {
@@ -34,30 +33,22 @@ namespace Aimbot
 		    helper::engine::IsTakingScreenshot())
 			return;
 
-		gAimProjectile.RunMain(pLocal, pWeapon);
-
-		if (!Settings::Aimbot.key->IsActive())
-			return;
-
 		switch (pWeapon->GetWeaponType())
 		{
 		case EWeaponType::HITSCAN:
-		{
 			AimbotHitscan::Run(pLocal, pWeapon, pCmd, m_state);
-			//AimHitscan::RunMain(pLocal, pWeapon, pCmd);
-		}
-		break;
+			break;
 
 		case EWeaponType::PROJECTILE:
 		{
-			// AimbotProjectile::Run(pLocal, pWeapon, pCmd,
-			// m_state);
+			gAimProjectile.RunMain(pLocal, pWeapon);
 			gAimProjectile.RunAim(pLocal, pWeapon, pCmd, m_state);
 
 			if (m_state.shouldSilent)
 				TickManager::m_bSendPacket = false;
+
+			break;
 		}
-		break;
 
 		case EWeaponType::MELEE:
 		{
@@ -65,8 +56,9 @@ namespace Aimbot
 
 			if (m_state.shouldSilent)
 				TickManager::m_bSendPacket = false;
+
+			break;
 		}
-		break;
 		default:
 			break;
 		}

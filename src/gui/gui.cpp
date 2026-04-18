@@ -13,6 +13,7 @@
 #include "tabs/tab_radar.h"
 #include "tabs/tab_config.h"
 #include "tabs/tab_logs.h"
+#include "tabs/tab_chams.h"
 
 int GUI::tab = 0;
 
@@ -31,6 +32,9 @@ void DrawTabButtons(int &tab)
 
 	if (ImGui::Button("MISC", ImVec2(-1, 0)))
 		tab = TAB_MISC;
+
+	if (ImGui::Button("CHAMS", ImVec2(-1, 0)))
+		tab = TAB_CHAMS;
 
 	// if (ImGui::Button("ANTIAIM", ImVec2(-1, 0)))
 	// tab = TAB_ANTIAIM;
@@ -162,6 +166,9 @@ void GUI::RunMainWindow()
 					break;
 				case TAB_LOGS:
 					DrawLogsTab();
+					break;
+				case TAB_CHAMS:
+					DrawChamsTab();
 					break;
 				default:
 					break;

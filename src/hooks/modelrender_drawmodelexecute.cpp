@@ -29,7 +29,7 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void,
 		return originalDrawModelExecute(thisptr, state, pInfo, Backtrack::m_current_drawing_record->m_Bones);
 	#endif
 
-	if (!Chams::m_bRunning && !Glow::m_bRunning)
+	if (!Chams::IsDrawing() && !Glow::m_bRunning)
 	{
 		float color[3] = {1, 1, 1};
 		interfaces::RenderView->SetColorModulation(color);
@@ -47,10 +47,10 @@ DECLARE_VTABLE_HOOK(DrawModelExecute, void,
 		Hooks_CallHooks("DrawModel", [&](asIScriptContext *ctx) { ctx->SetArgObject(0, &ctx); });
 	}
 
-	if (Chams::m_bRunning || Glow::m_bRunning)
+	if (Chams::IsDrawing() || Glow::m_bRunning)
 		return originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);
 
-	if (Chams::ShouldHide(pInfo.entity_index) || Glow::ShouldHide(pInfo.entity_index))
+	if (pInfo.entity_index > 0 && (Chams::ShouldHide(pInfo.entity_index) || Glow::ShouldHide(pInfo.entity_index)))
 		return;
 
 	originalDrawModelExecute(thisptr, state, pInfo, pCustomBoneToWorld);

@@ -13,21 +13,26 @@
 DECLARE_VTABLE_HOOK(DoPostScreenSpaceEffects, bool, (IClientMode* thisptr, CViewSetup* setup))
 {
 	Backtrack::DoPostScreenSpaceEffects();
-	Chams::Run();
+	//Chams::Run();
 	Glow::Run();
 
-	if (Settings::Misc.no_zoom)
+	if (auto pLocal = EntityList::GetLocal(); pLocal != nullptr)
 	{
-		if (auto pLocal = EntityList::GetLocal(); pLocal != nullptr && pLocal->IsAlive())
+		Chams::OnDoPostScreenSpaceEffects(pLocal);
+
+		if (pLocal->IsAlive())
 		{
-			if (pLocal->InCond(TF_COND_ZOOMED) && Thirdperson::IsThirdPerson(pLocal))
+			if (Settings::Misc.no_zoom)
 			{
-				pLocal->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
-				auto ent = pLocal->FirstShadowChild();
-				while (ent != nullptr)
+				if (pLocal->InCond(TF_COND_ZOOMED) && Thirdperson::IsThirdPerson(pLocal))
 				{
-					ent->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
-					ent->NextShadowPeer();
+					pLocal->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+					auto ent = pLocal->FirstShadowChild();
+					while (ent != nullptr)
+					{
+						ent->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+						ent->NextShadowPeer();
+					}
 				}
 			}
 		}

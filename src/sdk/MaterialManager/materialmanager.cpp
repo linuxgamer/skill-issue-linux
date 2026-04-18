@@ -9,7 +9,7 @@ IMaterial *MaterialManager::CreateMaterial(const std::string &name, const std::s
 	if (it != m_Materials.end())
 		return it->second;
 
-	KeyValues *kv = new KeyValues(name.c_str());
+	KeyValues *kv = new KeyValues("");
 	kv->LoadFromBuffer(name.c_str(), vmt.c_str());
 
 	IMaterial *mat = interfaces::MaterialSystem->CreateMaterial(name.c_str(), kv);

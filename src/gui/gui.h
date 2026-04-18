@@ -23,6 +23,7 @@ enum TabMenu {
 	TAB_RADAR,
 	TAB_CONFIG,
 	TAB_LOGS,
+	TAB_CHAMS,
 };
 
 namespace GUI {

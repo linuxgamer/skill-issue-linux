@@ -3,6 +3,19 @@
 	https://angelcode.com/angelscript/sdk/docs/manual/doc_script.html
 */
 
+/*
+Template for scripts:
+void main()
+{
+	// Code here
+}
+
+void unload()
+{
+	// Code here
+}
+*/
+
 // gotta do ts to make it not complain about it being undefined
 // https://angelcode.com/angelscript/sdk/docs/manual/doc_script_stdlib_string.html
 // https://angelcode.com/angelscript/sdk/docs/manual/doc_datatypes_strings.html
@@ -75,7 +88,6 @@ class Vector3
 	Vector3 FromAngle();
 
 	Vector3& opAssign(const Vector3 &in);
-	float& opIndex(int);
 	float opIndex(int);
 	bool opEquals(const Vector3 &in);
 	bool opCmp(const Vector3 &in);
@@ -202,7 +214,6 @@ class Entity
 	bool IsPlayer();
 	bool IsWeapon();
 	int GetIndex();
-	bool IsPlayer();
 	bool IsBuilding();
 	int GetClassID();
 	bool IsRobot();
@@ -366,7 +377,7 @@ namespace Engine
 	void TraceHull(Vector3 start, Vector3 end, Vector3 min, Vector3 max, uint mask, TraceFilterFn@ filter, Trace &out trace);
 }
 
-namespace EnttyList
+namespace EntityList
 {
 	Entity@ GetClientEntity(int entindex);
 	int GetMaxEntities();

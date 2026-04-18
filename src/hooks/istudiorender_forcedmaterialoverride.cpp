@@ -8,7 +8,7 @@
 DECLARE_VTABLE_HOOK(ForcedMaterialOverride, void,
 		    (IStudioRender * thisptr, IMaterial *mat, OverrideType_t nOverrideType))
 {
-	if (Chams::m_bRunning || Glow::m_bRunning)
+	if (Chams::IsDrawing() || Glow::m_bRunning)
 		return;
 
 	originalForcedMaterialOverride(thisptr, mat, nOverrideType);

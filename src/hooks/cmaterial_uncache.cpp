@@ -15,7 +15,11 @@ void HookedUncache(IMaterial *mat, bool bPreserveVars)
 		return;
 	}
 
-	if (MaterialManager::MaterialExists(mat->GetName()))
+	const char* name = mat->GetName();
+
+	if (name == nullptr) return;
+
+	if (MaterialManager::MaterialExists(name))
 		return;
 
 	DETOUR_ORIG_CALL(&uncache_ctx, original_Uncache, mat, bPreserveVars);
